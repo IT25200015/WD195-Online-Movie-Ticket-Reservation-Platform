@@ -1,13 +1,19 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>CineBooking | Home</title>
+    <%@ include file="includes/header.jsp" %>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
+<%@ include file="includes/navbar.jsp" %>
+
+<div class="container text-center" style="margin-top: 100px; min-height: 400px;">
+    <h1 class="display-4 fw-bold">Welcome to CineBooking</h1>
+    <p class="lead">The best place to book your favorite movie tickets online!</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="register.jsp" role="button">Register Now</a>
+</div>
+
+<%@ include file="includes/footer.jsp" %>
 </body>
 </html>
