@@ -11,12 +11,12 @@ The Online Movie Ticket Booking Platform is a web-based application developed fo
 ### Team Members & Component Breakdown
 | # | Component | Assigned Student ID |
 | :--- | :--- | :--- |
-| 01 | User Account Management | [Add ID Here] |
-| 02 | Movie & Showtime Management | [Add ID Here] |
-| 03 | Seat Selection & Booking Management | [Add ID Here] |
-| 04 | Payment & Transaction Management | [Add ID Here] |
-| 05 | Promotion & Discount Management | [Add ID Here] |
-| 06 | Review, Rating & Feedback Management | [Add ID Here] |
+| 01 | User Account Management | [IT25200015] |
+| 02 | Movie & Showtime Management | [IT25101345] |
+| 03 | Seat Selection & Booking Management | [IT25101468] |
+| 04 | Payment & Transaction Management | [IT25101914] |
+| 05 | Promotion & Discount Management | [IT25100239] |
+| 06 | Review, Rating & Feedback Management | [IT25103383] |
 
 ## Technology Stack
 * **Language:** Java (JDK 17+)
