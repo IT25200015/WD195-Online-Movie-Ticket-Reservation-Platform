@@ -57,6 +57,8 @@ public abstract class User {
     public void  setRole(String role) {
         this.role = role;
     }
+//Abstraction - Because the dashboadrd changes on user role
+    public abstract void displayDashboard();
 
     public void showUserDetails() {
         System.out.println("User ID: " + userId);
