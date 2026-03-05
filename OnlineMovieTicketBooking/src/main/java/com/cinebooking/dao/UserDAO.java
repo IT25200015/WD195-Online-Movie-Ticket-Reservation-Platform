@@ -1,10 +1,14 @@
 package com.cinebooking.dao;
 
+import com.cinebooking.models.Admin;
+import com.cinebooking.models.Customer;
 import com.cinebooking.models.User;
 import com.cinebooking.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
+import java.sql.ResultSet;
 
 public class UserDAO {
 
@@ -39,11 +43,52 @@ public class UserDAO {
             conn.close();
 
         } catch (Exception e) {
-            // Print the error message to the error console
+            // Print the error message
             System.err.println("Error in register: " + e.getMessage());
         }
 
         return isSuccess         ;
+    }
+    // Method to login a user
+    public User loginUser(String email, String password) {
+        User user = null;
+
+        try {
+            //   database connection
+            Connection conn = DBConnection.getConnection();
+
+            //  SQL query
+            String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            pst.setString(1, email);
+            pst.setString(2, password);
+
+            ResultSet rs = pst.executeQuery();
+
+            // If we found a user in the database
+            if (rs.next()) {
+                // Get data from the database row
+                int dbId = rs.getInt("user_id");
+                String dbName = rs.getString("name");
+                String dbRole = rs.getString("role");
+
+                // Check the role and create the object
+                if (dbRole.equals("ADMIN")) {
+                    user = new Admin(dbId, dbName, email, password);
+                } else {
+                    user = new Customer(dbId, dbName, email, password);
+                }
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println("Login error: " + e.getMessage());
+        }
+
+        // Return null if login failed
+        return user;
     }
 
 }
