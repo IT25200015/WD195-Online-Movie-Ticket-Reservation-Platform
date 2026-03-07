@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+
+
 @WebServlet("/UserController")
 public class UserController extends HttpServlet {
 
@@ -27,7 +29,7 @@ public class UserController extends HttpServlet {
         try {
             // register a new user
 
-            if (action.equals("register")) {
+            if (("register".equals(action))) {
 
                 // get values from the object
                 String name = request.getParameter("name");
@@ -46,6 +48,31 @@ public class UserController extends HttpServlet {
                 } else {
                     System.out.println("User save failed!");
                     response.sendRedirect("register.jsp"); // Go back to register
+                }
+            }
+
+            //  login an existing user
+
+            else if ("login".equals(action)) {
+
+                // get email and password from login form
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+
+                // check database
+                com.cinebooking.models.User loggedUser = userDAO.loginUser(email, password);
+
+                if (loggedUser != null) {
+                    System.out.println("Login success for: " + loggedUser.getName());
+
+                    // create a session to remember the user
+                    jakarta.servlet.http.HttpSession session = request.getSession();
+                    session.setAttribute("user", loggedUser);
+
+                    response.sendRedirect("dashboard.jsp"); // Go to dashboard
+                } else {
+                    System.out.println("Wrong email or password!");
+                    response.sendRedirect("login.jsp"); // Go back to login
                 }
             }
 
