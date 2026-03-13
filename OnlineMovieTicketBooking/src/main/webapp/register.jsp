@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,7 +83,7 @@
 
                 <div class="brand-title text-center">CINEBOOKING</div>
 
-                <form action="UserController" method="POST">
+                <form action="${pageContext.request.contextPath}/UserController" method="POST">
 
                     <input type="hidden" name="action" value="register">
 
