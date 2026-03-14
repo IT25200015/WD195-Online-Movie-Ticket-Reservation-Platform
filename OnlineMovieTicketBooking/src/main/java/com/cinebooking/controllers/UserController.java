@@ -1,6 +1,8 @@
 package com.cinebooking.controllers;
 
 import com.cinebooking.dao.UserDAO;
+import com.cinebooking.dao.UserDAODatabase;
+import com.cinebooking.dao.UserDAOFile;
 import com.cinebooking.models.Customer;
 
 import jakarta.servlet.ServletException;
@@ -24,7 +26,8 @@ public class UserController extends HttpServlet {
         // to test
         System.out.println("Action received: " + action);
 
-        UserDAO userDAO = new UserDAO();
+         UserDAO userDAO = new UserDAOFile(); // Use this for File stroage (users.txt)
+       // UserDAO userDAO = new UserDAODatabase(); // Use this for Database storage
 
         try {
             // register a new user
