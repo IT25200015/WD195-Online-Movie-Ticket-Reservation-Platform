@@ -87,6 +87,12 @@
                     <div class="brand-subtitle">WELCOME BACK</div>
                 </div>
 
+                <% if (request.getParameter("error") != null) { %>
+                    <div class="alert alert-danger text-center">
+                        Invalid Username or Password! Please try again.
+                    </div>
+                <% } %>
+
                 <!-- Login form -->
                 <form action="${pageContext.request.contextPath}/UserController" method="POST">
                     <input type="hidden" name="action" value="login">
@@ -108,7 +114,7 @@
 
                     <div class="text-center">
                         <p class="text-white-50" style="font-size: 0.9rem;">
-                            Don't have an account? <a href="register.jsp" class="text-white text-decoration-underline">Register here</a>
+                            Don't have an account? <a href="${pageContext.request.contextPath}/UserController?action=register" class="text-white text-decoration-underline">Register here</a>
                         </p>
                     </div>
                 </form>

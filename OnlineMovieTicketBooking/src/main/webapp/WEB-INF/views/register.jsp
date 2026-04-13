@@ -98,6 +98,30 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="form-label">Mobile Number <span class="required-star">*</span></label>
+                        <input type="text" name="mobileNumber" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Date of Birth <span class="required-star">*</span></label>
+                        <input type="date" name="dob" class="form-control custom-input" style="color-scheme: dark;" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Gender <span class="required-star">*</span></label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male" required>
+                                <label class="form-check-label text-white" for="genderMale">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female" required>
+                                <label class="form-check-label text-white" for="genderFemale">Female</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="form-label">Create a Password <span class="required-star">*</span></label>
                         <input type="password" name="password" class="form-control custom-input" required>
                     </div>
@@ -118,7 +142,7 @@
 
                     <div class="text-center">
                         <p class="text-white-50" style="font-size: 0.9rem;">
-                            Already have an account? <a href="login.jsp" class="text-white text-decoration-underline">Login here</a>
+                            Already have an account? <a href="${pageContext.request.contextPath}/UserController?action=login" class="text-white text-decoration-underline">Login here</a>
                         </p>
                     </div>
 

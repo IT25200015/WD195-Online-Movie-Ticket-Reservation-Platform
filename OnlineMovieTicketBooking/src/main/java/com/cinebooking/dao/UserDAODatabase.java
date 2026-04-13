@@ -17,7 +17,7 @@ public class UserDAODatabase implements  UserDAO  {
     public boolean registerUser(User user) {
         boolean isSuccess = false;
 
-        String sql = "INSERT INTO User (name, email, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO User (name, email, password, role, mobile_number, dob, gender, membership) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             Connection conn = DBConnection.getConnection();
@@ -28,6 +28,15 @@ public class UserDAODatabase implements  UserDAO  {
             pst.setString(2, user.getEmail());
             pst.setString(3, user.getPassword());
             pst.setString(4, user.getRole());
+            pst.setString(5, user.getMobileNumber());
+            pst.setString(6, user.getDob());
+            pst.setString(7, user.getGender());
+
+            if (user instanceof Customer) {
+                pst.setString(8, ((Customer) user).getMembership());
+            } else {
+                pst.setString(8, "N/A");
+            }
 
             int result = pst.executeUpdate();
 
@@ -67,12 +76,22 @@ public class UserDAODatabase implements  UserDAO  {
                 int dbId = rs.getInt("user_id");
                 String dbName = rs.getString("name");
                 String dbRole = rs.getString("role");
+                String dbMobile = rs.getString("mobile_number");
+                String dbDob = rs.getString("dob");
+                String dbGender = rs.getString("gender");
+
+                String dbMembership = "Regular";
+                try {
+                    dbMembership = rs.getString("membership");
+                    if (dbMembership == null) dbMembership = "Regular";
+                } catch (Exception ignore) {
+                }
 
                 // Check the role and create the object
-                if (dbRole.equals("ADMIN")) {
-                    user = new Admin(dbId, dbName, email, password);
+                if (dbRole.equalsIgnoreCase("ADMIN")) {
+                    user = new Admin(dbId, dbName, email, password, dbMobile, dbDob, dbGender);
                 } else {
-                    user = new Customer(dbId, dbName, email, password);
+                    user = new Customer(dbId, dbName, email, password, dbMobile, dbDob, dbGender, dbMembership);
                 }
             }
 
