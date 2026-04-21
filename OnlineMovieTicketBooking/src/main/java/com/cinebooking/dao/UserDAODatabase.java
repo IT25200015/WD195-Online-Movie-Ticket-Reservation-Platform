@@ -115,4 +115,9 @@ public class UserDAODatabase implements  UserDAO  {
     public boolean deleteUser(String email) {
         return false;
     }
+
+    @Override
+    public java.util.List<User> getAllUsers() {
+        return new java.util.ArrayList<>();
+    }
 }

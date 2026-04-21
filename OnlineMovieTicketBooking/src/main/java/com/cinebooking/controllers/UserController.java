@@ -3,7 +3,9 @@ package com.cinebooking.controllers;
 import com.cinebooking.dao.UserDAO;
 import com.cinebooking.dao.UserDAODatabase;
 import com.cinebooking.dao.UserDAOFile;
+import com.cinebooking.models.Admin;
 import com.cinebooking.models.Customer;
+import com.cinebooking.models.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,6 +28,21 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
         } else if ("editProfile".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/editProfile.jsp").forward(request, response);
+        } else if ("adminDashboard".equals(action)) {
+            // Check if user is logged in and is an Admin
+            HttpSession session = request.getSession();
+            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+            if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+                UserDAO userDAO = new UserDAOFile();
+                java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
+                // Put the list inside the request object
+                request.setAttribute("userList", userList);
+                request.getRequestDispatcher("/WEB-INF/views/adminDashboard.jsp").forward(request, response);
+            } else {
+                // If not Admin, redirect to login
+                response.sendRedirect("UserController?action=login");
+            }
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
@@ -58,12 +75,33 @@ public class UserController extends HttpServlet {
                 String mobileNumber = request.getParameter("mobileNumber");
                 String dob = request.getParameter("dob");
                 String gender = request.getParameter("gender");
+                String adminKey = request.getParameter("adminKey");
 
-                // create customer object, set membership to Regular
-                Customer newCus = new Customer(0, name, email, password, mobileNumber, dob, gender, "Regular");
+                User newUser; // Polymorphism: Base class reference can point to subclass objects
+
+                if ("SLIIT2026".equals(adminKey)) {
+                    // Create an Admin using the default constructor
+                    Admin adminUser = new Admin();
+                    adminUser.setRole("Admin");
+                    newUser = adminUser;
+                } else {
+                    // Create a Customer using the default constructor
+                    Customer customerUser = new Customer();
+                    customerUser.setRole("Customer");
+                    customerUser.setMembership("Regular");
+                    newUser = customerUser;
+                }
+
+                // Apply common properties to the instantiated object (Polymorphism in action)
+                newUser.setName(name);
+                newUser.setEmail(email);
+                newUser.setPassword(password);
+                newUser.setMobileNumber(mobileNumber);
+                newUser.setDob(dob);
+                newUser.setGender(gender);
 
                 // Save to database
-                boolean isSaved = userDAO.registerUser(newCus);
+                boolean isSaved = userDAO.registerUser(newUser);
 
                 if (isSaved == true) {
                     System.out.println("User saved successfully!");
@@ -131,6 +169,40 @@ public class UserController extends HttpServlet {
                         response.sendRedirect("UserController?action=editProfile&error=1");
                     }
                 } else {
+                    response.sendRedirect("UserController?action=login");
+                }
+            } else if ("makePremium".equals(action)) {
+
+                // Get the current user from the session
+                HttpSession session = request.getSession();
+                User loggedUser = (User) session.getAttribute("user");
+
+                if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+
+                    String targetUserId = request.getParameter("userId");
+
+                    if (targetUserId != null && !targetUserId.isEmpty()) {
+                        int id = Integer.parseInt(targetUserId);
+                        java.util.List<User> allUsers = userDAO.getAllUsers();
+                        for (User u : allUsers) {
+
+                            if (u.getUserId() == id) {
+
+                                //  Make sure this user is a Customer (Admins can't be Premium)
+                                if (u instanceof Customer) {
+                                    Customer customerToUpdate = (Customer) u;
+                                    customerToUpdate.setMembership("Premium");
+                                    // Save the updated customer back to the file
+                                    userDAO.updateUser(customerToUpdate);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    // Send the Admin back to the dashboard to see the changes
+                    response.sendRedirect("UserController?action=adminDashboard");
+                } else {
+                    // Not an admin? Send them to the login page
                     response.sendRedirect("UserController?action=login");
                 }
             }

@@ -164,4 +164,40 @@ public class UserDAOFile implements UserDAO {
     public boolean deleteUser(String email) {
         return false;
     }
+
+    @Override
+    public java.util.List<User> getAllUsers() {
+        java.util.List<User> users = new java.util.ArrayList<>();
+        File file = new File(FILE_PATH);
+        if (!file.exists()) return users;
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("\\|");
+                if (parts.length >= 9) {
+                    int userId = Integer.parseInt(parts[0]);
+                    String name = parts[1];
+                    String emailStr = parts[2];
+                    String pass = parts[3];
+                    String role = parts[4];
+                    String mobile = parts[5];
+                    String dob = parts[6];
+                    String gender = parts[7];
+                    String authLevel = parts[8];
+
+                    if (role.equalsIgnoreCase("Admin")) {
+                        users.add(new Admin(userId, name, emailStr, pass, mobile, dob, gender));
+                    } else {
+                        users.add(new Customer(userId, name, emailStr, pass, mobile, dob, gender, authLevel));
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
 }

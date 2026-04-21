@@ -1,1 +1,4 @@
-1|Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|123455677|2026-04-15|Male|Regular
+1|Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|123455677|2026-04-15|Male|Premium
+2| Chamod Ru|sajitha13579@gmail.com|12345|Customer|1234567|2026-04-15|Male|Premium
+3|System Admin|admin@cinebooking.com|admin123|Admin|12345677|2000-04-20|Male|N/A
+4|Sajitha  Ruwanpura|sajithachamod@gmail.com|1234567|Admin|1234567|2026-04-02|Male|N/A

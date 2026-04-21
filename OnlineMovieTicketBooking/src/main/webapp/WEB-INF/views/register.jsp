@@ -138,6 +138,11 @@
                         </label>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="form-label">Admin Key (Leave blank if normal user)</label>
+                        <input type="password" name="adminKey" class="form-control custom-input">
+                    </div>
+
                     <button type="submit" class="btn custom-btn w-100 mb-4">CREATE AN ACCOUNT</button>
 
                     <div class="text-center">
