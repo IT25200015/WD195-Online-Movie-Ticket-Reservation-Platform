@@ -7,8 +7,8 @@ public class Admin extends User {
         this.setRole("Admin");
     }
     //Parameterized constructor to create an Admin object
-    public Admin(int userId ,String name ,String email, String password) {
-        super(userId, name, email, password, "Admin");
+    public Admin(int userId ,String name ,String email, String password, String mobileNumber, String dob, String gender) {
+        super(userId, name, email, password, "Admin", mobileNumber, dob, gender);
     }
     @Override
     public void displayDashboard() {
@@ -16,4 +16,3 @@ public class Admin extends User {
 
     }
 }
-

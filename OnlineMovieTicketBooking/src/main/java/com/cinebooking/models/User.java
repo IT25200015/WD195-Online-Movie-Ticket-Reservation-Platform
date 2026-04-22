@@ -8,16 +8,24 @@ public abstract class User {
     private String password;
     private String role; // "customer" or "admin"
 
+    // New fields
+    private String mobileNumber;
+    private String dob;
+    private String gender;
+
     public User() {
 
     }
 //Parameterized constructor for add user details
-    public User(int userId, String name, String email, String password, String role) {
+    public User(int userId, String name, String email, String password, String role, String mobileNumber, String dob, String gender) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.mobileNumber = mobileNumber;
+        this.dob = dob;
+        this.gender = gender;
     }
 // Getters and setters for accessing and modifying user details
     public int getUserId() {
@@ -57,6 +65,26 @@ public abstract class User {
     public void  setRole(String role) {
         this.role = role;
     }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+    public String getDob() {
+        return dob;
+    }
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+    public String getGender() {
+        return gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
 //Abstraction - Because the dashboadrd changes on user role
     public abstract void displayDashboard();
 
