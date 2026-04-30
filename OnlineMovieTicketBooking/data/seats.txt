@@ -1,0 +1,10 @@
+S01|Standard|false|500.00
+S02|Standard|false|500.00
+S03|Standard|false|500.00
+S04|Standard|false|500.00
+S05|Premium|false|1000.00
+S06|Premium|false|1000.00
+S07|Premium|false|1000.00
+S08|Premium|false|1000.00
+S09|VIP|false|1500.00
+S10|VIP|false|1500.00
