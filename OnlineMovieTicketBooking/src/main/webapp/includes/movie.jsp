@@ -83,8 +83,7 @@
             <div class="movie-card">
                 <img src="../images/movie1.jpg">
                 <div class="movie-info">
-                    <div class="title">Dhruvandar: The Revenge</div>
-                    <small>Adults Only</small><br>
+                    <div class="title">ABC</div>
                     <small>In Theaters Now</small>
                 </div>
             </div>
