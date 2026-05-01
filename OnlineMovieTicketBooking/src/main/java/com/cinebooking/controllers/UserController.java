@@ -60,7 +60,8 @@ public class UserController extends HttpServlet {
         // to test
         System.out.println("Action received: " + action);
 
-         UserDAO userDAO = new UserDAOFile(); // Use this for File stroage (users.txt)
+        String dataFilePath = getServletContext().getRealPath("/data/users.txt");
+        UserDAO userDAO = new UserDAOFile(dataFilePath); // Use this for File storage (users.txt)
        // UserDAO userDAO = new UserDAODatabase(); // Use this for Database storage
 
         try {
@@ -170,6 +171,24 @@ public class UserController extends HttpServlet {
                     }
                 } else {
                     response.sendRedirect("UserController?action=login");
+                }
+            } else if ("deleteProfile".equals(action)) {
+                // Delete the currently logged-in user's profile
+                HttpSession session = request.getSession();
+                com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+                if (loggedUser != null) {
+                    String email = loggedUser.getEmail();
+                    boolean deleted = userDAO.deleteUser(email);
+
+                    if (deleted) {
+                        session.invalidate();
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=profile&error=delete_failed");
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/UserController?action=login");
                 }
             } else if ("makePremium".equals(action)) {
 
