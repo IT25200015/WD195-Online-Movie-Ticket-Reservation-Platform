@@ -24,36 +24,19 @@ public class UserDAOFile implements UserDAO {
 
     @Override
     public boolean registerUser(User user) {
-        int newId = 1;
-        File file = new File(filePath);
+        boolean saved = appendUserToFile(new File(filePath), user);
 
-        //  Read the file to find the highest ID currently used
-        if (file.exists()) {
-            try (Scanner scanner = new Scanner(file)) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    if (line.trim().isEmpty()) continue;
-
-                    String[] parts = line.split("\\|");
-
-                    if (parts.length >= 1) {
-                        try {
-                            // The ID is the first part
-                            int currentId = Integer.parseInt(parts[0]);
-                            if (currentId >= newId) {
-                                newId = currentId + 1; // Increment ID
-                            }
-                        } catch (NumberFormatException e) {
-                        }
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        // Keep source data in sync when running from a deployed path.
+        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
+            saved = appendUserToFile(new File(DEFAULT_FILE_PATH), user) || saved;
         }
 
-        // Save the new user with the generated ID
-        try (FileWriter writer = new FileWriter(filePath, true)) {
+        return saved;
+    }
+
+    private boolean appendUserToFile(File file, User user) {
+        // Save the new user without any numeric ID
+        try (FileWriter writer = new FileWriter(file, true)) {
             // Check if the user is a Customer using instanceof
             // If it is a Customer, cast it and get the membership
             // If it is an Admin, just write "N/A"
@@ -63,8 +46,8 @@ public class UserDAOFile implements UserDAO {
                 membershipValue = customer.getMembership();
             }
 
-            // ID|Name|Email|Password|Role|MobileNumber|DOB|Gender|Membership
-            String userData = newId + "|" + user.getName() + "|" + user.getEmail() + "|" + user.getPassword() + "|" + user.getRole() + "|" + user.getMobileNumber() + "|" + user.getDob() + "|" + user.getGender() + "|" + membershipValue + "\n";
+            // Name|Email|Password|Role|MobileNumber|DOB|Gender|Membership
+            String userData = user.getName() + "|" + user.getEmail() + "|" + user.getPassword() + "|" + user.getRole() + "|" + user.getMobileNumber() + "|" + user.getDob() + "|" + user.getGender() + "|" + membershipValue + "\n";
             writer.write(userData);
             return true;
         } catch (IOException e) {
@@ -86,26 +69,25 @@ public class UserDAOFile implements UserDAO {
 
                 String[] parts = line.split("\\|");
 
-                //  ID, Name, Email, Password, Role, MobileNumber, DOB, Gender, Membership
-                if (parts.length >= 9) {
-                    int userId = Integer.parseInt(parts[0]); // Get ID from file
-                    String name = parts[1];
-                    String storedEmail = parts[2];
-                    String storedPass = parts[3];
-                    String role = parts[4];
-                    String mobileNumber = parts[5];
-                    String dob = parts[6];
-                    String gender = parts[7];
-                    String membership = parts[8];
+                //  Name, Email, Password, Role, MobileNumber, DOB, Gender, Membership
+                if (parts.length >= 8) {
+                    String name = parts[0];
+                    String storedEmail = parts[1];
+                    String storedPass = parts[2];
+                    String role = parts[3];
+                    String mobileNumber = parts[4];
+                    String dob = parts[5];
+                    String gender = parts[6];
+                    String membership = parts[7];
 
                     // Check if email and password match
-                    if (storedEmail.equals(email) && storedPass.equals(password)) {
+                    if (storedEmail.trim().equals(email.trim()) && storedPass.equals(password)) {
 
                         // Return correct user type (Admin or Customer)
                         if (role.equalsIgnoreCase("Admin")) {
-                            return new Admin(userId, name, storedEmail, storedPass, mobileNumber, dob, gender);
+                            return new Admin(name, storedEmail, storedPass, mobileNumber, dob, gender);
                         }
-                        return new Customer(userId, name, storedEmail, storedPass, mobileNumber, dob, gender, membership);
+                        return new Customer(name, storedEmail, storedPass, mobileNumber, dob, gender, membership);
                     }
                 }
             }
@@ -117,11 +99,22 @@ public class UserDAOFile implements UserDAO {
 
     @Override
     public boolean updateUser(User user) {
-        File file = new File(filePath);
+        boolean updated = updateUserInFile(new File(filePath), user);
+
+        // Keep source data in sync when running from a deployed path.
+        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
+            updated = updateUserInFile(new File(DEFAULT_FILE_PATH), user) || updated;
+        }
+
+        return updated;
+    }
+
+    private boolean updateUserInFile(File file, User user) {
         if (!file.exists()) return false;
 
         java.util.List<String> lines = new java.util.ArrayList<>();
         boolean updated = false;
+        String inputEmail = user.getEmail().trim();
 
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
@@ -129,9 +122,9 @@ public class UserDAOFile implements UserDAO {
                 if (line.trim().isEmpty()) continue;
 
                 String[] parts = line.split("\\|");
-                if (parts.length >= 5) {
-                    int id = Integer.parseInt(parts[0]);
-                    if (id == user.getUserId()) {
+                if (parts.length >= 2) {
+                    String storedEmail = parts[1].trim();
+                    if (storedEmail.equals(inputEmail)) {
                         String membershipValue = "N/A";
                         // If the user is a Customer, get the membership
                         if (user instanceof Customer) {
@@ -140,7 +133,7 @@ public class UserDAOFile implements UserDAO {
                         }
 
                         // Update with new data
-                        String updatedLine = id + "|" + user.getName() + "|" + user.getEmail() + "|" + user.getPassword() + "|" + user.getRole() + "|" + user.getMobileNumber() + "|" + user.getDob() + "|" + user.getGender() + "|" + membershipValue;
+                        String updatedLine = user.getName() + "|" + user.getEmail() + "|" + user.getPassword() + "|" + user.getRole() + "|" + user.getMobileNumber() + "|" + user.getDob() + "|" + user.getGender() + "|" + membershipValue;
                         lines.add(updatedLine);
                         updated = true;
                     } else {
@@ -156,7 +149,7 @@ public class UserDAOFile implements UserDAO {
         }
 
         if (updated) {
-            try (FileWriter writer = new FileWriter(filePath, false)) {
+            try (FileWriter writer = new FileWriter(file, false)) {
                 for (String l : lines) {
                     writer.write(l + "\n");
                 }
@@ -198,9 +191,9 @@ public class UserDAOFile implements UserDAO {
                 if (line.trim().isEmpty()) continue;
 
                 String[] parts = line.split("\\|");
-                if (parts.length >= 3) {
-                    String storedEmail = parts[2].trim();
-                    if (storedEmail.equalsIgnoreCase(normalizedEmail)) {
+                if (parts.length >= 2) {
+                    String storedEmail = parts[1].trim();
+                    if (storedEmail.equals(normalizedEmail)) {
                         deleted = true;
                         continue;
                     }
@@ -238,21 +231,20 @@ public class UserDAOFile implements UserDAO {
                 if (line.trim().isEmpty()) continue;
 
                 String[] parts = line.split("\\|");
-                if (parts.length >= 9) {
-                    int userId = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String emailStr = parts[2];
-                    String pass = parts[3];
-                    String role = parts[4];
-                    String mobile = parts[5];
-                    String dob = parts[6];
-                    String gender = parts[7];
-                    String authLevel = parts[8];
+                if (parts.length >= 8) {
+                    String name = parts[0];
+                    String emailStr = parts[1];
+                    String pass = parts[2];
+                    String role = parts[3];
+                    String mobile = parts[4];
+                    String dob = parts[5];
+                    String gender = parts[6];
+                    String authLevel = parts[7];
 
                     if (role.equalsIgnoreCase("Admin")) {
-                        users.add(new Admin(userId, name, emailStr, pass, mobile, dob, gender));
+                        users.add(new Admin(name, emailStr, pass, mobile, dob, gender));
                     } else {
-                        users.add(new Customer(userId, name, emailStr, pass, mobile, dob, gender, authLevel));
+                        users.add(new Customer(name, emailStr, pass, mobile, dob, gender, authLevel));
                     }
                 }
             }

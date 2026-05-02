@@ -183,7 +183,7 @@ public class UserController extends HttpServlet {
 
                     if (deleted) {
                         session.invalidate();
-                        response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=login&msg=profileDeleted");
                     } else {
                         response.sendRedirect(request.getContextPath() + "/UserController?action=profile&error=delete_failed");
                     }
@@ -198,14 +198,13 @@ public class UserController extends HttpServlet {
 
                 if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
 
-                    String targetUserId = request.getParameter("userId");
+                    String targetEmail = request.getParameter("email");
 
-                    if (targetUserId != null && !targetUserId.isEmpty()) {
-                        int id = Integer.parseInt(targetUserId);
+                    if (targetEmail != null && !targetEmail.isEmpty()) {
                         java.util.List<User> allUsers = userDAO.getAllUsers();
                         for (User u : allUsers) {
 
-                            if (u.getUserId() == id) {
+                            if (u.getEmail().trim().equals(targetEmail.trim())) {
 
                                 //  Make sure this user is a Customer (Admins can't be Premium)
                                 if (u instanceof Customer) {
