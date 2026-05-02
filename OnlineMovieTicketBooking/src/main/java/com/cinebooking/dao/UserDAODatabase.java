@@ -73,7 +73,6 @@ public class UserDAODatabase implements  UserDAO  {
             // If we found a user in the database
             if (rs.next()) {
                 // Get data from the database row
-                int dbId = rs.getInt("user_id");
                 String dbName = rs.getString("name");
                 String dbRole = rs.getString("role");
                 String dbMobile = rs.getString("mobile_number");
@@ -89,9 +88,9 @@ public class UserDAODatabase implements  UserDAO  {
 
                 // Check the role and create the object
                 if (dbRole.equalsIgnoreCase("ADMIN")) {
-                    user = new Admin(dbId, dbName, email, password, dbMobile, dbDob, dbGender);
+                    user = new Admin(dbName, email, password, dbMobile, dbDob, dbGender);
                 } else {
-                    user = new Customer(dbId, dbName, email, password, dbMobile, dbDob, dbGender, dbMembership);
+                    user = new Customer(dbName, email, password, dbMobile, dbDob, dbGender, dbMembership);
                 }
             }
 
