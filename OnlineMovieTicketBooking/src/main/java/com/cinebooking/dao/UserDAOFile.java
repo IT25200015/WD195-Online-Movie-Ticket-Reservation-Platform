@@ -11,12 +11,21 @@ import java.util.Scanner;
 
 public class UserDAOFile implements UserDAO {
 
-    private static final String FILE_PATH = "C:\\Users\\USER\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\users.txt";
+    private static final String DEFAULT_FILE_PATH = "C:\\Users\\USER\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\users.txt";
+    private final String filePath;
+
+    public UserDAOFile() {
+        this.filePath = DEFAULT_FILE_PATH;
+    }
+
+    public UserDAOFile(String filePath) {
+        this.filePath = (filePath == null || filePath.trim().isEmpty()) ? DEFAULT_FILE_PATH : filePath;
+    }
 
     @Override
     public boolean registerUser(User user) {
         int newId = 1;
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
 
         //  Read the file to find the highest ID currently used
         if (file.exists()) {
@@ -44,7 +53,7 @@ public class UserDAOFile implements UserDAO {
         }
 
         // Save the new user with the generated ID
-        try (FileWriter writer = new FileWriter(FILE_PATH, true)) {
+        try (FileWriter writer = new FileWriter(filePath, true)) {
             // Check if the user is a Customer using instanceof
             // If it is a Customer, cast it and get the membership
             // If it is an Admin, just write "N/A"
@@ -66,7 +75,7 @@ public class UserDAOFile implements UserDAO {
 
     @Override
     public User loginUser(String email, String password) {
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
 
         if (!file.exists()) return null; // No file means no users yet
 
@@ -108,7 +117,7 @@ public class UserDAOFile implements UserDAO {
 
     @Override
     public boolean updateUser(User user) {
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         if (!file.exists()) return false;
 
         java.util.List<String> lines = new java.util.ArrayList<>();
@@ -147,7 +156,7 @@ public class UserDAOFile implements UserDAO {
         }
 
         if (updated) {
-            try (FileWriter writer = new FileWriter(FILE_PATH, false)) {
+            try (FileWriter writer = new FileWriter(filePath, false)) {
                 for (String l : lines) {
                     writer.write(l + "\n");
                 }
@@ -162,13 +171,65 @@ public class UserDAOFile implements UserDAO {
 
     @Override
     public boolean deleteUser(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        String normalizedEmail = email.trim();
+        boolean deleted = deleteUserFromFile(new File(filePath), normalizedEmail);
+
+        // Keep source data in sync when running from a deployed path.
+        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
+            deleted = deleteUserFromFile(new File(DEFAULT_FILE_PATH), normalizedEmail) || deleted;
+        }
+
+        return deleted;
+    }
+
+    private boolean deleteUserFromFile(File file, String normalizedEmail) {
+        if (!file.exists()) return false;
+
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        boolean deleted = false;
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("\\|");
+                if (parts.length >= 3) {
+                    String storedEmail = parts[2].trim();
+                    if (storedEmail.equalsIgnoreCase(normalizedEmail)) {
+                        deleted = true;
+                        continue;
+                    }
+                }
+                lines.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (deleted) {
+            try (FileWriter writer = new FileWriter(file, false)) {
+                for (String l : lines) {
+                    writer.write(l + "\n");
+                }
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         return false;
     }
 
     @Override
     public java.util.List<User> getAllUsers() {
         java.util.List<User> users = new java.util.ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         if (!file.exists()) return users;
 
         try (Scanner scanner = new Scanner(file)) {
