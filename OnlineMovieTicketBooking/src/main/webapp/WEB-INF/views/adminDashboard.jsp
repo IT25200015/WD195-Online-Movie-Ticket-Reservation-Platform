@@ -117,6 +117,34 @@
 
     <div class="glass-card">
         <h3 class="mb-4" style="font-weight: 300; letter-spacing: 1px;">ALL USERS</h3>
+
+        <%
+            String searchQuery = request.getParameter("searchQuery");
+            if (searchQuery == null) {
+                searchQuery = "";
+            }
+        %>
+        <form class="row g-2 align-items-center mb-4" method="GET" action="UserController">
+            <input type="hidden" name="action" value="adminDashboard">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark text-white border-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                        type="text"
+                        class="form-control bg-dark text-white border-0"
+                        name="searchQuery"
+                        placeholder="Search by Name or Email..."
+                        value="<%= searchQuery %>">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-50">Search</button>
+                <a href="UserController?action=adminDashboard" class="btn btn-outline-light w-50">Clear</a>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead>

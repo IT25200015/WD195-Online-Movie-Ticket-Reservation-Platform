@@ -37,6 +37,20 @@ public class UserController extends HttpServlet {
                 UserDAO userDAO = new UserDAOFile();
                 java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
 
+                String searchQuery = request.getParameter("searchQuery");
+                if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                    String query = searchQuery.trim().toLowerCase();
+                    java.util.List<com.cinebooking.models.User> filteredUsers = new java.util.ArrayList<>();
+                    for (com.cinebooking.models.User u : userList) {
+                        String name = u.getName() != null ? u.getName().toLowerCase() : "";
+                        String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
+                        if (name.contains(query) || email.contains(query)) {
+                            filteredUsers.add(u);
+                        }
+                    }
+                    userList = filteredUsers;
+                }
+
                 // Sort so Admin users come first, Customer users come after
                 java.util.Collections.sort(userList, new java.util.Comparator<com.cinebooking.models.User>() {
                     @Override
