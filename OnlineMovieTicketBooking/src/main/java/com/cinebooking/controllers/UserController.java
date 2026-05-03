@@ -214,6 +214,36 @@ public class UserController extends HttpServlet {
                 } else {
                     response.sendRedirect(request.getContextPath() + "/UserController?action=login");
                 }
+            } else if ("deleteUserByAdmin".equals(action)) {
+                // Delete a user by the Admin
+                HttpSession session = request.getSession();
+                User loggedUser = (User) session.getAttribute("user");
+
+                if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+                    String email = request.getParameter("email");
+
+                    // Validate the email parameter
+                    if (email == null || email.trim().isEmpty()) {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=adminDashboard&error=delete_failed");
+                        return;
+                    }
+
+                    // Prevent the admin from deleting their own account
+                    if (email.trim().equalsIgnoreCase(loggedUser.getEmail().trim())) {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=adminDashboard&error=cannot_delete_self");
+                        return;
+                    }
+
+                    boolean deleted = userDAO.deleteUser(email.trim());
+
+                    if (deleted) {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=adminDashboard&msg=userDeleted");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=adminDashboard&error=delete_failed");
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                }
             } else if ("makePremium".equals(action)) {
 
                 // Get the current user from the session

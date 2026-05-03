@@ -194,13 +194,26 @@
                                                 <% } else { %>
                                                     <span class="text-success"><i class="bi bi-star-fill"></i> Premium Active</span>
                                                 <% } %>
+                                                <!-- Delete button for Customer -->
+                                                <form action="UserController" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                    <input type="hidden" name="action" value="deleteUserByAdmin">
+                                                    <input type="hidden" name="email" value="<%= c.getEmail() %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm ms-1">Delete 🗑️</button>
+                                                </form>
                                             </td>
                                     <%
                                         } else {
                                             // If the user is an Admin, they don't have a membership
                                     %>
                                             <td class="text-muted">N/A</td>
-                                            <td><span class="text-muted">-</span></td>
+                                            <td>
+                                                <!-- Delete button for Admin -->
+                                                <form action="UserController" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                    <input type="hidden" name="action" value="deleteUserByAdmin">
+                                                    <input type="hidden" name="email" value="<%= u.getEmail() %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete 🗑️</button>
+                                                </form>
+                                            </td>
                                     <%
                                         }
                                     %>
