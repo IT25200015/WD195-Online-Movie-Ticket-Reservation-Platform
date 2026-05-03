@@ -3,6 +3,7 @@
 <%@ page import="com.cinebooking.models.User" %>
 <%@ page import="com.cinebooking.models.Customer" %>
 <%@ page import="com.cinebooking.models.Admin" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
     // Security Check: Only allow access if the session user is not null and their role is "Admin"
@@ -157,80 +158,52 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        // The UserController receives the request, sets "userList", and uses RequestDispatcher to forward the list here.
-                        List<User> userList = (List<User>) request.getAttribute("userList");
-                        if (userList != null && !userList.isEmpty()) {
-                            // Iterate through the userList using a standard Java loop
-                            for (User u : userList) {
-                    %>
-                                <tr>
-                                    <td><%= u.getName() %></td>
-                                    <td><%= u.getEmail() %></td>
-                                    <td>
-                                        <span class="badge <%= "Admin".equals(u.getRole()) ? "bg-danger" : "bg-primary" %>">
-                                            <%= u.getRole() %>
+                    <c:if test="${not empty userList}">
+                        <c:forEach var="user" items="${userList}">
+                            <tr>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td>
+                                    <span class="badge ${user.role == 'Admin' ? 'bg-danger' : 'bg-primary'}">
+                                        ${user.role}
+                                    </span>
+                                </td>
+                                <td>
+                                    <c:if test="${user.role == 'Admin'}">
+                                        <span class="text-muted">N/A</span>
+                                    </c:if>
+                                    <c:if test="${user.role == 'Customer'}">
+                                        <span class="badge ${user.membership == 'Premium' ? 'bg-success' : 'bg-secondary'}">
+                                            ${user.membership}
                                         </span>
-                                    </td>
-
-                                    <%
-                                        // The 'instanceof' keyword checks if 'u' is actually a Customer object
-                                        if (u instanceof Customer) {
-                                            // If true, we cast 'u' to a Customer so we can use getMembership()
-                                            Customer c = (Customer) u;
-                                    %>
-                                            <td>
-                                                <span class="badge <%= "Premium".equals(c.getMembership()) ? "bg-success" : "bg-secondary" %>">
-                                                    <%= c.getMembership() %>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <% if ("Regular".equals(c.getMembership())) { %>
-                                                    <!-- Inline form to make the customer premium -->
-                                                    <form action="UserController?action=makePremium" method="POST" class="d-inline">
-                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
-                                                        <button type="submit" class="btn custom-btn-warning">Make Premium 🌟</button>
-                                                    </form>
-                                                    <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                        <input type="hidden" name="action" value="deleteUserByAdmin">
-                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
-                                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Delete</button>
-                                                    </form>
-                                                <% } else { %>
-                                                    <span class="text-success"><i class="bi bi-star-fill"></i> Premium Active</span>
-                                                    <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                        <input type="hidden" name="action" value="deleteUserByAdmin">
-                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
-                                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Delete</button>
-                                                    </form>
-                                                <% } %>
-                                            </td>
-                                    <%
-                                        } else {
-                                            // If the user is an Admin, they don't have a membership
-                                    %>
-                                            <td class="text-muted">N/A</td>
-                                            <td>
-                                                <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                    <input type="hidden" name="action" value="deleteUserByAdmin">
-                                                    <input type="hidden" name="email" value="<%= u.getEmail() %>">
-                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                </form>
-                                            </td>
-                                    <%
-                                        }
-                                    %>
-                                </tr>
-                    <%
-                            }
-                        } else {
-                    %>
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <c:if test="${user.role == 'Admin'}">
+                                        <span class="text-muted">N/A</span>
+                                    </c:if>
+                                    <c:if test="${user.role == 'Customer'}">
+                                        <a href="UserController?action=deleteUserByAdmin&email=${user.email}"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                        <c:if test="${user.role == 'Customer' and user.membership == 'Regular'}">
+                                            <a href="UserController?action=toggleMembership&email=${user.email}&status=Premium"
+                                               class="btn btn-success btn-sm ms-2">Make Premium</a>
+                                        </c:if>
+                                        <c:if test="${user.role == 'Customer' and user.membership == 'Premium'}">
+                                            <a href="UserController?action=toggleMembership&email=${user.email}&status=Regular"
+                                               class="btn btn-warning btn-sm ms-2">Remove Premium</a>
+                                        </c:if>
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty userList}">
                         <tr>
                             <td colspan="5" class="text-center">No users found.</td>
                         </tr>
-                    <%
-                        }
-                    %>
+                    </c:if>
                 </tbody>
             </table>
         </div>

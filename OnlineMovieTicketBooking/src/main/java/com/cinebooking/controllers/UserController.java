@@ -89,6 +89,24 @@ public class UserController extends HttpServlet {
             } else {
                 response.sendRedirect("UserController?action=login");
             }
+        } else if ("toggleMembership".equals(action)) {
+            HttpSession session = request.getSession();
+            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+            if (loggedUser == null || !"Admin".equals(loggedUser.getRole())) {
+                response.sendRedirect("UserController?action=login");
+                return;
+            }
+
+            String email = request.getParameter("email");
+            String status = request.getParameter("status");
+
+            if (email != null && !email.trim().isEmpty() && status != null && !status.trim().isEmpty()) {
+                UserDAOFile userDAO = new UserDAOFile();
+                userDAO.changeMembership(email, status);
+            }
+
+            response.sendRedirect("UserController?action=adminDashboard");
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
@@ -276,4 +294,3 @@ public class UserController extends HttpServlet {
         }
     }
 }
-

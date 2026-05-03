@@ -111,6 +111,12 @@ public class UserDAODatabase implements  UserDAO  {
     }
 
     @Override
+    public boolean updateMembership(String email, String newStatus) {
+        return false;
+    }
+
+
+    @Override
     public boolean deleteUser(String email) {
         return false;
     }

@@ -11,8 +11,14 @@ import java.util.Scanner;
 
 public class UserDAOFile implements UserDAO {
 
-    private static final String DEFAULT_FILE_PATH = "C:\\Users\\USER\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\users.txt";
+    private static final String DEFAULT_FILE_PATH = "C:/Users/USER/OneDrive/Desktop/WD195-Online-Movie-Ticket-Reservation-Platform/OnlineMovieTicketBooking/src/main/webapp/data/users.txt";
     private final String filePath;
+    private java.util.List<User> cachedUsers;
+
+    @Override
+    public boolean updateMembership(String email, String newStatus) {
+        return false;
+    }
 
     public UserDAOFile() {
         this.filePath = DEFAULT_FILE_PATH;
@@ -107,6 +113,111 @@ public class UserDAOFile implements UserDAO {
         }
 
         return updated;
+    }
+
+    public void changeMembership(String email, String newStatus) {
+        if (email == null || email.trim().isEmpty() || newStatus == null || newStatus.trim().isEmpty()) {
+            return;
+        }
+
+        String absolutePath = "C:/Users/USER/OneDrive/Desktop/WD195-Online-Movie-Ticket-Reservation-Platform/OnlineMovieTicketBooking/src/main/webapp/data/users.txt";
+        File file = new File(absolutePath);
+        if (!file.exists()) {
+            return;
+        }
+
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        String inputEmail = email.trim();
+        String normalizedStatus = newStatus.trim();
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                lines.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
+            String[] parts = line.split("\\|");
+            if (parts.length >= 8 && parts[1].trim().equalsIgnoreCase(inputEmail)) {
+                parts[7] = normalizedStatus;
+                String updatedLine = parts[0] + "|" + parts[1] + "|" + parts[2] + "|" + parts[3] + "|" + parts[4] + "|" + parts[5] + "|" + parts[6] + "|" + parts[7];
+                lines.set(i, updatedLine);
+                break;
+            }
+        }
+
+        try (FileWriter writer = new FileWriter(file, false)) {
+            for (String l : lines) {
+                writer.write(l + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        if (cachedUsers != null) {
+            for (User user : cachedUsers) {
+                if (user.getEmail() != null && user.getEmail().trim().equalsIgnoreCase(inputEmail) && user instanceof Customer) {
+                    ((Customer) user).setMembership(normalizedStatus);
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean updateMembershipInFile(File file, String email, String newStatus) {
+        if (!file.exists()) return false;
+
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        boolean updated = false;
+        String inputEmail = email.trim();
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("\\|");
+                if (parts.length >= 8) {
+                    String storedEmail = parts[1].trim();
+                    if (storedEmail.equalsIgnoreCase(inputEmail)) {
+                        parts[7] = newStatus.trim();
+                        String updatedLine = parts[0] + "|" + parts[1] + "|" + parts[2] + "|" + parts[3] + "|" + parts[4] + "|" + parts[5] + "|" + parts[6] + "|" + parts[7];
+                        lines.add(updatedLine);
+                        updated = true;
+                    } else {
+                        lines.add(line);
+                    }
+                } else {
+                    lines.add(line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (updated) {
+            try (FileWriter writer = new FileWriter(file, false)) {
+                for (String l : lines) {
+                    writer.write(l + "\n");
+                }
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 
     private boolean updateUserInFile(File file, User user) {
@@ -251,6 +362,8 @@ public class UserDAOFile implements UserDAO {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        this.cachedUsers = users;
         return users;
     }
 }
