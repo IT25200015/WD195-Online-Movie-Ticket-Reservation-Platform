@@ -191,8 +191,18 @@
                                                         <input type="hidden" name="email" value="<%= c.getEmail() %>">
                                                         <button type="submit" class="btn custom-btn-warning">Make Premium 🌟</button>
                                                     </form>
+                                                    <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                        <input type="hidden" name="action" value="deleteUserByAdmin">
+                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
+                                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Delete</button>
+                                                    </form>
                                                 <% } else { %>
                                                     <span class="text-success"><i class="bi bi-star-fill"></i> Premium Active</span>
+                                                    <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                        <input type="hidden" name="action" value="deleteUserByAdmin">
+                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
+                                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Delete</button>
+                                                    </form>
                                                 <% } %>
                                             </td>
                                     <%
@@ -200,7 +210,13 @@
                                             // If the user is an Admin, they don't have a membership
                                     %>
                                             <td class="text-muted">N/A</td>
-                                            <td><span class="text-muted">-</span></td>
+                                            <td>
+                                                <form action="UserController" method="GET" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                    <input type="hidden" name="action" value="deleteUserByAdmin">
+                                                    <input type="hidden" name="email" value="<%= u.getEmail() %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
                                     <%
                                         }
                                     %>

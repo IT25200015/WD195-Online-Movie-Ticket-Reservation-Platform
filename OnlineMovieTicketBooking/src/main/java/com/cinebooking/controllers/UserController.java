@@ -67,6 +67,28 @@ public class UserController extends HttpServlet {
                 // If not Admin, redirect to login
                 response.sendRedirect("UserController?action=login");
             }
+        } else if ("deleteUserByAdmin".equals(action)) {
+            HttpSession session = request.getSession();
+            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+            if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+                String email = request.getParameter("email");
+                boolean deleted = false;
+
+                if (email != null && !email.trim().isEmpty()) {
+                    String dataFilePath = getServletContext().getRealPath("/data/users.txt");
+                    UserDAO userDAO = new UserDAOFile(dataFilePath);
+                    deleted = userDAO.deleteUser(email);
+                }
+
+                if (deleted) {
+                    response.sendRedirect("UserController?action=adminDashboard&msg=deleteSuccess");
+                } else {
+                    response.sendRedirect("UserController?action=adminDashboard&error=deleteFailed");
+                }
+            } else {
+                response.sendRedirect("UserController?action=login");
+            }
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
@@ -254,3 +276,4 @@ public class UserController extends HttpServlet {
         }
     }
 }
+
