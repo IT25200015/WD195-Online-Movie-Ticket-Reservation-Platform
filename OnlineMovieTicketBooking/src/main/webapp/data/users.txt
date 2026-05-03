@@ -1,5 +1,7 @@
-Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-06|Male|Regular
-Sajitha Chamod Ru|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-11|Male|Regular
+Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-06|Male|Premium
+Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-06|Male|Premium
 Sajitha Chamod Ruwanpura|sajitha13579@gmail.com|12345|Customer|1234567323|2026-05-13|Male|Premium
-Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Regular
-Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|123456|Admin|1234567323|2026-05-19|Male|N/A
+Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Premium
+Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Premium
+Sajitha C Ruwanpura|sajithachamod1@gmail.com|123456|Admin|1234567|2026-05-08|Male|N/A
+Sajitha Chamod Ruwanpura|sajithachamod13@gmail.com|1234567|Admin|1234567323|2026-05-28|Male|N/A

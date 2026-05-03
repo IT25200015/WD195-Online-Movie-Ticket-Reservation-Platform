@@ -36,6 +36,16 @@ public class UserController extends HttpServlet {
             if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
                 UserDAO userDAO = new UserDAOFile();
                 java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
+
+                // Sort so Admin users come first, Customer users come after
+                java.util.Collections.sort(userList, new java.util.Comparator<com.cinebooking.models.User>() {
+                    @Override
+                    public int compare(com.cinebooking.models.User u1, com.cinebooking.models.User u2) {
+                        int p1 = "Admin".equals(u1.getRole()) ? 0 : 1;
+                        int p2 = "Admin".equals(u2.getRole()) ? 0 : 1;
+                        return Integer.compare(p1, p2);
+                    }
+                });
                 // Put the list inside the request object
                 request.setAttribute("userList", userList);
                 request.getRequestDispatcher("/WEB-INF/views/adminDashboard.jsp").forward(request, response);
