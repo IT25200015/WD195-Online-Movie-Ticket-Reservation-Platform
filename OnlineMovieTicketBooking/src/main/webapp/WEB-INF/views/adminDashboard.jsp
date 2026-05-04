@@ -121,7 +121,6 @@
             <table class="table table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -138,7 +137,6 @@
                             for (User u : userList) {
                     %>
                                 <tr>
-                                    <td><%= u.getUserId() %></td>
                                     <td><%= u.getName() %></td>
                                     <td><%= u.getEmail() %></td>
                                     <td>
@@ -162,7 +160,7 @@
                                                 <% if ("Regular".equals(c.getMembership())) { %>
                                                     <!-- Inline form to make the customer premium -->
                                                     <form action="UserController?action=makePremium" method="POST" class="d-inline">
-                                                        <input type="hidden" name="userId" value="<%= c.getUserId() %>">
+                                                        <input type="hidden" name="email" value="<%= c.getEmail() %>">
                                                         <button type="submit" class="btn custom-btn-warning">Make Premium 🌟</button>
                                                     </form>
                                                 <% } else { %>
@@ -184,7 +182,7 @@
                         } else {
                     %>
                         <tr>
-                            <td colspan="6" class="text-center">No users found.</td>
+                            <td colspan="5" class="text-center">No users found.</td>
                         </tr>
                     <%
                         }

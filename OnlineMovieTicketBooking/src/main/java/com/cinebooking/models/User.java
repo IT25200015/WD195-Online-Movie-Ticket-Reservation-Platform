@@ -2,7 +2,6 @@ package com.cinebooking.models;
 
 public abstract class User {
     // Encapsulation use for data privacy and security
-    private int userId;
     private String name;
     private String email;
     private String password;
@@ -17,8 +16,7 @@ public abstract class User {
 
     }
 //Parameterized constructor for add user details
-    public User(int userId, String name, String email, String password, String role, String mobileNumber, String dob, String gender) {
-        this.userId = userId;
+    public User(String name, String email, String password, String role, String mobileNumber, String dob, String gender) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -28,10 +26,6 @@ public abstract class User {
         this.gender = gender;
     }
 // Getters and setters for accessing and modifying user details
-    public int getUserId() {
-        return userId;
-    }
-
     public String getName() {
         return name;
     }
@@ -46,10 +40,6 @@ public abstract class User {
 
     public String getRole() {
         return role;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public void setName(String name) {
@@ -89,9 +79,8 @@ public abstract class User {
     public abstract void displayDashboard();
 
     public void showUserDetails() {
-        System.out.println("User ID: " + userId);
-        System.out.println("Name: " + name);
         System.out.println("Email: " + email);
+        System.out.println("Name: " + name);
         System.out.println("Role: " + role);
     }
 
