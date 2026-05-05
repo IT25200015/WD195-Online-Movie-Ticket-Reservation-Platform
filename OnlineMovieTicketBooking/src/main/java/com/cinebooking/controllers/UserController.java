@@ -1,7 +1,6 @@
 package com.cinebooking.controllers;
 
 import com.cinebooking.dao.UserDAO;
-import com.cinebooking.dao.UserDAODatabase;
 import com.cinebooking.dao.UserDAOFile;
 import com.cinebooking.models.Admin;
 import com.cinebooking.models.Customer;
@@ -126,7 +125,6 @@ public class UserController extends HttpServlet {
 
         String dataFilePath = getServletContext().getRealPath("/data/users.txt");
         UserDAO userDAO = new UserDAOFile(dataFilePath); // Use this for File storage (users.txt)
-       // UserDAO userDAO = new UserDAODatabase(); // Use this for Database storage
 
         try {
             // register a new user
