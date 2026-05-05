@@ -11,7 +11,7 @@
     <h1 class="display-4 fw-bold">Welcome to CineBooking</h1>
     <p class="lead">The best place to book your favorite movie tickets online!</p>
     <hr class="my-4">
-    <a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/UserController?action=register" role="button">Register Now</a>
+    <a class="btn btn-primary btn-lg" href="register.jsp" role="button">Register Now</a>
 </div>
 
 <%@ include file="includes/footer.jsp" %>
