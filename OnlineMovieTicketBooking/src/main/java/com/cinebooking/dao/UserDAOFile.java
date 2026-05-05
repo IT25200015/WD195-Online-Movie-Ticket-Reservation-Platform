@@ -40,6 +40,55 @@ public class UserDAOFile implements UserDAO {
         return saved;
     }
 
+    @Override
+    public boolean isEmailExists(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        String normalizedEmail = email.trim();
+
+        // Check the active file first.
+        if (isEmailInFile(new File(filePath), normalizedEmail)) {
+            return true;
+        }
+
+        // If running from a deployed path, also check the source file.
+        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
+            return isEmailInFile(new File(DEFAULT_FILE_PATH), normalizedEmail);
+        }
+
+        return false;
+    }
+
+    private boolean isEmailInFile(File file, String normalizedEmail) {
+        if (!file.exists()) {
+            return false;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split("\\|");
+                if (parts.length >= 2) {
+                    String storedEmail = parts[1].trim();
+                    // Case-insensitive match for safer duplicate checks.
+                    if (storedEmail.equalsIgnoreCase(normalizedEmail)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     private boolean appendUserToFile(File file, User user) {
         // Save the new user without any numeric ID
         try (FileWriter writer = new FileWriter(file, true)) {

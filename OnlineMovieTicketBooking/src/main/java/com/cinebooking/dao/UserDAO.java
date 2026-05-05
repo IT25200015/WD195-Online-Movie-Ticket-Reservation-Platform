@@ -15,4 +15,6 @@ public interface UserDAO {
     boolean deleteUser(String email);
 
     java.util.List<User> getAllUsers();
+
+    boolean isEmailExists(String email);
 }

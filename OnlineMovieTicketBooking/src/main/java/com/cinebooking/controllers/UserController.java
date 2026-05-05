@@ -140,6 +140,13 @@ public class UserController extends HttpServlet {
                 String gender = request.getParameter("gender");
                 String adminKey = request.getParameter("adminKey");
 
+                // stop registration if the email is already used.
+                if (userDAO.isEmailExists(email)) {
+                    request.setAttribute("errorMessage", "Email already exists! Please use a different email or login.");
+                    request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                    return;
+                }
+
                 User newUser; // Polymorphism: Base class reference can point to subclass objects
 
                 if ("SLIIT2026".equals(adminKey)) {
