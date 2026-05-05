@@ -1,7 +1,6 @@
 package com.cinebooking.controllers;
 
 import com.cinebooking.dao.UserDAO;
-import com.cinebooking.dao.UserDAODatabase;
 import com.cinebooking.dao.UserDAOFile;
 import com.cinebooking.models.Admin;
 import com.cinebooking.models.Customer;
@@ -60,8 +59,8 @@ public class UserController extends HttpServlet {
         // to test
         System.out.println("Action received: " + action);
 
-         UserDAO userDAO = new UserDAOFile(); // Use this for File stroage (users.txt)
-       // UserDAO userDAO = new UserDAODatabase(); // Use this for Database storage
+        String dataFilePath = getServletContext().getRealPath("/data/users.txt");
+        UserDAO userDAO = new UserDAOFile(dataFilePath); // Use this for File storage (users.txt)
 
         try {
             // register a new user
@@ -171,6 +170,24 @@ public class UserController extends HttpServlet {
                 } else {
                     response.sendRedirect("UserController?action=login");
                 }
+            } else if ("deleteProfile".equals(action)) {
+                // Delete the currently logged-in user's profile
+                HttpSession session = request.getSession();
+                com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+                if (loggedUser != null) {
+                    String email = loggedUser.getEmail();
+                    boolean deleted = userDAO.deleteUser(email);
+
+                    if (deleted) {
+                        session.invalidate();
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=login&msg=profileDeleted");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=profile&error=delete_failed");
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                }
             } else if ("makePremium".equals(action)) {
 
                 // Get the current user from the session
@@ -179,14 +196,13 @@ public class UserController extends HttpServlet {
 
                 if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
 
-                    String targetUserId = request.getParameter("userId");
+                    String targetEmail = request.getParameter("email");
 
-                    if (targetUserId != null && !targetUserId.isEmpty()) {
-                        int id = Integer.parseInt(targetUserId);
+                    if (targetEmail != null && !targetEmail.isEmpty()) {
                         java.util.List<User> allUsers = userDAO.getAllUsers();
                         for (User u : allUsers) {
 
-                            if (u.getUserId() == id) {
+                            if (u.getEmail().trim().equals(targetEmail.trim())) {
 
                                 //  Make sure this user is a Customer (Admins can't be Premium)
                                 if (u instanceof Customer) {

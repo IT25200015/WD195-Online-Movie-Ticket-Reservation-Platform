@@ -1,5 +1,5 @@
 <%@ page import="com.cinebooking.models.User" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%
     // Security Check: Get the user from session
     User user = (User) session.getAttribute("user");
@@ -26,7 +26,7 @@
             background: #0f0c29; /* Dark background similar to your image */
             background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
             color: white;
-            height: 100 vh;
+            height: 100vh;
             display: flex;
             align-items: center;
         }
@@ -74,6 +74,20 @@
         .btn-custom-edit:hover {
             background: white;
             color: black;
+        }
+
+        .btn-offers {
+            background: #ff416c;
+            background: linear-gradient(to right, #ff4b2b, #ff416c);
+            border: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn-offers:hover {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
         }
 
         .btn-logout {
@@ -136,9 +150,17 @@
                 </div>
 
                 <div class="mt-4">
+                    <a href="promotions.jsp" class="btn btn-offers w-100 py-2 mb-3 fw-bold">
+                        VIEW OFFERS & PROMOTIONS
+                    </a>
                     <a href="UserController?action=editProfile" class="btn btn-custom-edit w-100 py-2 mb-3">
                         EDIT DETAILS
                     </a>
+                    <!-- Delete profile action (POST) with confirmation -->
+                    <form action="UserController" method="post" class="w-100 mb-3" onsubmit="return confirm('Are you sure you want to delete your profile? This cannot be undone.');">
+                        <input type="hidden" name="action" value="deleteProfile">
+                        <button type="submit" class="btn btn-danger w-100 py-2">DELETE PROFILE</button>
+                    </form>
                     <a href="UserController?action=logout" class="btn-logout">
                         Logout
                     </a>

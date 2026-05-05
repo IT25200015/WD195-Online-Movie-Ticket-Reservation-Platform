@@ -10,8 +10,8 @@ public class Customer extends User {
         this.membership = "Regular";
     }
     //Parameterized constructor to create a Customer object
-    public Customer(int userId ,String name ,String email, String password, String mobileNumber, String dob, String gender, String membership) {
-        super(userId, name, email, password, "Customer", mobileNumber, dob, gender);
+    public Customer(String name, String email, String password, String mobileNumber, String dob, String gender, String membership) {
+        super(name, email, password, "Customer", mobileNumber, dob, gender);
         this.membership = membership;
     }
 
