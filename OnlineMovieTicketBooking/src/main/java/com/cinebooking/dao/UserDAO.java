@@ -10,7 +10,11 @@ public interface UserDAO {
 
     boolean updateUser(User user);
 
+    boolean updateMembership(String email, String newStatus);
+
     boolean deleteUser(String email);
 
     java.util.List<User> getAllUsers();
+
+    boolean isEmailExists(String email);
 }

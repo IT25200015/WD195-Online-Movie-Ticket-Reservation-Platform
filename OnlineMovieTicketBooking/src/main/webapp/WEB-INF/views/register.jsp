@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +87,11 @@
                 <form action="${pageContext.request.contextPath}/UserController" method="POST">
 
                     <input type="hidden" name="action" value="register">
+
+                    <!-- Show duplicate-email error from the controller -->
+                    <c:if test="${not empty errorMessage}">
+                        <div class="mb-3 text-danger">${errorMessage}</div>
+                    </c:if>
 
                     <div class="mb-4">
                         <label class="form-label">Full name <span class="required-star">*</span></label>

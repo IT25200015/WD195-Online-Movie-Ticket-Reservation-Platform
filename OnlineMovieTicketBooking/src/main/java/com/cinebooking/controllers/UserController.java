@@ -35,6 +35,30 @@ public class UserController extends HttpServlet {
             if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
                 UserDAO userDAO = new UserDAOFile();
                 java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
+
+                String searchQuery = request.getParameter("searchQuery");
+                if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                    String query = searchQuery.trim().toLowerCase();
+                    java.util.List<com.cinebooking.models.User> filteredUsers = new java.util.ArrayList<>();
+                    for (com.cinebooking.models.User u : userList) {
+                        String name = u.getName() != null ? u.getName().toLowerCase() : "";
+                        String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
+                        if (name.contains(query) || email.contains(query)) {
+                            filteredUsers.add(u);
+                        }
+                    }
+                    userList = filteredUsers;
+                }
+
+                // Sort so Admin users come first, Customer users come after
+                java.util.Collections.sort(userList, new java.util.Comparator<com.cinebooking.models.User>() {
+                    @Override
+                    public int compare(com.cinebooking.models.User u1, com.cinebooking.models.User u2) {
+                        int p1 = "Admin".equals(u1.getRole()) ? 0 : 1;
+                        int p2 = "Admin".equals(u2.getRole()) ? 0 : 1;
+                        return Integer.compare(p1, p2);
+                    }
+                });
                 // Put the list inside the request object
                 request.setAttribute("userList", userList);
                 request.getRequestDispatcher("/WEB-INF/views/adminDashboard.jsp").forward(request, response);
@@ -42,6 +66,46 @@ public class UserController extends HttpServlet {
                 // If not Admin, redirect to login
                 response.sendRedirect("UserController?action=login");
             }
+        } else if ("deleteUserByAdmin".equals(action)) {
+            HttpSession session = request.getSession();
+            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+            if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+                String email = request.getParameter("email");
+                boolean deleted = false;
+
+                if (email != null && !email.trim().isEmpty()) {
+                    String dataFilePath = getServletContext().getRealPath("/data/users.txt");
+                    UserDAO userDAO = new UserDAOFile(dataFilePath);
+                    deleted = userDAO.deleteUser(email);
+                }
+
+                if (deleted) {
+                    response.sendRedirect("UserController?action=adminDashboard&msg=deleteSuccess");
+                } else {
+                    response.sendRedirect("UserController?action=adminDashboard&error=deleteFailed");
+                }
+            } else {
+                response.sendRedirect("UserController?action=login");
+            }
+        } else if ("toggleMembership".equals(action)) {
+            HttpSession session = request.getSession();
+            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+            if (loggedUser == null || !"Admin".equals(loggedUser.getRole())) {
+                response.sendRedirect("UserController?action=login");
+                return;
+            }
+
+            String email = request.getParameter("email");
+            String status = request.getParameter("status");
+
+            if (email != null && !email.trim().isEmpty() && status != null && !status.trim().isEmpty()) {
+                UserDAOFile userDAO = new UserDAOFile();
+                userDAO.changeMembership(email, status);
+            }
+
+            response.sendRedirect("UserController?action=adminDashboard");
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
@@ -75,6 +139,13 @@ public class UserController extends HttpServlet {
                 String dob = request.getParameter("dob");
                 String gender = request.getParameter("gender");
                 String adminKey = request.getParameter("adminKey");
+
+                // stop registration if the email is already used.
+                if (userDAO.isEmailExists(email)) {
+                    request.setAttribute("errorMessage", "Email already exists! Please use a different email or login.");
+                    request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                    return;
+                }
 
                 User newUser; // Polymorphism: Base class reference can point to subclass objects
 
