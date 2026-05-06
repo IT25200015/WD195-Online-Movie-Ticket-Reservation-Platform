@@ -2,68 +2,39 @@ package com.cinebooking.models;
 
 
 public class Movie {
-    private int movie_id;
-    private String name;
-    private String description;
-    private int duration;
+    private int id;
+    private String title;
     private String director;
-    private String category;
+    private int year;
 
-
-    public Movie(int movie_id, String name, String description, int duration, String director, String category) {
-        this.movie_id = movie_id;
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
+    public Movie(int id, String title, String director, int year) {
+        this.id = id;
+        this.title = title;
         this.director = director;
-        this.category = category;
+        this.year = year;
     }
 
-    public int getMovie_id() {
-        return movie_id;
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDirector() { return director; }
+    public int getYear() { return year; }
+
+    public void setTitle(String title) { this.title = title; }
+    public void setDirector(String director) { this.director = director; }
+    public void setYear(int year) { this.year = year; }
+
+    // Convert to file format
+    public String toFileString() {
+        return id + "," + title + "," + director + "," + year;
     }
 
-    public void setMovie_id(int movie_id) {
-        this.movie_id = movie_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public static Movie fromFileString(String line) {
+        String[] parts = line.split(",");
+        return new Movie(
+                Integer.parseInt(parts[0]),
+                parts[1],
+                parts[2],
+                Integer.parseInt(parts[3])
+        );
     }
 }
