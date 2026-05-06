@@ -46,7 +46,7 @@
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/includes/movie.jsp">Movies</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking.jsp">Book Tickets</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/promotions.jsp">Offers</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/deals">Offers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/reviews.jsp">Reviews</a></li>
                 <li class="nav-item"><a class="cinema-login-btn ms-lg-3" href="${pageContext.request.contextPath}/UserController?action=login">Login</a></li>
             </ul>
