@@ -231,6 +231,14 @@
     <div class="dashboard-card">
         <h3 class="mb-4 section-title">ALL USERS</h3>
 
+        <div class="d-flex justify-content-end mb-3">
+            <a href="${pageContext.request.contextPath}/admin/promotions"
+               class="btn"
+               style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
+                Manage Promotions
+            </a>
+        </div>
+
         <%
             String searchQuery = request.getParameter("searchQuery");
             if (searchQuery == null) {
