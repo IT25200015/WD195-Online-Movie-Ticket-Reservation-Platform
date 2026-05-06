@@ -38,7 +38,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow cinema-navbar">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/index.jsp">🎬 CineBooking</a>
+        <a class="navbar-brand fw-bold" href="index.jsp">🎬 CineBooking</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
