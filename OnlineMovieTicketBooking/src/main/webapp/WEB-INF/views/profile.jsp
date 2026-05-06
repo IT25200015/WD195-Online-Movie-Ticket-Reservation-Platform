@@ -21,35 +21,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+            --cinema-glow: rgba(229, 9, 20, 0.35);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: #0f0c29; /* Dark background similar to your image */
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            color: white;
-            height: 100vh;
+            background-color: var(--cinema-bg);
+            color: var(--cinema-text);
+            min-height: 100vh;
             display: flex;
             align-items: center;
         }
 
         .profile-card {
-            background: rgba(255, 255, 255, 0.05); /* Semi-transparent background */
-            backdrop-filter: blur(10px); /* Glass effect */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: var(--cinema-surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         }
 
         .brand-name {
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #ffffff;
+            color: var(--cinema-text);
             margin-bottom: 20px;
         }
 
         .info-label {
-            color: #bbb;
+            color: var(--cinema-muted);
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -57,49 +65,65 @@
         }
 
         .info-value {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 400;
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
+            padding-bottom: 6px;
         }
 
         .btn-custom-edit {
             background: transparent;
-            border: 1px solid white;
-            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: var(--cinema-text);
             transition: 0.3s;
         }
 
         .btn-custom-edit:hover {
-            background: white;
-            color: black;
+            background: var(--cinema-surface-2);
+            color: var(--cinema-text);
         }
 
         .btn-offers {
-            background: #ff416c;
-            background: linear-gradient(to right, #ff4b2b, #ff416c);
+            background: var(--cinema-accent);
             border: none;
-            color: white;
+            color: #ffffff;
             transition: 0.3s;
+            box-shadow: 0 10px 20px var(--cinema-glow);
         }
 
         .btn-offers:hover {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+            filter: brightness(1.05);
+            box-shadow: 0 14px 28px rgba(229, 9, 20, 0.45);
+        }
+
+        .btn-danger {
+            background-color: #c00812;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            filter: brightness(1.05);
         }
 
         .btn-logout {
-            color: #ff4b2b;
+            color: var(--cinema-accent);
             text-decoration: none;
             font-size: 0.9rem;
             transition: 0.3s;
         }
 
         .btn-logout:hover {
-            color: #ff416c;
+            color: #ff2a2a;
             text-decoration: underline;
+        }
+
+        .badge.bg-primary {
+            background-color: #2d2d2d !important;
+        }
+
+        .badge.bg-success {
+            background-color: var(--cinema-accent) !important;
         }
     </style>
 </head>

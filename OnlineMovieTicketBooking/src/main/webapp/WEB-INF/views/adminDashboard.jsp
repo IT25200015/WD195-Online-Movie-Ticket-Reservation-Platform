@@ -23,83 +23,195 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+            --cinema-glow: rgba(229, 9, 20, 0.35);
+            --cinema-border: #333333;
+            --cinema-row-hover: #2a2a2a;
+        }
+
+        html,
+        body {
+            background-color: #121212 !important;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: #0f0c29;
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            color: white;
+            background-color: #121212 !important;
+            color: var(--cinema-text);
             min-height: 100vh;
         }
 
+        .container,
+        .container-fluid,
         .dashboard-container {
-            margin-top: 40px;
-            margin-bottom: 40px;
+            background-color: #121212 !important;
+        }
+
+        .dashboard-container {
+            background-color: #121212;
+            margin-top: 48px;
+            margin-bottom: 60px;
         }
 
         .brand-title {
-            font-size: 2.5rem;
-            font-weight: 600;
+            font-size: 2.4rem;
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: #ffffff;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .brand-subtitle {
-            color: #bbb;
-            font-size: 1.1rem;
+            color: var(--cinema-muted);
+            font-size: 1rem;
             letter-spacing: 1px;
-            margin-bottom: 40px;
+            margin-bottom: 34px;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05); /* Semi-transparent background */
-            backdrop-filter: blur(10px); /* Glass effect */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        .dashboard-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         }
 
-        .table {
-            color: white;
-            border-color: rgba(255, 255, 255, 0.1);
+        .section-title {
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #ffffff;
         }
 
-        .table-hover tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
+        .custom-input {
+            background-color: var(--cinema-surface-2);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: var(--cinema-text) !important;
+            padding: 12px 14px;
+            box-shadow: none !important;
         }
 
-        .table thead th {
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            color: #bbb;
+        .custom-input::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .custom-input:focus {
+            border-color: var(--cinema-accent);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
+            outline: none;
+        }
+
+        .input-group-text.cinema-addon {
+            background-color: var(--cinema-surface-2);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--cinema-muted);
+        }
+
+        .custom-btn {
+            background-color: #e50914;
+            color: #ffffff;
+            border: none;
+            border-radius: 999px;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px var(--cinema-glow);
+            filter: brightness(1.05);
+        }
+
+        .ghost-btn {
+            background: #333333;
+            border: none;
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 12px;
+            font-size: 0.85rem;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            transition: 0.3s ease;
+        }
+
+        .ghost-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .ghost-btn.danger {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .ghost-btn.danger:hover {
+            filter: brightness(1.05);
+        }
+
+        .ghost-btn.success {
+            background-color: #198754;
+            color: #ffffff;
+        }
+
+        .ghost-btn.success:hover {
+            filter: brightness(1.05);
+        }
+
+        .ghost-btn.warn {
+            background-color: #ffc107;
+            color: #1a1a1a;
+        }
+
+        .ghost-btn.warn:hover {
+            filter: brightness(1.05);
+        }
+
+        .cinema-table {
+            background-color: #1e1e1e;
+            color: #e5e5e5;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .cinema-table thead th {
+            background-color: #2b2b2b;
+            color: #e5e5e5;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
+            border-bottom: 1px solid #333333;
         }
 
-        .table td {
-            border-color: rgba(255, 255, 255, 0.1);
+        .cinema-table tbody td {
+            background-color: #1e1e1e;
+            color: #e5e5e5;
+            border-bottom: 1px solid #333333;
             vertical-align: middle;
         }
 
-        .custom-btn-warning {
-            background: transparent;
-            border: 1px solid #ffc107;
-            color: #ffc107;
-            transition: 0.3s;
-            padding: 5px 15px;
-            font-size: 0.85rem;
-            border-radius: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .cinema-table tbody tr {
+            background-color: #1e1e1e;
         }
 
-        .custom-btn-warning:hover {
-            background: #ffc107;
-            color: #000;
+        .cinema-table tbody tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .badge.bg-primary {
+            background-color: #2d2d2d !important;
+        }
+
+        .badge.bg-success {
+            background-color: var(--cinema-accent) !important;
         }
     </style>
 </head>
@@ -116,8 +228,8 @@
         </div>
     </div>
 
-    <div class="glass-card">
-        <h3 class="mb-4" style="font-weight: 300; letter-spacing: 1px;">ALL USERS</h3>
+    <div class="dashboard-card">
+        <h3 class="mb-4 section-title">ALL USERS</h3>
 
         <%
             String searchQuery = request.getParameter("searchQuery");
@@ -129,25 +241,32 @@
             <input type="hidden" name="action" value="adminDashboard">
             <div class="col-md-8">
                 <div class="input-group">
-                    <span class="input-group-text bg-dark text-white border-0">
+                    <span class="input-group-text cinema-addon">
                         <i class="bi bi-search"></i>
                     </span>
                     <input
                         type="text"
-                        class="form-control bg-dark text-white border-0"
+                        class="form-control custom-input"
                         name="searchQuery"
                         placeholder="Search by Name or Email..."
                         value="<%= searchQuery %>">
                 </div>
             </div>
             <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-50">Search</button>
-                <a href="UserController?action=adminDashboard" class="btn btn-outline-light w-50">Clear</a>
+                <!-- Search Button -->
+                <button type="submit" class="btn" style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; padding: 10px 20px !important; border-radius: 4px !important; font-weight: bold !important; margin-right: 10px !important; cursor: pointer;">
+                    Search
+                </button>
+
+                <!-- Clear Button -->
+                <button type="button" onclick="window.location.href='UserController?action=adminDashboard'" class="btn" style="background-color: #333333 !important; color: #ffffff !important; border: none !important; padding: 10px 20px !important; border-radius: 4px !important; font-weight: bold !important; cursor: pointer;">
+                    CLEAR
+                </button>
             </div>
         </form>
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
+            <table class="table align-middle cinema-table">
                 <thead>
                     <tr>
                         <th>Name</th>
