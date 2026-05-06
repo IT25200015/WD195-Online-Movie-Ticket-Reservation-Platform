@@ -158,7 +158,7 @@ public class UserController extends HttpServlet {
                     // Create a Customer using the default constructor
                     Customer customerUser = new Customer();
                     customerUser.setRole("Customer");
-                    customerUser.setMembership("Regular");
+                    //customerUser.setMembership("Regular");
                     newUser = customerUser;
                 }
 
@@ -278,7 +278,7 @@ public class UserController extends HttpServlet {
                                 //  Make sure this user is a Customer (Admins can't be Premium)
                                 if (u instanceof Customer) {
                                     Customer customerToUpdate = (Customer) u;
-                                    customerToUpdate.setMembership("Premium");
+                                    //customerToUpdate.setMembership("Premium");
                                     // Save the updated customer back to the file
                                     userDAO.updateUser(customerToUpdate);
                                 }
