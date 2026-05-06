@@ -17,36 +17,79 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+            --cinema-glow: rgba(229, 9, 20, 0.35);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: #0f0c29;
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            color: white;
-            height: 100vh;
+            background-color: var(--cinema-bg);
+            color: var(--cinema-text);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             margin: 0;
         }
 
         .edit-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: var(--cinema-surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         }
 
         .brand-name {
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #ffffff;
+            color: var(--cinema-text);
             margin-bottom: 20px;
         }
 
-        .form-control { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; }
-        .form-control:focus { background: rgba(255, 255, 255, 0.2); color: white; box-shadow: none; border: 1px solid white; }
+        .text-secondary {
+            color: var(--cinema-muted) !important;
+        }
+
+        .form-control {
+            background: var(--cinema-surface-2);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--cinema-text);
+        }
+
+        .form-control:focus {
+            background: var(--cinema-surface-2);
+            color: var(--cinema-text);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
+            border: 1px solid var(--cinema-accent);
+        }
+
+        .btn-outline-light {
+            background-color: var(--cinema-accent);
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 10px 20px var(--cinema-glow);
+        }
+
+        .btn-outline-light:hover {
+            filter: brightness(1.05);
+            box-shadow: 0 14px 28px rgba(229, 9, 20, 0.45);
+        }
+
+        a.text-secondary {
+            color: var(--cinema-muted) !important;
+        }
+
+        a.text-secondary:hover {
+            color: var(--cinema-text) !important;
+        }
     </style>
 </head>
 <body>

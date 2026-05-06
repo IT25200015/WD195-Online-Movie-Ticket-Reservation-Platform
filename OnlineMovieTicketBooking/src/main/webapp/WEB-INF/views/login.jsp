@@ -9,9 +9,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+            --cinema-glow: rgba(229, 9, 20, 0.35);
+        }
+
         body {
-            background-color: #1c1a3b;
-            color: #ffffff;
+            background-color: var(--cinema-bg);
+            color: var(--cinema-text);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -27,52 +37,57 @@
 
         .brand-subtitle {
             font-size: 0.9rem;
-            color: #8e8eb2;
+            color: var(--cinema-muted);
             margin-bottom: 40px;
             letter-spacing: 1px;
         }
 
         .custom-input {
-            background-color: transparent !important;
-            border: none;
-            border-bottom: 1px solid #6c6a8b;
-            border-radius: 0;
-            color: white !important;
-            padding-left: 0;
-            padding-bottom: 8px;
+            background-color: var(--cinema-surface);
+            border: 1px solid transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--cinema-text) !important;
+            padding: 12px 14px;
             box-shadow: none !important;
         }
 
+        .custom-input::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
         .custom-input:focus {
-            border-bottom: 2px solid #ffffff;
+            border-color: var(--cinema-accent);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
             outline: none;
         }
 
         .form-label {
             font-size: 0.85rem;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 500;
-            color: #e0e0e0;
+            color: var(--cinema-muted);
         }
 
         .required-star {
-            color: #ff4d4d;
+            color: var(--cinema-accent);
         }
 
         .custom-btn {
-            background-color: transparent;
-            color: white;
-            border: 1px solid #ffffff;
-            border-radius: 0;
+            background-color: var(--cinema-accent);
+            color: #ffffff;
+            border: none;
+            border-radius: 999px;
             padding: 12px;
-            font-weight: bold;
+            font-weight: 700;
             letter-spacing: 1px;
-            transition: 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
         }
 
         .custom-btn:hover {
-            background-color: #ffffff;
-            color: #1c1a3b;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px var(--cinema-glow);
+            filter: brightness(1.05);
         }
     </style>
 </head>

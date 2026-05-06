@@ -27,7 +27,7 @@
             min-height: 420px;
             display: grid;
             align-items: center;
-            background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.85) 20%, rgba(0, 0, 0, 0.45) 65%),
+            background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.72) 20%, rgba(0, 0, 0, 0.3) 65%),
                 url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1600&auto=format&fit=crop");
             background-size: cover;
             background-position: center;
@@ -39,7 +39,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.7));
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
         }
 
         .hero-content {
