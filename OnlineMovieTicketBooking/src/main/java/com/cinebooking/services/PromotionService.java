@@ -13,9 +13,9 @@ public class PromotionService {
     private String filePath;
 
     public PromotionService(String rootPath) {
-        // Pointing directly to the absolute project path so changes show up in IntelliJ
-        // instead of Tomcat's temporary deployment webapps folder.
-        this.filePath = "C:\\Users\\User\\Downloads\\New folder (2)\\WD195-Online-Movie-Ticket-Reservation-Platform-main\\OnlineMovieTicketBooking\\data\\promotions.txt";
+        // Build a webapp-relative data path for safe deployments.
+        File dataFile = new File(rootPath, "data" + File.separator + "promotions.txt");
+        this.filePath = dataFile.getPath();
         ensureFileExists();
     }
 

@@ -15,10 +15,10 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="modern-ui bg-light">
+<body class="modern-ui">
 
     <!-- Top Navbar Placeholder -->
-    <nav class="navbar navbar-expand-lg navbar-dark border-bottom" style="background: var(--text-main)">
+    <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-film text-warning me-2"></i>CineBooking Admin</a>
             <div class="d-flex text-white opacity-75">
@@ -31,7 +31,7 @@
         
         <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom">
             <div>
-                <a href="${pageContext.request.contextPath}/admin/promotions" class="btn btn-sm btn-outline-secondary mb-2 rounded-pill">
+                <a href="${pageContext.request.contextPath}/admin/promotions" class="btn btn-sm btn-secondary-action mb-2 rounded-pill">
                     <i class="fa-solid fa-arrow-left me-1"></i> Back to Management
                 </a>
                 <h2 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Performance Overview</h2>
@@ -48,7 +48,7 @@
                     </div>
                     <div>
                         <p class="text-muted text-uppercase fw-bold mb-1 small">Total Campaigns Created</p>
-                        <h2 class="display-5 fw-bold m-0 text-dark">${totalCodes != null ? totalCodes : 0}</h2>
+                        <h2 class="display-5 fw-bold m-0 text-white">${totalCodes != null ? totalCodes : 0}</h2>
                     </div>
                 </div>
             </div>
@@ -61,15 +61,15 @@
                     </div>
                     <div>
                         <p class="text-muted text-uppercase fw-bold mb-1 small">Total Redemptions</p>
-                        <h2 class="display-5 fw-bold m-0 text-dark">${totalRedemptions != null ? totalRedemptions : 0}</h2>
+                        <h2 class="display-5 fw-bold m-0 text-white">${totalRedemptions != null ? totalRedemptions : 0}</h2>
                     </div>
                 </div>
             </div>
             
              <!-- Stat Card 3 -->
             <div class="col-md-12 col-lg-4">
-                <div class="glass-card p-4 d-flex align-items-center h-100" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
-                    <div class="dashboard-stat-icon bg-white text-primary me-4">
+                <div class="glass-card p-4 d-flex align-items-center h-100" style="background: #2b2b2b; color: white;">
+                    <div class="dashboard-stat-icon text-primary me-4">
                         <i class="fa-solid fa-crown"></i>
                     </div>
                     <div>

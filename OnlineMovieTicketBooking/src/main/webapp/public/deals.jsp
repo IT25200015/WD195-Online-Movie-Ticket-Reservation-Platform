@@ -20,7 +20,7 @@
     <!-- Premium Hero Section -->
     <header class="hero-section">
         <div class="container position-relative z-1 text-center">
-            <span class="badge bg-white text-primary rounded-pill px-3 py-2 mb-3 fw-bold fade-in" style="font-size: 0.9rem;">
+            <span class="badge bg-dark text-light rounded-pill px-3 py-2 mb-3 fw-bold fade-in" style="font-size: 0.9rem;">
                 <i class="fa-solid fa-sparkles me-2"></i>LIMITED TIME OFFERS
             </span>
             <h1 class="display-3 fw-bold mb-3 fade-in" style="letter-spacing: -2px;">Unlock Premium Movie Experiences</h1>
@@ -35,13 +35,13 @@
         <div class="row g-4 justify-content-center">
             <c:choose>
                 <c:when test="${empty activePromotions}">
-                    <div class="col-md-8 text-center py-5 glass-card fade-in">
+                        <div class="col-md-8 text-center py-5 glass-card fade-in">
                         <div class="mb-4">
                             <i class="fa-solid fa-ticket-simple fa-4x text-muted opacity-25"></i>
                         </div>
                         <h3 class="fw-bold">No Active Promotions</h3>
                         <p class="text-muted">We're preparing something special. Check back later for upcoming seasonal deals and blockbuster offers!</p>
-                        <a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-modern rounded-pill mt-3">Back to Home</a>
+                            <a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-primary-action rounded-pill mt-3">Back to Home</a>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -64,7 +64,7 @@
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <h2 class="fw-bold text-dark mb-2">
+                                    <h2 class="fw-bold text-white mb-2">
                                         <c:choose>
                                             <c:when test="${promo.promotionType == 'PERCENTAGE'}">
                                                 Flat ${promo.discountValue}% OFF
@@ -88,10 +88,10 @@
                                 </div>
 
                                 <div class="mt-auto pt-3 border-top d-flex gap-2">
-                                    <button class="btn btn-outline-primary flex-grow-1 rounded-pill copy-btn" data-code="${promo.promoCode}">
+                                    <button class="btn btn-primary-action flex-grow-1 rounded-pill copy-btn" data-code="${promo.promoCode}">
                                         <i class="fa-regular fa-copy me-2"></i>Copy Code
                                     </button>
-                                    <a href="${pageContext.request.contextPath}/public/checkout-mock.jsp" class="btn btn-dark rounded-circle" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                    <a href="${pageContext.request.contextPath}/public/checkout-mock.jsp" class="btn btn-primary-action rounded-circle" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </div>
@@ -120,11 +120,11 @@
                 navigator.clipboard.writeText(code).then(() => {
                     const originalHTML = this.innerHTML;
                     this.innerHTML = '<i class="fa-solid fa-check me-2"></i>Copied!';
-                    this.classList.replace('btn-outline-primary', 'btn-success');
-                    
+                    this.classList.replace('btn-primary-action', 'btn-secondary-action');
+
                     setTimeout(() => {
                         this.innerHTML = originalHTML;
-                        this.classList.replace('btn-success', 'btn-outline-primary');
+                        this.classList.replace('btn-secondary-action', 'btn-primary-action');
                     }, 2000);
                 });
             });

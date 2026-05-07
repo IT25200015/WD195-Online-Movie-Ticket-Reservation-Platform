@@ -4,13 +4,15 @@ import com.cinebooking.models.FixedAmountDiscount;
 import com.cinebooking.models.PercentageDiscount;
 import com.cinebooking.models.Promotion;
 import com.cinebooking.models.SeasonalPromotion;
+import com.cinebooking.models.User;
 import com.cinebooking.services.PromotionService;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -29,6 +31,13 @@ public class AdminPromotionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User sessionUser = session != null ? (User) session.getAttribute("user") : null;
+        if (sessionUser == null || !"Admin".equals(sessionUser.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
+
         // List all promotions by default
         List<Promotion> promotions = promotionService.getAllPromotions();
         request.setAttribute("promotions", promotions);
@@ -37,6 +46,13 @@ public class AdminPromotionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User sessionUser = session != null ? (User) session.getAttribute("user") : null;
+        if (sessionUser == null || !"Admin".equals(sessionUser.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
+
         String action = request.getParameter("action");
 
         try {
