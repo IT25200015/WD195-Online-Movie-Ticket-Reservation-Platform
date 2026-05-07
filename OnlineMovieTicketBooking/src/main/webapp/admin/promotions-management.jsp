@@ -15,10 +15,10 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="modern-ui bg-light">
+<body class="modern-ui">
 
     <!-- Top Navbar Placeholder -->
-    <nav class="navbar navbar-expand-lg navbar-dark border-bottom" style="background: var(--text-main)">
+    <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-film text-warning me-2"></i>CineBooking Admin</a>
             <div class="d-flex text-white opacity-75">
@@ -36,10 +36,10 @@
                 <p class="text-muted mb-0">Create, edit, and manage discount campaigns</p>
             </div>
             <div>
-                <a href="${pageContext.request.contextPath}/admin/promotions/analytics" class="btn btn-outline-secondary rounded-pill me-2">
+                <a href="${pageContext.request.contextPath}/admin/promotions/analytics" class="btn btn-secondary-action rounded-pill me-2">
                     <i class="fa-solid fa-chart-line me-2"></i>View Analytics
                 </a>
-                <button type="button" class="btn btn-modern px-4" data-bs-toggle="modal" data-bs-target="#promotionModal" onclick="openCreateModal()">
+                <button type="button" class="btn btn-primary-action px-4" data-bs-toggle="modal" data-bs-target="#promotionModal" onclick="openCreateModal()">
                     <i class="fa-solid fa-plus me-2"></i>Create Promotion
                 </button>
             </div>
@@ -89,8 +89,8 @@
                             <c:forEach var="promo" items="${promotions}">
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="fw-bold text-dark fs-5">${promo.promoCode}</div>
-                                        <div class="badge bg-light text-secondary border">
+                                        <div class="fw-bold text-white fs-5">${promo.promoCode}</div>
+                                        <div class="badge text-light" style="background: #2b2b2b; border: 1px solid #3a3a3a;">
                                             ${promo.promotionType} <c:if test="${promo.promotionType == 'SEASONAL'}">(${promo.seasonName})</c:if>
                                         </div>
                                     </td>
@@ -129,10 +129,10 @@
                                         
                                         <!-- Actions Dropdown -->
                                         <div class="dropdown">
-                                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                            <button class="btn btn-secondary-action btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
                                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 glass-card">
                                                 <li>
                                                     <a class="dropdown-item py-2" href="#" 
                                                        onclick='openEditModal("${promo.promoCode}", "${promo.promotionType}", ${promo.discountValue}, "${promo.startDate}", "${promo.endDate}", ${promo.usageLimit}, ${promo.minimumAmount}, "${promo.promotionType == 'SEASONAL' ? promo.seasonName : ''}")'>
@@ -187,11 +187,11 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Promo Code</label>
-                        <input type="text" class="form-control form-control-lg bg-light" id="promoCode" name="promoCode" required placeholder="e.g. SUMMER25">
+                        <input type="text" class="form-control form-control-lg dark-input" id="promoCode" name="promoCode" required placeholder="e.g. SUMMER25">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Promotion Type</label>
-                        <select class="form-select form-select-lg bg-light" id="type" name="type" required onchange="handleTypeChange()">
+                        <select class="form-select form-select-lg dark-input" id="type" name="type" required onchange="handleTypeChange()">
                             <option value="PERCENTAGE">Percentage Discount (%)</option>
                             <option value="FIXED">Fixed Amount (Rs)</option>
                             <option value="SEASONAL">Seasonal Deal</option>
@@ -200,39 +200,39 @@
 
                     <div class="col-12" id="seasonalField" style="display: none;">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Season / Event Name</label>
-                        <input type="text" class="form-control bg-light" id="seasonName" name="seasonName" placeholder="e.g. Diwali Festival">
+                        <input type="text" class="form-control dark-input" id="seasonName" name="seasonName" placeholder="e.g. Diwali Festival">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Discount Value</label>
-                        <input type="number" class="form-control bg-light" id="discountValue" name="discountValue" step="0.01" required placeholder="e.g. 15">
+                        <input type="number" class="form-control dark-input" id="discountValue" name="discountValue" step="0.01" required placeholder="e.g. 15">
                     </div>
                     
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Min Booking Amount (Rs)</label>
-                        <input type="number" class="form-control bg-light" id="minimumAmount" name="minimumAmount" step="1" required placeholder="e.g. 1000">
+                        <input type="number" class="form-control dark-input" id="minimumAmount" name="minimumAmount" step="1" required placeholder="e.g. 1000">
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Start Date</label>
-                        <input type="date" class="form-control bg-light" id="startDate" name="startDate" required>
+                        <input type="date" class="form-control dark-input" id="startDate" name="startDate" required>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold text-muted small text-uppercase">End Date</label>
-                        <input type="date" class="form-control bg-light" id="endDate" name="endDate" required>
+                        <input type="date" class="form-control dark-input" id="endDate" name="endDate" required>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold text-muted small text-uppercase">Max Usages</label>
-                        <input type="number" class="form-control bg-light" id="usageLimit" name="usageLimit" required placeholder="e.g. 500">
+                        <input type="number" class="form-control dark-input" id="usageLimit" name="usageLimit" required placeholder="e.g. 500">
                     </div>
                 </div>
 
               </div>
               <div class="modal-footer border-top-0 pt-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-modern px-5" id="submitBtn">Save Promotion</button>
+                <button type="button" class="btn btn-secondary-action rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary-action px-5" id="submitBtn">Save Promotion</button>
               </div>
           </form>
         </div>

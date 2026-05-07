@@ -14,7 +14,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="modern-ui bg-light">
+<body class="modern-ui">
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -27,7 +27,7 @@
                         <p class="text-muted">Review your tickets before payment</p>
                     </div>
 
-                    <div class="border rounded-3 p-3 mb-4 bg-white">
+                    <div class="dark-surface p-3 mb-4">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Movie Ticket (x2)</span>
                             <span class="fw-semibold">Rs 1200.00</span>
@@ -48,23 +48,23 @@
                     </div>
 
                     <!-- Promo Code Validation Widget (Our Component) -->
-                    <div class="widget-container w-100 bg-white p-4 rounded-4 shadow-sm border mb-4">
+                    <div class="widget-container w-100 dark-surface p-4 rounded-4 shadow-sm mb-4">
                         <h5 class="fw-bold mb-3"><i class="fa-solid fa-tag text-warning me-2"></i>Have a Promo Code?</h5>
                         <form id="promoForm" onsubmit="applyPromo(event)">
                             <div class="promo-input-group">
-                                <input type="text" class="form-control form-control-lg bg-light" id="promoCode" placeholder="Enter code here" required>
-                                <button type="submit" class="btn btn-dark fw-bold px-4">Apply</button>
+                                <input type="text" class="form-control form-control-lg dark-input" id="promoCode" placeholder="Enter code here" required>
+                                <button type="submit" class="btn btn-primary-action fw-bold px-4">Apply</button>
                             </div>
                         </form>
                         <div id="promoFeedback" class="mt-2 small fw-semibold" style="display: none;"></div>
                     </div>
 
-                    <button class="btn btn-primary w-100 btn-lg rounded-pill fw-bold shadow-sm">
+                    <button class="btn btn-primary-action w-100 btn-lg rounded-pill fw-bold shadow-sm">
                         Proceed to Payment <i class="fa-solid fa-lock ms-2"></i>
                     </button>
                     
                     <div class="text-center mt-4">
-                        <a href="${pageContext.request.contextPath}/deals" class="text-decoration-none small"><i class="fa-solid fa-arrow-left me-1"></i> Back to live deals</a>
+                        <a href="${pageContext.request.contextPath}/deals" class="text-decoration-none small text-muted"><i class="fa-solid fa-arrow-left me-1"></i> Back to live deals</a>
                     </div>
                 </div>
             </div>
