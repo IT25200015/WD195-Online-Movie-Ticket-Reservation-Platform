@@ -17,7 +17,9 @@
 
 <!-- ADD MOVIE -->
 
-<form action="${pageContext.request.contextPath}/movies" method="post" class="mb-5">
+<form action="${pageContext.request.contextPath}/movies"
+          method="post"
+          enctype="multipart/form-data" class="mb-5">
 
     <input type="hidden" name="action" value="add">
 
@@ -31,10 +33,10 @@
 
     <input type="text" name="year" class="form-control mb-2" placeholder="Year" required>
 
-    <input type="text"
+    <input type="file"
            name="poster"
            class="form-control mb-2"
-           placeholder="Poster filename (e.g. avatar.jpg)"
+           accept="image/*"
            required>
 
     <button type="submit" class="btn btn-success">

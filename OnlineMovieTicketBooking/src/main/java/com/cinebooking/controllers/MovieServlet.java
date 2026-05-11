@@ -6,9 +6,18 @@ import com.cinebooking.services.MovieService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
 
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+        maxFileSize = 1024 * 1024 * 10,       // 10MB
+        maxRequestSize = 1024 * 1024 * 50      // 50MB
+)
 @WebServlet("/movies")
 public class MovieServlet extends HttpServlet {
 
@@ -63,9 +72,17 @@ public class MovieServlet extends HttpServlet {
             String title = request.getParameter("title");
             String director = request.getParameter("director");
             int year = Integer.parseInt(request.getParameter("year"));
-            String poster = request.getParameter("poster");
+            Part filePart = request.getPart("poster");
 
-            Movie movie = new Movie(id, title, director, year, poster);
+            String fileName = filePart.getSubmittedFileName();
+            String uploadPath = getServletContext().getRealPath("/images");
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdir();
+
+            filePart.write(uploadPath + File.separator + fileName);
+
+            Movie movie = new Movie(id, title, director, year, fileName);
 
             // ADD
             if ("add".equals(action)) {
