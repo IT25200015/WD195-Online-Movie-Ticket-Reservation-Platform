@@ -1,0 +1,102 @@
+package com.cinebooking.controllers;
+
+import com.cinebooking.models.Movie;
+import com.cinebooking.services.MovieService;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
+
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+        maxFileSize = 1024 * 1024 * 10,       // 10MB
+        maxRequestSize = 1024 * 1024 * 50      // 50MB
+)
+@WebServlet("/movies")
+public class MovieServlet extends HttpServlet {
+
+    private MovieService movieService;
+
+    @Override
+    public void init() throws ServletException {
+        movieService = new MovieService();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        List<Movie> movies = movieService.getAllMovies();
+
+        request.setAttribute("movies", movies);
+
+        String page = request.getParameter("page");
+
+        if ("manage".equals(page)) {
+
+            request.getRequestDispatcher("/includes/manageMovies.jsp")
+                    .forward(request, response);
+        }
+        else {
+
+            request.getRequestDispatcher("/includes/movies.jsp")
+                    .forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        // DELETE
+        if ("delete".equals(action)) {
+
+            movieService.deleteMovie(id);
+        }
+
+        // ADD OR UPDATE
+        else {
+
+            String title = request.getParameter("title");
+            String director = request.getParameter("director");
+            int year = Integer.parseInt(request.getParameter("year"));
+            Part filePart = request.getPart("poster");
+
+            String fileName = filePart.getSubmittedFileName();
+            String uploadPath = getServletContext().getRealPath("/images");
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdir();
+
+            filePart.write(uploadPath + File.separator + fileName);
+
+            Movie movie = new Movie(id, title, director, year, fileName);
+
+            // ADD
+            if ("add".equals(action)) {
+
+                movieService.addMovie(movie);
+            }
+
+            // UPDATE
+            else if ("update".equals(action)) {
+
+                movieService.updateMovie(movie);
+            }
+        }
+
+        response.sendRedirect("movies?page=manage");
+    }
+}
