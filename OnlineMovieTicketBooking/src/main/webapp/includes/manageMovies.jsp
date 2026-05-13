@@ -112,7 +112,9 @@
 
             <td colspan="5">
 
-                <form action="movies" method="post">
+                <form action="${pageContext.request.contextPath}/movies"
+                      method="post"
+                      enctype="multipart/form-data">
 
                     <input type="hidden" name="action" value="update">
 
@@ -132,6 +134,11 @@
                            name="year"
                            class="form-control mb-2"
                            value="${movie.year}">
+
+                    <input type="file"
+                           name="poster"
+                           class="form-control mb-2"
+                           accept="image/*">
 
                     <button class="btn btn-primary">
                         Save Changes

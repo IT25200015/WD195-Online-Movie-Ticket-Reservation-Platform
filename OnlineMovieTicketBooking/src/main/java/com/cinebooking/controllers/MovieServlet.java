@@ -72,17 +72,42 @@ public class MovieServlet extends HttpServlet {
             String title = request.getParameter("title");
             String director = request.getParameter("director");
             int year = Integer.parseInt(request.getParameter("year"));
+
+            String fileName = "";
+
             Part filePart = request.getPart("poster");
 
-            String fileName = filePart.getSubmittedFileName();
-            String uploadPath = getServletContext().getRealPath("/images");
+            // only if user selected image
+            if (filePart != null &&
+                    filePart.getSize() > 0) {
 
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdir();
+                fileName = filePart.getSubmittedFileName();
 
-            filePart.write(uploadPath + File.separator + fileName);
+                String uploadPath =
+                        getServletContext().getRealPath("/images");
 
-            Movie movie = new Movie(id, title, director, year, fileName);
+                File uploadDir = new File(uploadPath);
+
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                filePart.write(uploadPath +
+                        File.separator +
+                        fileName);
+            }
+
+            // UPDATE -> keep old poster if no new image selected
+            if ("update".equals(action) && fileName.isEmpty()) {
+
+                Movie oldMovie =
+                        movieService.getMovieById(id);
+
+                fileName = oldMovie.getPoster();
+            }
+
+            Movie movie =
+                    new Movie(id, title, director, year, fileName);
 
             // ADD
             if ("add".equals(action)) {
@@ -97,6 +122,8 @@ public class MovieServlet extends HttpServlet {
             }
         }
 
-        response.sendRedirect("movies?page=manage");
+        response.sendRedirect(
+                request.getContextPath()
+                        + "/movies?page=manage");
     }
 }
