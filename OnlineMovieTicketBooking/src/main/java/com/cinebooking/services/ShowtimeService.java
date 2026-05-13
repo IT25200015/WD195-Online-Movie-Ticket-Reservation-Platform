@@ -6,86 +6,112 @@ import java.io.*;
 import java.util.*;
 
 public class ShowtimeService {
-    private static final String FILE_PATH = "data/showtimes.txt";
 
-    // Read all showtimes
-    public List<Showtime> getAllShowtimes() throws IOException {
-        List<Showtime> showtimes = new ArrayList<>();
+    private static final String FILE_PATH = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\showtimes.txt";
+
+    // GET ALL
+    public List<Showtime> getAllShowtimes()
+            throws IOException {
+
+        List<Showtime> list = new ArrayList<>();
+
         File file = new File(FILE_PATH);
 
-        if (!file.exists()) return showtimes;
+        if (!file.exists()) return list;
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br =
+                new BufferedReader(new FileReader(file));
+
         String line;
 
         while ((line = br.readLine()) != null) {
-            showtimes.add(Showtime.fromFileString(line));
+
+            list.add(
+                    Showtime.fromFileString(line)
+            );
         }
+
         br.close();
 
-        return showtimes;
+        return list;
     }
 
-    // Add showtime
-    public void addShowtime(Showtime showtime) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true));
+    // GET BY MOVIE ID
+    public List<Showtime> getShowtimesByMovieId(int movieId)
+            throws IOException {
+
+        List<Showtime> result = new ArrayList<>();
+
+        for (Showtime s : getAllShowtimes()) {
+
+            if (s.getMovieId() == movieId) {
+                result.add(s);
+            }
+        }
+
+        return result;
+    }
+
+    // ADD
+    public void addShowtime(Showtime showtime)
+            throws IOException {
+
+        BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(FILE_PATH, true));
+
         bw.write(showtime.toFileString());
         bw.newLine();
+
         bw.close();
     }
 
-    // Update showtime
-    public void updateShowtime(Showtime updatedShowtime) throws IOException {
-        List<Showtime> showtimes = getAllShowtimes();
+    // DELETE
+    public void deleteShowtime(int id)
+            throws IOException {
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH));
+        List<Showtime> list = getAllShowtimes();
 
-        for (Showtime s : showtimes) {
-            if (s.getShowtime_id() == updatedShowtime.getShowtime_id()) {
-                bw.write(updatedShowtime.toFileString());
-            } else {
-                bw.write(s.toFileString());
-            }
-            bw.newLine();
-        }
-        bw.close();
-    }
+        BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(FILE_PATH));
 
-    // Delete showtime
-    public void deleteShowtime(int id) throws IOException {
-        List<Showtime> showtimes = getAllShowtimes();
+        for (Showtime s : list) {
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH));
+            if (s.getId() != id) {
 
-        for (Showtime s : showtimes) {
-            if (s.getShowtime_id() != id) {
                 bw.write(s.toFileString());
                 bw.newLine();
             }
         }
+
         bw.close();
     }
 
-    // Get showtime by ID
-    public Showtime getShowtimeById(int id) throws IOException {
-        List<Showtime> showtimes = getAllShowtimes();
+    // UPDATE
+    public void updateShowtime(Showtime updated)
+            throws IOException {
 
-        for (Showtime s : showtimes) {
-            if (s.getShowtime_id() == id) return s;
-        }
-        return null;
-    }
+        List<Showtime> list = getAllShowtimes();
 
-    // Get showtimes by movie ID
-    public List<Showtime> getShowtimesByMovieId(int movieId) throws IOException {
-        List<Showtime> result = new ArrayList<>();
-        List<Showtime> showtimes = getAllShowtimes();
+        BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(FILE_PATH));
 
-        for (Showtime s : showtimes) {
-            if (s.getMovie_id() == movieId) {
-                result.add(s);
+        for (Showtime s : list) {
+
+            if (s.getId() == updated.getId()) {
+
+                bw.write(updated.toFileString());
             }
+            else {
+
+                bw.write(s.toFileString());
+            }
+
+            bw.newLine();
         }
-        return result;
+
+        bw.close();
     }
 }
