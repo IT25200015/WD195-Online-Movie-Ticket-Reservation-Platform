@@ -69,7 +69,11 @@
 
                 <div class="movie-card">
 
-                    <img src="${pageContext.request.contextPath}/images/${movie.poster}">
+                    <a href="${pageContext.request.contextPath}/showtimes?movieId=${movie.id}">
+
+                        <img src="${pageContext.request.contextPath}/images/${movie.poster}">
+
+                    </a>
 
                     <div class="movie-info">
 
