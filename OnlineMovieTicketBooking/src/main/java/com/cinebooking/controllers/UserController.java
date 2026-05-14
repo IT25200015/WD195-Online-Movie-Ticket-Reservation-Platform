@@ -110,6 +110,13 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        } else if ("logout".equals(action)) {
+            // Get the current session (create if missing)
+            HttpSession session = request.getSession();
+            // Clear all session data for a clean logout
+            session.invalidate();
+            // Send the user to the login page with a simple message flag
+            response.sendRedirect("UserController?action=login&msg=loggedOut");
         } else {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
