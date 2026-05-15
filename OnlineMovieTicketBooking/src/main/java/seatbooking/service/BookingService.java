@@ -11,8 +11,8 @@ import java.util.List;
 
 public class BookingService {
 
-    private static final String SEATS_FILE = "data/seats.txt";
-    private static final String BOOKINGS_FILE = "data/bookings.txt";
+    private static final String SEATS_FILE = "C:/Users/Lenovo/IdeaProjects/WD195-Online-Movie-Ticket-Reservation-Platform/OnlineMovieTicketBooking/data/seats.txt";
+    private static final String BOOKINGS_FILE = "C:/Users/Lenovo/IdeaProjects/WD195-Online-Movie-Ticket-Reservation-Platform/OnlineMovieTicketBooking/data/bookings.txt";
 
     public List<Seat> getAllSeats() {
         List<Seat> seatList = new ArrayList<>();
@@ -43,6 +43,27 @@ public class BookingService {
         return null;
     }
 
+    public List<Booking> getBookingsByEmail(String email) {
+        List<Booking> bookings = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data.length == 9 && data[2].equals(email)) {
+                    Booking b = new Booking(
+                            data[0], data[1], data[2], data[3],
+                            data[4], Double.parseDouble(data[5]),
+                            data[6], data[7], data[8]
+                    );
+                    bookings.add(b);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
     public Booking createBooking(String customerName, String customerEmail,
                                  String seatId, String movieName, String showTime) {
 
@@ -62,6 +83,42 @@ public class BookingService {
         markSeatAsBooked(seatId);
 
         return booking;
+    }
+
+    public boolean cancelBooking(String bookingId) {
+        List<String> lines = new ArrayList<>();
+        String cancelledSeatId = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data[0].equals(bookingId)) {
+                    cancelledSeatId = data[3];
+                } else {
+                    lines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
+            for (String line : lines) {
+                bw.write(line);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (cancelledSeatId != null) {
+            markSeatAsAvailable(cancelledSeatId);
+        }
+
+        return true;
     }
 
     private void saveBooking(Booking booking) {
@@ -88,6 +145,27 @@ public class BookingService {
         for (Seat s : seatList) {
             if (s.getSeatId().equals(seatId)) {
                 s.setBooked(true);
+            }
+            sb.append(s.getSeatId()).append("|")
+                    .append(s.getSeatType()).append("|")
+                    .append(s.isBooked()).append("|")
+                    .append(s.getPrice()).append("\n");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(SEATS_FILE))) {
+            bw.write(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void markSeatAsAvailable(String seatId) {
+        List<Seat> seatList = getAllSeats();
+        StringBuilder sb = new StringBuilder();
+
+        for (Seat s : seatList) {
+            if (s.getSeatId().equals(seatId)) {
+                s.setBooked(false);
             }
             sb.append(s.getSeatId()).append("|")
                     .append(s.getSeatType()).append("|")
