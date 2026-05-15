@@ -1,4 +1,4 @@
-package com.cinebooking.controllers;
+package transactionManagement;
 
 import com.cinebooking.models.FixedAmountDiscount;
 import com.cinebooking.models.PercentageDiscount;
