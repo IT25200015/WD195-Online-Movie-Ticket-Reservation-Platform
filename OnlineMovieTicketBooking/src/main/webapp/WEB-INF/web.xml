@@ -674,10 +674,6 @@
         <mime-type>application/x-java-jnlp-file</mime-type>
     </mime-mapping>
     <mime-mapping>
-        <extension>jpe</extension>
-        <mime-type>image/jpeg</mime-type>
-    </mime-mapping>
-    <mime-mapping>
         <extension>jpeg</extension>
         <mime-type>image/jpeg</mime-type>
     </mime-mapping>
@@ -1197,5 +1193,10 @@
 <!--        <welcome-file>index.jsp</welcome-file>-->
         <welcome-file>home</welcome-file>
     </welcome-file-list>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
 
 </web-app>

@@ -104,6 +104,11 @@
                         <div class="mb-3 text-danger">${errorMessage}</div>
                     </c:if>
 
+                    <!-- Show simple validation error from the controller -->
+                    <c:if test="${not empty error}">
+                        <div class="mb-3 text-danger">${error}</div>
+                    </c:if>
+
                     <div class="mb-4">
                         <label class="form-label">Full name <span class="required-star">*</span></label>
                         <input type="text" name="name" class="form-control custom-input" required>
@@ -116,7 +121,7 @@
 
                     <div class="mb-4">
                         <label class="form-label">Mobile Number <span class="required-star">*</span></label>
-                        <input type="text" name="mobileNumber" class="form-control custom-input" required>
+                        <input type="tel" name="mobileNumber" class="form-control custom-input" pattern="[0-9]{10}" title="Enter exactly 10 digits" style="background-color: #1e1e1e; color: #f5f5f5;" required>
                     </div>
 
                     <div class="mb-4">
@@ -140,12 +145,12 @@
 
                     <div class="mb-4">
                         <label class="form-label">Create a Password <span class="required-star">*</span></label>
-                        <input type="password" name="password" class="form-control custom-input" required>
+                        <input type="password" name="password" class="form-control custom-input" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{7,}" title="Password must be at least 7 characters long, containing uppercase, lowercase, numbers, and symbols." required>
                     </div>
 
                     <div class="mb-5">
                         <label class="form-label">Confirm password <span class="required-star">*</span></label>
-                        <input type="password" name="confirmPassword" class="form-control custom-input" required>
+                        <input type="password" name="confirmPassword" class="form-control custom-input" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{7,}" title="Password must be at least 7 characters long, containing uppercase, lowercase, numbers, and symbols." required>
                     </div>
 
                     <div class="form-check mb-4">
@@ -175,4 +180,3 @@
 
 </body>
 </html>
-
