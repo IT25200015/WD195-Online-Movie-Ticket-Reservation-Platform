@@ -4,3 +4,6 @@ Sajitha Chamod Ruwanpura|sajitha13579@gmail.com|12345|Customer|1234567323|2026-0
 Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Premium
 Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|123456|Admin|1234567323|2026-05-19|Male|N/A
 Sajitha Chamod Ruwanpura|sajithachamod135@gmail.com|1234|Customer|12345|2026-05-06|Male|Premium
+Sajitha Chamod Ruwanpura|chamod13579@gmail.com|1113578|Customer|0715629447|2026-05-15|Male|Regular
+Ruwanpura M.W.H.S.C|it25200015@my.sliit.lk|12345678|Customer|3255445455|2026-05-19|Male|Regular
+Sajitha Chamod Ruwanpura|sajithachamod1357@gmail.com|RUWANsajitha@!6531|Customer|1234567323|2026-05-18|Male|Regular
