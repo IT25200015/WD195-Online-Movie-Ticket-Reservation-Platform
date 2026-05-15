@@ -1,2 +1,13 @@
-4,2,Friday,20:01
-1,1,Monday,12:45
+1,1,Monday,10:30
+2,1,Monday,15:45
+3,1,Tuesday,20:30
+4,1,Friday,12:45
+5,2,Wednesday,15:30
+6,2,Thursday,10:30
+7,2,Thursday,09:45
+8,3,Monday,09:30
+9,3,Friday,16:40
+10,3,Sunday,20:45
+11,4,Monday,19:00
+12,4,Sunday,19:00
+13,5,Wednesday,11:30

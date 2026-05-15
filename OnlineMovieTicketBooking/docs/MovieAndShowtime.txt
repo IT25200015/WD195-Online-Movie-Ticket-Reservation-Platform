@@ -1,0 +1,2 @@
+Manage showtime url : http://localhost:8080/booking_system_war_exploded/showtimes?page=manage
+Manage movie url: http://localhost:8080/booking_system_war_exploded/movies?page=manage

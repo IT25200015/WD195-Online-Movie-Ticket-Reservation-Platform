@@ -336,12 +336,16 @@
 
                     <div class="movie-actions">
 
-                        <button class="ghost-btn"
-                                type="button">
+                        <a href="${pageContext.request.contextPath}/movie-details?movieId=${movie.id}">
 
-                            Details
+                            <button class="ghost-btn"
+                                    type="button">
 
-                        </button>
+                                Details
+
+                            </button>
+
+                        </a>
 
                         <a href="${pageContext.request.contextPath}/showtimes?movieId=${movie.id}">
 

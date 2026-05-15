@@ -7,6 +7,7 @@ import java.util.*;
 
 public class ShowtimeService {
 
+    // Everyone change this file path to the file path in your machine
     private static final String FILE_PATH = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\showtimes.txt";
 
     // GET ALL
@@ -56,11 +57,20 @@ public class ShowtimeService {
     public void addShowtime(Showtime showtime)
             throws IOException {
 
+        int newId = generateId();
+
+        Showtime newShowtime = new Showtime(
+                newId,
+                showtime.getMovieId(),
+                showtime.getDay(),
+                showtime.getTime()
+        );
+
         BufferedWriter bw =
                 new BufferedWriter(
                         new FileWriter(FILE_PATH, true));
 
-        bw.write(showtime.toFileString());
+        bw.write(newShowtime.toFileString());
         bw.newLine();
 
         bw.close();
@@ -114,4 +124,25 @@ public class ShowtimeService {
 
         bw.close();
     }
+
+    private int generateId() {
+
+        List<Showtime> list = null;
+        try {
+            list = getAllShowtimes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        int maxId = 0;
+
+        for (Showtime s : list) {
+            if (s.getId() > maxId) {
+                maxId = s.getId();
+            }
+        }
+
+        return maxId + 1;
+    }
+
 }

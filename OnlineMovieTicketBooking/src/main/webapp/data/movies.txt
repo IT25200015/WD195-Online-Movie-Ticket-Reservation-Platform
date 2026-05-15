@@ -1,2 +1,5 @@
-1,Titanic,James Cameron,2001,979935200.jpg
-2,Harry potter,JK Rowlin,2001,0f5037e85c3fe7d60c8c57b810bac64e.jpg
+1,Harry Potter,JK Rowling,2001,harry potter.avif,In his fifth year at Hogwarts Harry Potter learns that many still doubt Voldemort has actually returned. With the cruel Dolores Umbridge now teaching Defense Against the Dark Arts, how can he help fight the rising darkness? And more importantly, will the Ministry finally admit that Voldemort is back?,3h,LLAaW1EgyY8?si=sPkevk5uxl0Y2ZoP
+2,Venom,Ryan,2019,venom.jpg,Venom is a parasite,2h 30m,-FmWuCgJmxo?si=_4uMa5v-sNuKN9CC
+3,Puss in Boots,Test,2010,puss in boots.jpg,Puss in Boots discovers that his passion for adventure has taken its toll when he learns that he has burnt through eight of his nine lives. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.,2h,RqrXhwS33yc?si=FnXQ9yODleiS5bZ_
+4,Perfect Days,Henry May,2020,perfect days.jpg,Hirayama feels content with his life as a toilet cleaner in Tokyo. Outside his structured routine, he cherishes music on cassette tapes, reads books and takes photos. Through unexpected encounters
+5,Deadpool,Shawn Levy,2024,deadpool.jpg,Deadpool's peaceful existence comes crashing down when the Time Variance Authority recruits him to help safeguard the multiverse. He soon unites with his would-be pal,2h 30m,73_1biulkYk?si=5lBIaZ76Us43F_la

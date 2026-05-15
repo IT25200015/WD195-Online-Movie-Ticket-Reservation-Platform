@@ -39,6 +39,23 @@
            accept="image/*"
            required>
 
+    <textarea name="description"
+              class="form-control mb-2"
+              placeholder="Description"
+              required></textarea>
+
+    <input type="text"
+           name="duration"
+           class="form-control mb-2"
+           placeholder="Duration (Eg: 2h 40m)"
+           required>
+
+    <input type="text"
+           name="trailer"
+           class="form-control mb-2"
+           placeholder="YouTube Embed URL movie ID (Eg: YoHD9XEInc0 in https://www.youtube.com/embed/YoHD9XEInc0)"
+           required>
+
     <button type="submit" class="btn btn-success">
         Add Movie
     </button>
@@ -139,6 +156,23 @@
                            name="poster"
                            class="form-control mb-2"
                            accept="image/*">
+
+                    <textarea name="description"
+                              class="form-control mb-2"
+                              placeholder="Description"
+                              required></textarea>
+
+                    <input type="text"
+                           name="duration"
+                           class="form-control mb-2"
+                           placeholder="Duration (Eg: 2h 40m)"
+                           required>
+
+                    <input type="text"
+                           name="trailer"
+                           class="form-control mb-2"
+                           placeholder="YouTube Embed URL (Eg: https://www.youtube.com/embed/YoHD9XEInc0)"
+                           required>
 
                     <button class="btn btn-primary">
                         Save Changes
