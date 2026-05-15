@@ -1,9 +1,9 @@
-Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-06|Male|Premium
-Sajitha Chamod Ru|sajithachamod13579@gmail.com|1234|Customer|1234567|2026-05-11|Male|Regular
-Sajitha Chamod Ruwanpura|sajitha13579@gmail.com|12345|Customer|1234567323|2026-05-13|Male|Regular
-Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Premium
-Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|123456|Admin|1234567323|2026-05-19|Male|N/A
-Sajitha Chamod Ruwanpura|sajithachamod135@gmail.com|1234|Customer|12345|2026-05-06|Male|Premium
+Sajitha Chamod Ruwanpura|sajitha13579@gmail.com|12345|Customer|12345|2026-05-13|Male|Regular
+Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|12345|Customer|1234567323|2026-05-12|Male|Regular
+Sajitha Chamod Ruwanpura|sajithachamod@gmail.com|123456|Admin|1234567323|2026-05-19|Male|Regular
+Sajitha Chamod Ruwanpura|sajithachamod135@gmail.com|1234|Customer|12345|2026-05-06|Male|Regular
 Sajitha Chamod Ruwanpura|chamod13579@gmail.com|1113578|Customer|0715629447|2026-05-15|Male|Regular
-Ruwanpura M.W.H.S.C|it25200015@my.sliit.lk|12345678|Customer|3255445455|2026-05-19|Male|Regular
-Sajitha Chamod Ruwanpura|sajithachamod1357@gmail.com|RUWANsajitha@!6531|Customer|1234567323|2026-05-18|Male|Regular
+Ruwanpura M.W.H.S.C|it25200015@my.sliit.lk|12345678|Customer|3255445455|2026-05-19|Male|Premium
+Sajitha Chamod Ruwanpura|sajithachamod1357@gmail.com|RUWANsajitha@!6531|Customer|1234567323|2026-05-18|Male|Premium
+Ruwanpura|sajitha@gmail.com|fecc1a8d73f8f8c3ea16d252995057afedcd578ffb925a9b6454ddf1801e52bc|Customer|0715629447|2026-05-20|Male|Regular
+Sadeepa LAkshan|sadeepalakshan@gmail.com|Sadeepa@1234|Customer|0715629447|2026-05-19|Male|Regular

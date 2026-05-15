@@ -14,11 +14,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
-
+import java.security.MessageDigest;
 
 @WebServlet("/UserController")
 public class UserController extends HttpServlet {
+
+    private static final Object FILE_LOCK = new Object();
+
+    // Hash a plain text password using SHA-256 and return a hex string
+    private String hashPassword(String plainText) {
+        try {
+            // MessageDigest is the built-in Java tool for hashing
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            // Step 1: convert the text to bytes
+            byte[] encodedHash = digest.digest(plainText.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+            // Step 2: convert each byte to hex (00 - ff)
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            // If hashing fails, return null so we can handle it safely
+            return null;
+        }
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -177,15 +202,28 @@ public class UserController extends HttpServlet {
                 newUser.setDob(dob);
                 newUser.setGender(gender);
 
-                // Save to database
-                boolean isSaved = userDAO.registerUser(newUser);
+                // Hash the password before saving
+                String hashedPassword = hashPassword(password);
+                if (hashedPassword == null) {
+                    request.setAttribute("error", "Invalid input");
+                    request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                    return;
+                }
 
-                if (isSaved == true) {
-                    System.out.println("User saved successfully!");
-                    response.sendRedirect(request.getContextPath() + "/UserController?action=login"); // Go to login page
-                } else {
-                    System.out.println("User save failed!");
-                    response.sendRedirect(request.getContextPath() + "/UserController?action=register&error=1"); // Go back to register
+                newUser.setPassword(hashedPassword);
+
+                // This lock prevents file corruption from concurrent users.
+                synchronized (FILE_LOCK) {
+                    // Save to database
+                    boolean isSaved = userDAO.registerUser(newUser);
+
+                    if (isSaved == true) {
+                        System.out.println("User saved successfully!");
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=login"); // Go to login page
+                    } else {
+                        System.out.println("User save failed!");
+                        response.sendRedirect(request.getContextPath() + "/UserController?action=register&error=1"); // Go back to register
+                    }
                 }
             }
 
@@ -197,8 +235,15 @@ public class UserController extends HttpServlet {
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
 
+                // Hash the input password before checking the file
+                String hashedPassword = hashPassword(password);
+                if (hashedPassword == null) {
+                    response.sendRedirect("UserController?action=login&error=invalid");
+                    return;
+                }
+
                 // check database
-                com.cinebooking.models.User loggedUser = userDAO.loginUser(email, password);
+                com.cinebooking.models.User loggedUser = userDAO.loginUser(email, hashedPassword);
 
                 if (loggedUser != null) {
                     // Get the current session
@@ -224,30 +269,42 @@ public class UserController extends HttpServlet {
                 if (loggedUser != null) {
                     String name = request.getParameter("name");
                     String email = request.getParameter("email");
-                    String password = request.getParameter("password");
+                    String newPassword = request.getParameter("password");
                     String mobileNumber = request.getParameter("mobileNumber");
                     String dob = request.getParameter("dob");
                     String gender = request.getParameter("gender");
 
                     loggedUser.setName(name);
                     loggedUser.setEmail(email);
-                    if (password != null && !password.isEmpty()) {
-                        loggedUser.setPassword(password);
-                    }
                     loggedUser.setMobileNumber(mobileNumber);
                     loggedUser.setDob(dob);
                     loggedUser.setGender(gender);
 
-                    boolean updated = userDAO.updateUser(loggedUser);
-                    if (updated) {
-                        session.setAttribute("user", loggedUser);
-                        response.sendRedirect("UserController?action=profile&update=success");
-                    } else {
-                        response.sendRedirect("UserController?action=editProfile&error=1");
+                    // This lock prevents file corruption from concurrent users.
+                    synchronized (FILE_LOCK) {
+                        // If a new password is provided, hash and store it
+                        if (newPassword != null && !newPassword.isEmpty()) {
+                            String hashedPassword = hashPassword(newPassword);
+                            if (hashedPassword == null) {
+                                response.sendRedirect("UserController?action=editProfile&error=1");
+                                return;
+                            }
+                            loggedUser.setPassword(hashedPassword);
+                        }
+                        // If blank, keep the existing hashed password
+
+                        boolean updated = userDAO.updateUser(loggedUser);
+                        if (updated) {
+                            session.setAttribute("user", loggedUser);
+                            response.sendRedirect("UserController?action=profile&update=success");
+                        } else {
+                            response.sendRedirect("UserController?action=editProfile&error=1");
+                        }
                     }
                 } else {
                     response.sendRedirect("UserController?action=login");
                 }
+                return;
             } else if ("deleteProfile".equals(action)) {
                 // Delete the currently logged-in user's profile
                 HttpSession session = request.getSession();
