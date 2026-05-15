@@ -72,6 +72,11 @@ public class MovieServlet extends HttpServlet {
             String title = request.getParameter("title");
             String director = request.getParameter("director");
             int year = Integer.parseInt(request.getParameter("year"));
+            String description = request.getParameter("description");
+
+            String duration = request.getParameter("duration");
+
+            String trailer = request.getParameter("trailer");
 
             String fileName = "";
 
@@ -104,8 +109,16 @@ public class MovieServlet extends HttpServlet {
                 fileName = oldMovie.getPoster();
             }
 
-            Movie movie =
-                    new Movie(id, title, director, year, fileName);
+            Movie movie = new Movie(
+                    id,
+                    title,
+                    director,
+                    year,
+                    fileName,
+                    description,
+                    duration,
+                    trailer
+            );
 
             // ADD
             if ("add".equals(action)) {

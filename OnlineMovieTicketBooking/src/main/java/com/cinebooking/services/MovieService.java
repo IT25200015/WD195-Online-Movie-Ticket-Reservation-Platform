@@ -21,6 +21,11 @@ public class MovieService {
         String line;
 
         while ((line = br.readLine()) != null) {
+
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
             movies.add(Movie.fromFileString(line));
         }
         br.close();

@@ -82,15 +82,13 @@ public class ShowtimeServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        int id =
-                Integer.parseInt(request.getParameter("id"));
-
         int movieId =
                 Integer.parseInt(
                         request.getParameter("movieId"));
 
         if ("delete".equals(action)) {
 
+            int id = Integer.parseInt(request.getParameter("id"));
             service.deleteShowtime(id);
         }
         else {
@@ -102,7 +100,7 @@ public class ShowtimeServlet extends HttpServlet {
                     request.getParameter("time");
 
             Showtime showtime =
-                    new Showtime(id, movieId,
+                    new Showtime(0, movieId,
                             day, time);
 
             if ("add".equals(action)) {

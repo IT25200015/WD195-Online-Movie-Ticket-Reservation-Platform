@@ -75,12 +75,6 @@
                        name="movieId"
                        value="${selectedMovieId}">
 
-                <input type="text"
-                       name="id"
-                       class="form-control mb-2"
-                       placeholder="Showtime ID"
-                       required>
-
                 <select name="day"
                         class="form-control mb-2">
 
