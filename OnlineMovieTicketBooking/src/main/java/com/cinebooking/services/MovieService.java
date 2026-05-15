@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.*;
 
 public class MovieService {
+
+    // Everyone change this file path to the file path in your machine
     private static final String FILE_PATH = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\movies.txt";
 
     // Read all movies

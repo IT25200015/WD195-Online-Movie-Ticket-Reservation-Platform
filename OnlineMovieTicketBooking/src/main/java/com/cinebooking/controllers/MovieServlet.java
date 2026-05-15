@@ -83,8 +83,8 @@ public class MovieServlet extends HttpServlet {
 
                 fileName = filePart.getSubmittedFileName();
 
-                String uploadPath =
-                        getServletContext().getRealPath("/images");
+                // Update the folder path according to your folder location
+                String uploadPath = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\java\\com\\cinebooking\\uploads";;
 
                 File uploadDir = new File(uploadPath);
 
@@ -92,9 +92,7 @@ public class MovieServlet extends HttpServlet {
                     uploadDir.mkdir();
                 }
 
-                filePart.write(uploadPath +
-                        File.separator +
-                        fileName);
+                filePart.write(uploadPath + File.separator + fileName);
             }
 
             // UPDATE -> keep old poster if no new image selected

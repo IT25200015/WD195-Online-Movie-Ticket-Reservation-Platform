@@ -1,2 +1,5 @@
 1,Titanic,James Cameron,2001,979935200.jpg
-2,Harry potter,JK Rowlin,2001,0f5037e85c3fe7d60c8c57b810bac64e.jpg
+2,Harry potter,JK Rowlin,2001,harry potter.avif
+3,Puss in boots,Test,2019,puss in boots.jpg
+4,Venom,Henry May,2019,venom.jpg
+5,Perfect Days,Test 12,2020,perfect days.jpg
