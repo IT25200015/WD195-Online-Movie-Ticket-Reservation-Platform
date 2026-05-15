@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c"
+           uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>CineBooking | Home</title>
@@ -132,69 +134,105 @@
         }
 
         .movie-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            margin-top: 30px;
         }
 
         .movie-card {
+            width: 280px;
             background: var(--cinema-surface);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 18px;
+            overflow: hidden;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            transition:
+                    transform 0.3s ease,
+                    box-shadow 0.3s ease;
+
             animation: fadeUp 0.8s ease-out both;
         }
 
         .movie-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 16px 40px var(--cinema-glow);
+            transform: translateY(-8px);
+            box-shadow: 0 18px 45px rgba(255, 255, 255, 0.08);
         }
 
         .movie-poster {
-            border-radius: 12px;
-            overflow: hidden;
-            aspect-ratio: 2 / 3;
-            background: var(--cinema-surface-2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cinema-muted);
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease;
         }
 
         .movie-card:hover .movie-poster {
-            transform: scale(1.05);
-            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
+            transform: scale(1.04);
+        }
+
+        .movie-info {
+            padding: 18px;
+        }
+
+        .movie-info {
+            padding: 16px;
         }
 
         .movie-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
         .movie-meta {
             color: var(--cinema-muted);
-            font-size: 0.9rem;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .movie-actions {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .movie-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            margin-left: 9px;
+            margin-top: 5px;
+        }
+
+        .movie-meta {
+            color: var(--cinema-muted);
+            font-size: 0.92rem;
+            margin-bottom: 16px;
+            line-height: 1.5;
+            margin-left: 9px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 12px;
         }
 
         .ghost-btn {
-            border-radius: 999px;
-            padding: 8px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: var(--cinema-text);
+            border: 1px solid rgba(255,255,255,0.15);
             background: transparent;
-            font-size: 0.85rem;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ghost-btn:hover {
+            background: white;
+            color: black;
         }
 
         @keyframes fadeUp {
@@ -274,45 +312,54 @@
         </div>
 
         <div class="movie-grid">
-            <article class="movie-card">
-                <div class="movie-poster">Poster</div>
-                <div class="movie-title">Interstellar Reunion</div>
-                <div class="movie-meta">Sci-Fi • 2h 40m</div>
-                <div class="movie-actions">
-                    <button class="ghost-btn" type="button">Details</button>
-                    <button class="ghost-btn" type="button">Showtimes</button>
-                </div>
-            </article>
 
-            <article class="movie-card">
-                <div class="movie-poster">Poster</div>
-                <div class="movie-title">Echoes of Midnight</div>
-                <div class="movie-meta">Mystery • 1h 55m</div>
-                <div class="movie-actions">
-                    <button class="ghost-btn" type="button">Details</button>
-                    <button class="ghost-btn" type="button">Showtimes</button>
-                </div>
-            </article>
+            <c:forEach var="movie"
+                       items="${movies}">
 
-            <article class="movie-card">
-                <div class="movie-poster">Poster</div>
-                <div class="movie-title">Neon Horizon</div>
-                <div class="movie-meta">Action • 2h 10m</div>
-                <div class="movie-actions">
-                    <button class="ghost-btn" type="button">Details</button>
-                    <button class="ghost-btn" type="button">Showtimes</button>
-                </div>
-            </article>
+                <article class="movie-card">
 
-            <article class="movie-card">
-                <div class="movie-poster">Poster</div>
-                <div class="movie-title">Aurora Rising</div>
-                <div class="movie-meta">Drama • 2h 05m</div>
-                <div class="movie-actions">
-                    <button class="ghost-btn" type="button">Details</button>
-                    <button class="ghost-btn" type="button">Showtimes</button>
-                </div>
-            </article>
+                    <a href="${pageContext.request.contextPath}/showtimes?movieId=${movie.id}">
+
+                        <img class="movie-poster"
+                             src="${pageContext.request.contextPath}/images/${movie.poster}"
+                             alt="${movie.title}">
+
+                    </a>
+
+                    <div class="movie-title">
+                            ${movie.title}
+                    </div>
+
+                    <div class="movie-meta">
+                        Directed by ${movie.director}
+                    </div>
+
+                    <div class="movie-actions">
+
+                        <button class="ghost-btn"
+                                type="button">
+
+                            Details
+
+                        </button>
+
+                        <a href="${pageContext.request.contextPath}/showtimes?movieId=${movie.id}">
+
+                            <button class="ghost-btn"
+                                    type="button">
+
+                                Showtimes
+
+                            </button>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </c:forEach>
+
         </div>
     </section>
 </div>
