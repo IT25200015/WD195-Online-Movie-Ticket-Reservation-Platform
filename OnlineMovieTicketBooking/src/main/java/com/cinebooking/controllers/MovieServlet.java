@@ -72,6 +72,11 @@ public class MovieServlet extends HttpServlet {
             String title = request.getParameter("title");
             String director = request.getParameter("director");
             int year = Integer.parseInt(request.getParameter("year"));
+            String description = request.getParameter("description");
+
+            String duration = request.getParameter("duration");
+
+            String trailer = request.getParameter("trailer");
 
             String fileName = "";
 
@@ -83,8 +88,8 @@ public class MovieServlet extends HttpServlet {
 
                 fileName = filePart.getSubmittedFileName();
 
-                String uploadPath =
-                        getServletContext().getRealPath("/images");
+                // Update the folder path according to your folder location
+                String uploadPath = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\java\\com\\cinebooking\\uploads";;
 
                 File uploadDir = new File(uploadPath);
 
@@ -92,9 +97,7 @@ public class MovieServlet extends HttpServlet {
                     uploadDir.mkdir();
                 }
 
-                filePart.write(uploadPath +
-                        File.separator +
-                        fileName);
+                filePart.write(uploadPath + File.separator + fileName);
             }
 
             // UPDATE -> keep old poster if no new image selected
@@ -106,8 +109,16 @@ public class MovieServlet extends HttpServlet {
                 fileName = oldMovie.getPoster();
             }
 
-            Movie movie =
-                    new Movie(id, title, director, year, fileName);
+            Movie movie = new Movie(
+                    id,
+                    title,
+                    director,
+                    year,
+                    fileName,
+                    description,
+                    duration,
+                    trailer
+            );
 
             // ADD
             if ("add".equals(action)) {
