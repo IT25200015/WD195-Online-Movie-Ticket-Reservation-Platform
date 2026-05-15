@@ -135,6 +135,8 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        } else if ("verifyOtp".equals(action)) {
+            request.getRequestDispatcher("/WEB-INF/views/verify-otp.jsp").forward(request, response);
         } else if ("logout".equals(action)) {
             // Get the current session (create if missing)
             HttpSession session = request.getSession();
@@ -212,19 +214,15 @@ public class UserController extends HttpServlet {
 
                 newUser.setPassword(hashedPassword);
 
-                // This lock prevents file corruption from concurrent users.
-                synchronized (FILE_LOCK) {
-                    // Save to database
-                    boolean isSaved = userDAO.registerUser(newUser);
+                // Generate a simple 4-digit OTP
+                int otp = 1000 + new java.util.Random().nextInt(9000);
 
-                    if (isSaved == true) {
-                        System.out.println("User saved successfully!");
-                        response.sendRedirect(request.getContextPath() + "/UserController?action=login"); // Go to login page
-                    } else {
-                        System.out.println("User save failed!");
-                        response.sendRedirect(request.getContextPath() + "/UserController?action=register&error=1"); // Go back to register
-                    }
-                }
+                // Store OTP and user data in session (do not write to file yet)
+                HttpSession session = request.getSession();
+                session.setAttribute("pendingOtp", String.valueOf(otp));
+                session.setAttribute("pendingUser", newUser);
+
+                response.sendRedirect("UserController?action=verifyOtp");
             }
 
             //  login an existing user
@@ -261,6 +259,23 @@ public class UserController extends HttpServlet {
                 } else {
                     // If login fails, send back with error message
                     response.sendRedirect("UserController?action=login&error=invalid");
+                }
+            } else if ("verifyOtp".equals(action)) {
+                HttpSession session = request.getSession();
+                String expectedOtp = (String) session.getAttribute("pendingOtp");
+                User pendingUser = (User) session.getAttribute("pendingUser");
+                String enteredOtp = request.getParameter("otp");
+
+                if (expectedOtp != null && pendingUser != null && expectedOtp.equals(enteredOtp)) {
+                    // This lock prevents file corruption from concurrent users.
+                    synchronized (FILE_LOCK) {
+                        userDAO.registerUser(pendingUser);
+                    }
+                    session.removeAttribute("pendingOtp");
+                    session.removeAttribute("pendingUser");
+                    response.sendRedirect("UserController?action=login");
+                } else {
+                    response.sendRedirect("UserController?action=verifyOtp&error=invalid");
                 }
             } else if ("update".equals(action)) {
                 HttpSession session = request.getSession();
