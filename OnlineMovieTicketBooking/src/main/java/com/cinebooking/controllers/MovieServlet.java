@@ -271,7 +271,7 @@ public class MovieServlet extends HttpServlet {
                 movieService.updateMovie(movie);
             }
         }
-
+        //response
         response.sendRedirect(
                 request.getContextPath()
                         + "/movies?page=manage");
