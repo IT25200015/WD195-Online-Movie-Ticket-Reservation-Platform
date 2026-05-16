@@ -47,7 +47,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/movies">Movies</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking.jsp">Book Tickets</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking">Book Tickets</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking?action=myBookings">My Bookings</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/deals">Offers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/reviews.jsp">Reviews</a></li>
                 <li class="nav-item"><a class="cinema-login-btn ms-lg-3" href="${pageContext.request.contextPath}/UserController?action=login">Login</a></li>
