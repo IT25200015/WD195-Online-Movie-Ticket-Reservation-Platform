@@ -1,5 +1,6 @@
 package seatbooking.service;
 
+import com.cinebooking.models.Showtime;
 import seatbooking.model.Booking;
 import seatbooking.model.Seat;
 
@@ -34,6 +35,41 @@ public class BookingService {
         return seatList;
     }
 
+    public List<Seat> getAvailableSeats(int showtimeId) {
+        // 1. Load all seats (all start as available)
+        List<Seat> allSeats = getAllSeats();
+
+        // 2. Find which seats are already booked for this showtime
+        List<String> bookedSeatIds = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data.length >= 9) {
+                    String bookingSeatId   = data[3];
+                    String bookingShowtime = data[8];
+                    // data[8] is showtimeId
+                    if (bookingShowtime.equals(String.valueOf(showtimeId))) {
+                        bookedSeatIds.add(bookingSeatId);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 3. Mark seats as booked if they appear in bookings for this showtime
+        for (Seat seat : allSeats) {
+            if (bookedSeatIds.contains(seat.getSeatId())) {
+                seat.setBooked(true);
+            } else {
+                seat.setBooked(false);
+            }
+        }
+
+        return allSeats;
+    }
+
     public Seat getSeatById(String seatId) {
         for (Seat s : getAllSeats()) {
             if (s.getSeatId().equals(seatId)) {
@@ -65,37 +101,40 @@ public class BookingService {
     }
 
     public Booking createBooking(String customerName, String customerEmail,
-                                 String seatId, String movieName, String showTime) {
+                                 String seatId, String movieName, String showtimeId) {
 
         Seat seat = getSeatById(seatId);
-        if (seat == null || seat.isBooked()) {
+        if (seat == null) {
             return null;
         }
 
-        String bookingId = generateBookingId();
+        // Check if seat is already booked for this showtime
+        List<Seat> availableSeats = getAvailableSeats(Integer.parseInt(showtimeId));
+        for (Seat s : availableSeats) {
+            if (s.getSeatId().equals(seatId) && s.isBooked()) {
+                return null; // already booked for this showtime
+            }
+        }
+
+        String bookingId   = generateBookingId();
         String bookingDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         Booking booking = new Booking(bookingId, customerName, customerEmail,
                 seatId, seat.getSeatType(), seat.getPrice(),
-                bookingDate, movieName, showTime);
+                bookingDate, movieName, showtimeId);
 
         saveBooking(booking);
-        markSeatAsBooked(seatId);
-
         return booking;
     }
 
     public boolean cancelBooking(String bookingId) {
         List<String> lines = new ArrayList<>();
-        String cancelledSeatId = null;
 
         try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\\|");
-                if (data[0].equals(bookingId)) {
-                    cancelledSeatId = data[3];
-                } else {
+                if (!data[0].equals(bookingId)) {
                     lines.add(line);
                 }
             }
@@ -114,10 +153,6 @@ public class BookingService {
             return false;
         }
 
-        if (cancelledSeatId != null) {
-            markSeatAsAvailable(cancelledSeatId);
-        }
-
         return true;
     }
 
@@ -133,48 +168,6 @@ public class BookingService {
                     booking.getMovieName() + "|" +
                     booking.getShowTime());
             bw.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void markSeatAsBooked(String seatId) {
-        List<Seat> seatList = getAllSeats();
-        StringBuilder sb = new StringBuilder();
-
-        for (Seat s : seatList) {
-            if (s.getSeatId().equals(seatId)) {
-                s.setBooked(true);
-            }
-            sb.append(s.getSeatId()).append("|")
-                    .append(s.getSeatType()).append("|")
-                    .append(s.isBooked()).append("|")
-                    .append(s.getPrice()).append("\n");
-        }
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(SEATS_FILE))) {
-            bw.write(sb.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void markSeatAsAvailable(String seatId) {
-        List<Seat> seatList = getAllSeats();
-        StringBuilder sb = new StringBuilder();
-
-        for (Seat s : seatList) {
-            if (s.getSeatId().equals(seatId)) {
-                s.setBooked(false);
-            }
-            sb.append(s.getSeatId()).append("|")
-                    .append(s.getSeatType()).append("|")
-                    .append(s.isBooked()).append("|")
-                    .append(s.getPrice()).append("\n");
-        }
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(SEATS_FILE))) {
-            bw.write(sb.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
