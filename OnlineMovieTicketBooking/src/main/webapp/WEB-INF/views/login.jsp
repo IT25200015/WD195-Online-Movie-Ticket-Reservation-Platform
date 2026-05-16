@@ -102,6 +102,12 @@
                     <div class="brand-subtitle">WELCOME BACK</div>
                 </div>
 
+                <% if ("loggedOut".equals(request.getParameter("msg"))) { %>
+                    <div class="alert alert-success text-center">
+                        You have logged out.
+                    </div>
+                <% } %>
+
                 <% if (request.getParameter("error") != null) { %>
                     <div class="alert alert-danger text-center">
                         Invalid Username or Password! Please try again.
