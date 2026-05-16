@@ -1,4 +1,4 @@
-package transactionManagement.controller;
+package cinebooking.controller;
 
 public class PublicDealsServlet {
 }
