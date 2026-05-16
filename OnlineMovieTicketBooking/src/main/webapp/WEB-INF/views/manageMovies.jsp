@@ -81,7 +81,7 @@
 </form>
 
 
-<!-- MOVIE TABLE -->
+<!-- CREAT MOVIE TABLE -->
 
 <table class="table table-bordered">
 
