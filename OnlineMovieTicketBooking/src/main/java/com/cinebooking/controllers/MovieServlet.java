@@ -207,7 +207,7 @@ public class MovieServlet extends HttpServlet {
             movieService.deleteMovie(id);
         }
 
-        // ADD OR UPDATE
+        // ADD OR UPDATE Details
         else {
 
             String title = request.getParameter("title");
