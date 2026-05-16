@@ -1,0 +1,25 @@
+:root {
+  --cinema-bg: #121212;
+  --cinema-surface: #1a1a1a;
+  --cinema-accent: #e50914;
+  --cinema-text: #f5f5f5;
+}
+
+.custom-input:focus {
+  background-color: var(--cinema-surface) !important;
+  color: var(--cinema-text) !important;
+  border-color: var(--cinema-accent) !important;
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2) !important;
+  outline: none;
+}
+
+/* Chrome Autofill Fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--cinema-surface) inset !important;
+  -webkit-text-fill-color: var(--cinema-text) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
