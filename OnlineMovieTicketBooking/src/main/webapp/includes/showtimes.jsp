@@ -90,8 +90,8 @@
         <div class="d-flex flex-wrap">
 
             <c:forEach var="show" items="${showtimes}">
-
-                <button class="btn-showtime">
+                <c:set var="movieId" value="${param.movieId}" />
+                <button class="btn-showtime" onclick="location.href='booking?action=selectSeat&movieID=${param.movieId}&showtimeId=${show.id}&movieName=${movie.name}'">
 
                     <span class="day-label">
                             ${show.day}

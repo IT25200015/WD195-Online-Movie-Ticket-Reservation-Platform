@@ -12,11 +12,12 @@ public class Booking {
     private String bookingDate;
     private String movieName;
     private String showTime;
+    private String bookingStatus;
 
     // Constructor - creates a new Booking object
     public Booking(String bookingId, String customerName, String customerEmail,
                    String seatId, String seatType, double totalPrice,
-                   String bookingDate, String movieName, String showTime) {
+                   String bookingDate, String movieName, String showTime, String bookingStatus) {
         this.bookingId = bookingId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -26,6 +27,7 @@ public class Booking {
         this.bookingDate = bookingDate;
         this.movieName = movieName;
         this.showTime = showTime;
+        this.bookingStatus = bookingStatus;
     }
 
     public String getBookingId() { return bookingId; }
@@ -37,6 +39,7 @@ public class Booking {
     public String getBookingDate() { return bookingDate; }
     public String getMovieName() { return movieName; }
     public String getShowTime() { return showTime; }
+    public String getBookingStatus() { return bookingStatus; }
 
     public void setBookingId(String bookingId) { this.bookingId = bookingId; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
@@ -47,4 +50,5 @@ public class Booking {
     public void setBookingDate(String bookingDate) { this.bookingDate = bookingDate; }
     public void setMovieName(String movieName) { this.movieName = movieName; }
     public void setShowTime(String showTime) { this.showTime = showTime; }
+    public void setBookingStatus(String status) { this.bookingStatus = status; }
 }

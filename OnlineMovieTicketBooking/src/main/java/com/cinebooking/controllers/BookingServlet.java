@@ -1,11 +1,8 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.models.Movie;
-import com.cinebooking.models.Showtime;
+import com.cinebooking.models.*;
 import com.cinebooking.services.MovieService;
 import com.cinebooking.services.ShowtimeService;
-import com.cinebooking.models.Booking;
-import com.cinebooking.models.Seat;
 import com.cinebooking.services.BookingService;
 
 import jakarta.servlet.ServletException;
@@ -35,21 +32,44 @@ public class BookingServlet extends HttpServlet {
         bookingService = new BookingService(seatFilepath, bookingFilepath);
         movieService = new MovieService(movieFilePath);
         showtimeService = new ShowtimeService(showTimeFilePath);
+
+        getServletContext().setAttribute("movieService", movieService);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
+
+        Object sessionUser = session != null ? session.getAttribute("user") : null;
+        if (sessionUser == null) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
+
         String action = request.getParameter("action");
 
         if ("myBookings".equals(action)) {
-            String customerEmail = "test@test.com";
-            List<Booking> myBookings = bookingService.getBookingsByEmail(customerEmail);
-            request.setAttribute("myBookings", myBookings);
-            request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp")
-                    .forward(request, response);
+            String page = request.getParameter("page");
+            if (page.equals("history")) {
+                User user = (User) sessionUser;
+                String customerEmail = user.getEmail();
+                List<Booking> myBookings = bookingService.getConfirmedBookingsByEmail(customerEmail);
+
+                request.setAttribute("myBookings", myBookings);
+                request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp")
+                        .forward(request, response);
+            }
+            else {
+                User user = (User) sessionUser;
+                String customerEmail = user.getEmail();
+                List<Booking> myBookings = bookingService.getPendingBookingsByEmail(customerEmail);
+
+                request.setAttribute("myBookings", myBookings);
+                request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp")
+                        .forward(request, response);
+            }
 
         } else if ("bookMovie".equals(action)) {
             handleBooking(request, response);
@@ -69,7 +89,7 @@ public class BookingServlet extends HttpServlet {
             request.setAttribute("seatList", seatList);
             request.setAttribute("movieName", movieName);
             request.setAttribute("showtimeId", showtimeId);
-            request.getRequestDispatcher("/WEB-INF/views/seatSelection.jsp")
+            request.getRequestDispatcher("/includes/seatSelection.jsp")
                     .forward(request, response);
 
         } else {
@@ -85,16 +105,23 @@ public class BookingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         String action = request.getParameter("action");
 
-        String customerName  = "TestUser";
-        String customerEmail = "test@test.com";
+        Object sessionUser = session != null ? session.getAttribute("user") : null;
+        if (sessionUser == null) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
+        User user = (User) sessionUser;
+        String customerName  = user.getName();
+        String customerEmail = user.getEmail();
 
         if ("cancel".equals(action)) {
             String bookingId = request.getParameter("bookingId");
             bookingService.cancelBooking(bookingId);
-            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings");
+            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=history");
+
             return;
         }
 
@@ -113,13 +140,40 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
+        if ("bookMultiple".equals(action)) {
+            String[] seatIds  = request.getParameterValues("seatIds");
+            String movieName  = request.getParameter("movieName");
+            String showtimeId = request.getParameter("showtimeId");
+
+            if (seatIds != null) {
+                for (String seatId : seatIds) {
+                    bookingService.createBooking(customerName, customerEmail,
+                            seatId, movieName, showtimeId, "PENDING");
+                }
+            }
+            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
+            return;
+        }
+
+        if ("confirmBookings".equals(action)) {
+            List<Booking> pendingBookings = bookingService.getPendingBookingsByEmail(customerEmail);
+
+            for (Booking b : pendingBookings) {
+                b.setBookingStatus("CONFIRMED");
+                bookingService.updateBooking(b);
+            }
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         // Create booking
         String seatId     = request.getParameter("seatId");
         String movieName  = request.getParameter("movieName");
         String showtimeId = request.getParameter("showtimeId");
 
         Booking booking = bookingService.createBooking(customerName, customerEmail,
-                seatId, movieName, showtimeId);
+                seatId, movieName, showtimeId, "PENDING");
 
         if (booking == null) {
             request.setAttribute("errorMessage", "Booking failed. Seat may already be taken.");
