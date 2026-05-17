@@ -15,9 +15,13 @@ public class IndexServlet extends HttpServlet {
     private MovieService movieService;
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
 
-        movieService = new MovieService();
+        String moviePath =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
+
+        movieService = new MovieService(moviePath);
     }
 
     @Override

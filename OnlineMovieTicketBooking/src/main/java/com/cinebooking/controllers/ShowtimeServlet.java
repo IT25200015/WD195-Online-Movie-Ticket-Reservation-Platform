@@ -19,7 +19,11 @@ public class ShowtimeServlet extends HttpServlet {
     @Override
     public void init() {
 
-        service = new ShowtimeService();
+        String path =
+                getServletContext()
+                        .getRealPath("/data/showtimes.txt");
+
+        service = new ShowtimeService(path);
     }
 
     @Override
@@ -27,8 +31,12 @@ public class ShowtimeServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
+        String moviePath =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
+
         MovieService movieService =
-                new MovieService();
+                new MovieService(moviePath);
 
         List<Movie> movies =
                 movieService.getAllMovies();

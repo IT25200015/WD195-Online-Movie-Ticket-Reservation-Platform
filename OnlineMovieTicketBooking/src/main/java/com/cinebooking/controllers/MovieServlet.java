@@ -166,7 +166,11 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        movieService = new MovieService();
+        String path =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
+
+        movieService = new MovieService(path);
     }
 
     @Override
@@ -207,7 +211,7 @@ public class MovieServlet extends HttpServlet {
             movieService.deleteMovie(id);
         }
 
-        // ADD OR UPDATE Details
+        // ADD OR UPDATE
         else {
 
             String title = request.getParameter("title");
@@ -227,9 +231,10 @@ public class MovieServlet extends HttpServlet {
 
                 fileName = filePart.getSubmittedFileName();
 
-                // ✅ CORRECTED: saves to src/main/webapp/images/
-                String uploadPath = getServletContext().getRealPath("/images");
-
+                // Update the folder path according to your folder location
+                String uploadPath =
+                        getServletContext()
+                                .getRealPath("/images");
                 File uploadDir = new File(uploadPath);
 
                 if (!uploadDir.exists()) {
