@@ -1,4 +1,4 @@
-package seatbooking.model;
+package com.cinebooking.models;
 
 public class Booking {
 
