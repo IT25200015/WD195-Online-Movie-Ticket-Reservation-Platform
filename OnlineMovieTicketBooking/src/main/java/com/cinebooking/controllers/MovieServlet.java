@@ -142,6 +142,7 @@
 package com.cinebooking.controllers;
 
 import com.cinebooking.models.Movie;
+import com.cinebooking.models.User;
 import com.cinebooking.services.MovieService;
 
 import jakarta.servlet.ServletException;
@@ -166,7 +167,17 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        movieService = new MovieService();
+        String dataFilePath = getServletContext().getRealPath("/data/movies.txt");
+        movieService = new MovieService(dataFilePath);
+    }
+
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+        User user = (User) session.getAttribute("user");
+        return user != null && "Admin".equals(user.getRole());
     }
 
     @Override
@@ -181,8 +192,11 @@ public class MovieServlet extends HttpServlet {
         String page = request.getParameter("page");
 
         if ("manage".equals(page)) {
-
-            request.getRequestDispatcher("/includes/manageMovies.jsp")
+            if (!isAdmin(request)) {
+                response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                return;
+            }
+            request.getRequestDispatcher("/WEB-INF/views/manageMovies.jsp")
                     .forward(request, response);
         }
         else {
@@ -196,6 +210,11 @@ public class MovieServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (!isAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
 
         String action = request.getParameter("action");
 
