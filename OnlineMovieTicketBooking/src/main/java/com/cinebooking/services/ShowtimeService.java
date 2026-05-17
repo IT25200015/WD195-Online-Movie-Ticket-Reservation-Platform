@@ -67,7 +67,8 @@ public class ShowtimeService {
         );
 
         BufferedWriter bw =
-                new BufferedWriter(new FileWriter(filePath, true));
+                new BufferedWriter(
+                        new FileWriter(filePath, true));
 
         bw.write(newShowtime.toFileString());
         bw.newLine();
@@ -80,7 +81,8 @@ public class ShowtimeService {
         List<Showtime> list = getAllShowtimes();
 
         BufferedWriter bw =
-                new BufferedWriter(new FileWriter(filePath));
+                new BufferedWriter(
+                        new FileWriter(filePath));
 
         for (Showtime s : list) {
 
@@ -99,7 +101,8 @@ public class ShowtimeService {
         List<Showtime> list = getAllShowtimes();
 
         BufferedWriter bw =
-                new BufferedWriter(new FileWriter(filePath));
+                new BufferedWriter(
+                        new FileWriter(filePath));
 
         for (Showtime s : list) {
 

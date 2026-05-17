@@ -1,1 +1,2 @@
 Sajitha Chamod Ruwanpura|sajithachamod13579@gmail.com|fecc1a8d73f8f8c3ea16d252995057afedcd578ffb925a9b6454ddf1801e52bc|Customer|0715629447|2026-05-14|Male|Regular
+Nimal Nishantha|nimalnishantha@gmail.com|e9b79742bb572b9cc811429c49e1bf3a7c3ecb337f3ddc2e432182f33c6410dc|Admin|0715629447|2026-05-20|Male|N/A

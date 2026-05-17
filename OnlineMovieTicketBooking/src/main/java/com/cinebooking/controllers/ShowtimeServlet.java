@@ -2,6 +2,8 @@ package com.cinebooking.controllers;
 
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.Showtime;
+import com.cinebooking.models.User;
+import com.cinebooking.models.User;
 import com.cinebooking.services.MovieService;
 import com.cinebooking.services.ShowtimeService;
 
@@ -19,11 +21,17 @@ public class ShowtimeServlet extends HttpServlet {
     @Override
     public void init() {
 
-        String path =
-                getServletContext()
-                        .getRealPath("/data/showtimes.txt");
+        String dataFilePath = getServletContext().getRealPath("/data/showtimes.txt");
+        service = new ShowtimeService(dataFilePath);
+    }
 
-        service = new ShowtimeService(path);
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+        User user = (User) session.getAttribute("user");
+        return user != null && "Admin".equals(user.getRole());
     }
 
     @Override
@@ -68,9 +76,12 @@ public class ShowtimeServlet extends HttpServlet {
 
         // ADMIN PAGE
         if ("manage".equals(page)) {
-
+            if (!isAdmin(request)) {
+                response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                return;
+            }
             request.getRequestDispatcher(
-                            "/includes/manageShowtimes.jsp")
+                            "/WEB-INF/views/manageShowtimes.jsp")
                     .forward(request, response);
         }
 
@@ -87,6 +98,11 @@ public class ShowtimeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (!isAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
 
         String action = request.getParameter("action");
 

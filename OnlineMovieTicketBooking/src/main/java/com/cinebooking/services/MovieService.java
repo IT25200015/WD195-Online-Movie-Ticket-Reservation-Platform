@@ -7,7 +7,7 @@ import java.util.*;
 
 public class MovieService {
 
-    private String filePath;
+    private final String filePath;
 
     public MovieService(String filePath) {
         this.filePath = filePath;
