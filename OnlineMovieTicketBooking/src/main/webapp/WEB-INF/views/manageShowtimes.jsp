@@ -1,3 +1,20 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: ASUS
+  Date: 16/05/2026
+  Time: 19:38
+  To change this template use File | Settings | File Templates.
+--%>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
+<%--<html>--%>
+<%--<head>--%>
+<%--    <title>Title</title>--%>
+<%--</head>--%>
+<%--<body>--%>
+
+<%--</body>--%>
+<%--</html>--%>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ taglib prefix="c"
@@ -12,22 +29,99 @@
     <link href=
                   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+
+    <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+            --cinema-border: #333333;
+        }
+
+        body {
+            background-color: var(--cinema-bg);
+            color: var(--cinema-text);
+        }
+
+        .admin-card {
+            background-color: var(--cinema-surface);
+            border: 1px solid var(--cinema-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .list-group-item {
+            background-color: var(--cinema-surface-2) !important;
+            color: var(--cinema-text) !important;
+            border: 1px solid var(--cinema-border) !important;
+        }
+
+        .list-group-item:hover {
+            background-color: #2a2a2a !important;
+        }
+
+        .form-control,
+        .form-select,
+        textarea {
+            background-color: var(--cinema-surface-2) !important;
+            color: var(--cinema-text) !important;
+            border: 1px solid var(--cinema-border) !important;
+            box-shadow: none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: var(--cinema-accent) !important;
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.25) !important;
+        }
+
+        .table {
+            color: var(--cinema-text);
+            border-color: var(--cinema-border);
+        }
+
+        .table thead th {
+            background-color: #222222;
+            color: var(--cinema-text);
+            border-color: var(--cinema-border);
+        }
+
+        .table tbody tr {
+            background-color: var(--cinema-surface);
+        }
+
+        .table tbody tr:hover {
+            background-color: #232323;
+        }
+
+        .btn-danger {
+            background-color: var(--cinema-accent) !important;
+            border-color: var(--cinema-accent) !important;
+        }
+    </style>
 
 </head>
 
-<body class="container-fluid mt-4">
+<body class="container-fluid mt-4 bg-dark text-white">
 
-<div class="row">
+<div class="admin-card">
+    <div class="row">
 
     <!-- MOVIE LIST -->
 
     <div class="col-md-3">
 
-        <h3 class="mb-4">
+        <h3 class="mb-4 text-white">
             Movies
         </h3>
 
-        <div class="list-group">
+        <div class="list-group bg-dark">
 
             <c:forEach var="movie"
                        items="${movies}">
@@ -35,7 +129,7 @@
                 <a href=
                            "${pageContext.request.contextPath}/showtimes?page=manage&movieId=${movie.id}"
 
-                   class="list-group-item list-group-item-action">
+                   class="list-group-item list-group-item-action bg-dark text-white border-secondary">
 
                         ${movie.title}
 
@@ -52,7 +146,7 @@
 
     <div class="col-md-9">
 
-        <h3 class="mb-4">
+        <h3 class="mb-4 text-white">
             Manage Showtimes
         </h3>
 
@@ -76,7 +170,7 @@
                        value="${selectedMovieId}">
 
                 <select name="day"
-                        class="form-control mb-2">
+                        class="form-control bg-dark text-white mb-2">
 
                     <option>Monday</option>
                     <option>Tuesday</option>
@@ -90,11 +184,11 @@
 
                 <input type="time"
                        name="time"
-                       class="form-control mb-2"
+                       class="form-control bg-dark text-white mb-2"
                        required>
 
                 <button class=
-                                "btn btn-success">
+                                "btn btn-danger">
 
                     Add Showtime
 
@@ -106,7 +200,7 @@
             <!-- SHOWTIME TABLE -->
 
             <table class=
-                           "table table-bordered">
+                           "table table-bordered table-dark">
 
                 <thead>
 
@@ -208,7 +302,7 @@
                                        value="${selectedMovieId}">
 
                                 <select name="day"
-                                        class="form-control mb-2">
+                                        class="form-control bg-dark text-white mb-2">
 
                                     <option ${show.day == 'Monday' ? 'selected' : ''}>
                                         Monday
@@ -243,10 +337,10 @@
                                 <input type="time"
                                        name="time"
                                        value="${show.time}"
-                                       class="form-control mb-2">
+                                       class="form-control bg-dark text-white mb-2">
 
                                 <button class=
-                                                "btn btn-primary">
+                                                "btn btn-danger btn-sm">
 
                                     Save Changes
 
@@ -271,7 +365,7 @@
 
         <c:if test="${selectedMovieId == null}">
 
-            <div class="alert alert-info">
+            <div class="alert alert-dark text-light border-0" style="background-color: #1f1f1f;">
 
                 Select a movie to manage showtimes.
 
@@ -280,6 +374,8 @@
         </c:if>
 
     </div>
+
+</div>
 
 </div>
 

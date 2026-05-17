@@ -34,7 +34,20 @@
         box-shadow: 0 10px 20px rgba(229, 9, 20, 0.35);
         color: #ffffff;
     }
+
+    .navbar-avatar {
+        width: 36px;
+        height: 36px;
+        border: 2px solid #e50914;
+        border-radius: 50%;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+        object-fit: cover;
+    }
 </style>
+
+<%
+    com.cinebooking.models.User navUser = (com.cinebooking.models.User) session.getAttribute("user");
+%>
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow cinema-navbar">
     <div class="container">
@@ -47,11 +60,23 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/movies">Movies</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking">Book Tickets</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking?action=myBookings">My Bookings</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/showtimes">Showtimes</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking.jsp">Book Tickets</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/deals">Offers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/reviews.jsp">Reviews</a></li>
-                <li class="nav-item"><a class="cinema-login-btn ms-lg-3" href="${pageContext.request.contextPath}/UserController?action=login">Login</a></li>
+                <% if (navUser != null) { %>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2" href="${pageContext.request.contextPath}/UserController?action=profile">
+                            <img
+                                src="https://ui-avatars.com/api/?name=<%= java.net.URLEncoder.encode(navUser.getName(), "UTF-8") %>&background=e50914&color=fff&rounded=true&size=64"
+                                alt="User avatar"
+                                class="navbar-avatar">
+                            <span><%= navUser.getName() %></span>
+                        </a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item"><a class="cinema-login-btn ms-lg-3" href="${pageContext.request.contextPath}/UserController?action=login">Login</a></li>
+                <% } %>
             </ul>
         </div>
     </div>

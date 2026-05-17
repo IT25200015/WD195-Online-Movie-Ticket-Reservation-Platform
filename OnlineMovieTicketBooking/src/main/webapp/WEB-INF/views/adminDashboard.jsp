@@ -20,6 +20,7 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
@@ -236,6 +237,19 @@
                class="btn"
                style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
                 Manage Promotions
+            </a>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <a href="${pageContext.request.contextPath}/movies?page=manage"
+               class="btn"
+               style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
+                Manage Movies
+            </a>
+            <a href="${pageContext.request.contextPath}/showtimes?page=manage"
+               class="btn"
+               style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
+                Manage Showtimes
             </a>
         </div>
 
