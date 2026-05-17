@@ -9,17 +9,28 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+        }
+
         body {
-            background-color: #121212;
-            color: white;
+            background-color: var(--cinema-bg);
+            color: var(--cinema-text);
         }
 
         .showtime-card {
-            background: #1f1f1f;
-            border-radius: 15px;
+            background: var(--cinema-surface);
+            border-radius: 16px;
             padding: 25px;
+            border: 1px solid #2a2a2a;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
@@ -31,8 +42,8 @@
 
         .btn-showtime {
             background: transparent;
-            border: 1px solid #e50914;
-            color: white;
+            border: 1px solid var(--cinema-accent);
+            color: var(--cinema-text);
             padding: 10px 18px;
             border-radius: 50px;
             margin: 8px;
@@ -41,7 +52,7 @@
         }
 
         .btn-showtime:hover {
-            background: #e50914;
+            background: var(--cinema-accent);
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
         }
@@ -49,7 +60,7 @@
         .day-label {
             display: block;
             font-size: 0.85rem;
-            color: #b9b9b9;
+            color: var(--cinema-muted);
         }
 
         .time-label {

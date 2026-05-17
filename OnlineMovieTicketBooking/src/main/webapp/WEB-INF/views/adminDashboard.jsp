@@ -243,12 +243,12 @@
         <div class="d-flex flex-wrap gap-2 mb-4">
             <a href="${pageContext.request.contextPath}/movies?page=manage"
                class="btn"
-               style="background-color: #1f1f1f !important; color: #ffffff !important; border: 1px solid #333333 !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
+               style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
                 Manage Movies
             </a>
             <a href="${pageContext.request.contextPath}/showtimes?page=manage"
                class="btn"
-               style="background-color: #1f1f1f !important; color: #ffffff !important; border: 1px solid #333333 !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
+               style="background-color: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 999px !important; padding: 8px 18px !important; font-weight: 600 !important; letter-spacing: 0.5px !important;">
                 Manage Showtimes
             </a>
         </div>

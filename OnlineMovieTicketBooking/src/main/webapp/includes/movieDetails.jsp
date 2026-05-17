@@ -9,27 +9,32 @@
     <link href=
                   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 
     <style>
+        :root {
+            --cinema-bg: #121212;
+            --cinema-surface: #1a1a1a;
+            --cinema-surface-2: #222222;
+            --cinema-accent: #e50914;
+            --cinema-text: #f5f5f5;
+            --cinema-muted: #b9b9b9;
+        }
 
         body {
-            background: linear-gradient(
-                    to bottom right,
-                    #0b1020,
-                    #111827
-            );
-
+            background-color: var(--cinema-bg);
             font-family: Arial, sans-serif;
-            color: white;
+            color: var(--cinema-text);
             min-height: 100vh;
         }
 
         .movie-container {
             margin-top: 50px;
             margin-bottom: 50px;
-            background: rgba(255,255,255,0.04);
+            background: var(--cinema-surface);
             padding: 40px;
             border-radius: 20px;
+            border: 1px solid #2a2a2a;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
@@ -52,14 +57,14 @@
         .movie-meta {
             font-size: 1.1rem;
             margin-bottom: 15px;
-            color: #d1d5db;
+            color: var(--cinema-muted);
         }
 
         .movie-description {
             line-height: 1.9;
             margin-top: 30px;
             font-size: 1.05rem;
-            color: #f3f4f6;
+            color: var(--cinema-text);
         }
 
         .trailer-title {
