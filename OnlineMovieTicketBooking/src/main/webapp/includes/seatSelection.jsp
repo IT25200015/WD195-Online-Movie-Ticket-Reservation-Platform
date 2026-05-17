@@ -66,8 +66,54 @@
             background-color: #2c3e50;
             color: white;
         }
+        .seat-selected {
+            background-color: #27ae60 !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
     </style>
 </head>
+
+<script>
+    const selectedSeats = new Map(); // seatId -> price
+
+    function toggleSeat(btn) {
+        const seatId = btn.dataset.seatId;
+        const price  = parseInt(btn.dataset.price);
+
+        if (selectedSeats.has(seatId)) {
+            selectedSeats.delete(seatId);
+            btn.classList.remove('seat-selected');
+        } else {
+            selectedSeats.set(seatId, price);
+            btn.classList.add('seat-selected');
+        }
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const bar   = document.getElementById('seatSummaryBar');
+        const total = [...selectedSeats.values()].reduce((a, b) => a + b, 0);
+        const count = selectedSeats.size;
+
+        document.getElementById('selectedCount').textContent = count;
+        document.getElementById('selectedTotal').textContent = total;
+
+        // Rebuild hidden inputs
+        const container = document.getElementById('seatInputs');
+        container.innerHTML = '';
+        selectedSeats.forEach((price, id) => {
+            const input = document.createElement('input');
+            input.type  = 'hidden';
+            input.name  = 'seatIds';
+            input.value = id;
+            container.appendChild(input);
+        });
+
+        bar.classList.toggle('d-none', count === 0);
+        bar.style.display = count > 0 ? 'flex' : 'none';
+    }
+</script>
 <body>
 
 <%@ include file="/includes/navbar.jsp" %>
@@ -76,10 +122,25 @@
 
     <h2 class="fw-bold mb-1">Select Your Seat</h2>
     <p class="text-muted mb-4">
-        🎬 <strong><%= request.getAttribute("movieName") %></strong>
+        <%
+            System.out.println("=== DEBUG ===");
+            System.out.println("movieID param: " + request.getParameter("movieID"));
+            System.out.println("movieID attr: " + request.getAttribute("movieID"));
+            System.out.println("showtimeId param: " + request.getParameter("showtimeId"));
+            System.out.println("showtimeId attr: " + request.getAttribute("showtimeId"));
+        %>
+        <%
+            com.cinebooking.services.MovieService movieService =
+                    (com.cinebooking.services.MovieService) application.getAttribute("movieService");
+
+            int movieId = Integer.parseInt(request.getParameter("movieID"));
+            String movieName = movieService.getMovieById(movieId).getTitle();
+        %>
+        🎬 <strong><%= movieName %></strong>
     </p>
 
     <!-- Showtime Dropdown -->
+    <% if (request.getAttribute("showtimeId") == null) { %>
     <form method="post" action="<%= request.getContextPath() %>/booking">
         <input type="hidden" name="action" value="selectSeat">
         <input type="hidden" name="movieName" value="<%= request.getAttribute("movieName") %>">
@@ -108,6 +169,8 @@
             </select>
         </div>
     </form>
+    <% } %>
+
 
     <!-- Error message -->
     <% if (request.getAttribute("errorMessage") != null) { %>
@@ -134,7 +197,8 @@
     </div>
 
     <!-- Seat Grid -->
-    <div class="row g-3">
+    <!-- Seat Grid -->
+    <div class="row g-3" id="seatGrid">
         <%
             for (Seat seat : seatList) {
                 String badgeClass = "badge-standard";
@@ -143,27 +207,82 @@
                 String bookedClass = seat.isBooked() ? "seat-booked" : "";
         %>
         <div class="col-6 col-md-3 col-lg-2">
-            <form method="post" action="<%= request.getContextPath() %>/booking">
-                <input type="hidden" name="seatId"     value="<%= seat.getSeatId() %>">
-                <input type="hidden" name="movieName"  value="<%= request.getAttribute("movieName") %>">
-                <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">
-
-                <button type="submit"
-                        class="btn w-100 seat-card border shadow-sm <%= bookedClass %>"
-                        <%= seat.isBooked() ? "disabled" : "" %>>
-                    <div class="fw-bold"><%= seat.getSeatId() %></div>
-                    <span class="badge <%= badgeClass %> mt-1"><%= seat.getSeatType() %></span>
-                    <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>
-                    <% if (seat.isBooked()) { %>
-                    <div class="small text-danger">Booked</div>
-                    <% } %>
-                </button>
-            </form>
+            <% if (!seat.isBooked()) { %>
+            <button type="button"
+                    class="btn w-100 seat-card border shadow-sm selectable-seat"
+                    data-seat-id="<%= seat.getSeatId() %>"
+                    data-seat-type="<%= seat.getSeatType() %>"
+                    data-price="<%= (int) seat.getPrice() %>"
+                    onclick="toggleSeat(this)">
+                <div class="fw-bold"><%= seat.getSeatId() %></div>
+                <span class="badge <%= badgeClass %> mt-1"><%= seat.getSeatType() %></span>
+                <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>
+            </button>
+            <% } else { %>
+            <button type="button" class="btn w-100 seat-card border shadow-sm seat-booked" disabled>
+                <div class="fw-bold"><%= seat.getSeatId() %></div>
+                <span class="badge bg-secondary mt-1"><%= seat.getSeatType() %></span>
+                <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>
+                <div class="small text-danger">Booked</div>
+            </button>
+            <% } %>
         </div>
-        <%
-            }
-        %>
+        <% } %>
     </div>
+
+    <!-- Sticky bottom bar -->
+    <div id="seatSummaryBar" class="d-none" style="
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #2c3e50; color: white;
+    padding: 14px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.3);">
+        <div>
+            <span id="selectedCount">0</span> seat(s) selected &nbsp;|&nbsp;
+            <strong>Total: LKR <span id="selectedTotal">0</span></strong>
+        </div>
+        <form method="post" action="<%= request.getContextPath() %>/booking" id="multiSeatForm">
+            <input type="hidden" name="action" value="bookMultiple">
+            <input type="hidden" name="movieName"  value="<%= movieName %>">
+            <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">
+            <input type="hidden" name="movieID"    value="<%= request.getAttribute("movieID") %>">
+            <div id="seatInputs"></div>
+            <button type="submit" class="btn btn-warning fw-bold px-4">Next →</button>
+        </form>
+    </div>
+
+    <!-- Bottom padding so content isn't hidden behind sticky bar -->
+    <div style="height: 80px;"></div>
+<%--    <div class="row g-3">--%>
+<%--        <%--%>
+<%--            for (Seat seat : seatList) {--%>
+<%--                String badgeClass = "badge-standard";--%>
+<%--                if (seat.getSeatType().equals("Premium")) badgeClass = "badge-premium";--%>
+<%--                if (seat.getSeatType().equals("VIP"))     badgeClass = "badge-vip";--%>
+<%--                String bookedClass = seat.isBooked() ? "seat-booked" : "";--%>
+<%--        %>--%>
+<%--        <div class="col-6 col-md-3 col-lg-2">--%>
+<%--            <form method="post" action="<%= request.getContextPath() %>/booking">--%>
+<%--                <input type="hidden" name="seatId"     value="<%= seat.getSeatId() %>">--%>
+<%--                <input type="hidden" name="movieName"  value="<%= request.getAttribute("movieName") %>">--%>
+<%--                <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">--%>
+
+<%--                <button type="submit"--%>
+<%--                        class="btn w-100 seat-card border shadow-sm <%= bookedClass %>"--%>
+<%--                        <%= seat.isBooked() ? "disabled" : "" %>>--%>
+<%--                    <div class="fw-bold"><%= seat.getSeatId() %></div>--%>
+<%--                    <span class="badge <%= badgeClass %> mt-1"><%= seat.getSeatType() %></span>--%>
+<%--                    <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>--%>
+<%--                    <% if (seat.isBooked()) { %>--%>
+<%--                    <div class="small text-danger">Booked</div>--%>
+<%--                    <% } %>--%>
+<%--                </button>--%>
+<%--            </form>--%>
+<%--        </div>--%>
+<%--        <%--%>
+<%--            }--%>
+<%--        %>--%>
+<%--    </div>--%>
 
     <% } else if (request.getAttribute("showtimeId") != null) { %>
     <div class="alert alert-info">No seats available for this showtime.</div>

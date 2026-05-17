@@ -55,8 +55,9 @@ public class BookingService {
                 if (data.length >= 9) {
                     String bookingSeatId   = data[3];
                     String bookingShowtime = data[8];
-                    // data[8] is showtimeId
-                    if (bookingShowtime.equals(String.valueOf(showtimeId))) {
+                    String bookingStatus = data[9];
+
+                    if (!bookingStatus.equals("PENDING") && bookingShowtime.equals(String.valueOf(showtimeId))) {
                         bookedSeatIds.add(bookingSeatId);
                     }
                 }
@@ -86,17 +87,59 @@ public class BookingService {
         return null;
     }
 
+    public List<Booking> getPendingBookingsByEmail(String email) {
+        List<Booking> bookings = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data.length == 10 && data[2].equals(email) && data[9].equals("PENDING")) {
+                    Booking b = new Booking(
+                            data[0], data[1], data[2], data[3],
+                            data[4], Double.parseDouble(data[5]),
+                            data[6], data[7], data[8], data[9]
+                    );
+                    bookings.add(b);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
+    public List<Booking> getConfirmedBookingsByEmail(String email) {
+        List<Booking> bookings = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data.length == 10 && data[2].equals(email) && data[9].equals("CONFIRMED")) {
+                    Booking b = new Booking(
+                            data[0], data[1], data[2], data[3],
+                            data[4], Double.parseDouble(data[5]),
+                            data[6], data[7], data[8], data[9]
+                    );
+                    bookings.add(b);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
     public List<Booking> getBookingsByEmail(String email) {
         List<Booking> bookings = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\\|");
-                if (data.length == 9 && data[2].equals(email)) {
+                if (data.length == 10 && data[2].equals(email)) {
                     Booking b = new Booking(
                             data[0], data[1], data[2], data[3],
                             data[4], Double.parseDouble(data[5]),
-                            data[6], data[7], data[8]
+                            data[6], data[7], data[8], data[9]
                     );
                     bookings.add(b);
                 }
@@ -108,7 +151,7 @@ public class BookingService {
     }
 
     public Booking createBooking(String customerName, String customerEmail,
-                                 String seatId, String movieName, String showtimeId) {
+                                 String seatId, String movieName, String showtimeId, String status) {
 
         Seat seat = getSeatById(seatId);
         if (seat == null) {
@@ -128,7 +171,7 @@ public class BookingService {
 
         Booking booking = new Booking(bookingId, customerName, customerEmail,
                 seatId, seat.getSeatType(), seat.getPrice(),
-                bookingDate, movieName, showtimeId);
+                bookingDate, movieName, showtimeId, status);
 
         saveBooking(booking);
         return booking;
@@ -173,11 +216,56 @@ public class BookingService {
                     booking.getTotalPrice() + "|" +
                     booking.getBookingDate() + "|" +
                     booking.getMovieName() + "|" +
-                    booking.getShowTime());
+                    booking.getShowTime() + "|" +
+                    booking.getBookingStatus());
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean updateBooking(Booking booking) {
+        List<String> lines = new ArrayList<>();
+        boolean updated = false;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                if (data[0].equals(booking.getBookingId())) {
+                    // Replace with updated booking data
+                    line = booking.getBookingId() + "|" +
+                            booking.getCustomerName() + "|" +
+                            booking.getCustomerEmail() + "|" +
+                            booking.getSeatId() + "|" +
+                            booking.getSeatType() + "|" +
+                            booking.getTotalPrice() + "|" +
+                            booking.getBookingDate() + "|" +
+                            booking.getMovieName() + "|" +
+                            booking.getShowTime() + "|" +
+                            booking.getBookingStatus();
+                    updated = true;
+                }
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (!updated) return false;
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
+            for (String line : lines) {
+                bw.write(line);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     private String generateBookingId() {

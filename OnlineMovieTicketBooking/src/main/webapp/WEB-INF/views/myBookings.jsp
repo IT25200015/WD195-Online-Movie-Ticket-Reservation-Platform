@@ -22,6 +22,27 @@
     .badge-vip      { background-color: #f39c12; }
   </style>
 </head>
+
+<script>
+  async function handlePayment() {
+    try {
+      const response = await fetch("<%= request.getContextPath() %>/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "action=confirmBookings"
+      });
+
+      if (response.ok) {
+        window.location.href = "<%= request.getContextPath() %>/payment";
+      } else {
+        alert("Failed to confirm bookings. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error confirming bookings:", err);
+      alert("Something went wrong. Please try again.");
+    }
+  }
+</script>
 <body>
 
 <%@ include file="/includes/navbar.jsp" %>
@@ -29,27 +50,36 @@
 <div class="container my-5">
   <h2 class="fw-bold mb-4">My Bookings</h2>
 
-  <%
+    <%
     List<Booking> myBookings = (List<Booking>) request.getAttribute("myBookings");
+    double subtotal = 0;
+
     if (myBookings == null || myBookings.isEmpty()) {
-  %>
+%>
   <div class="alert alert-info">
     You have no bookings yet.
-    <a href="<%= request.getContextPath() %>/booking?movieName=Avengers&showTime=7:00PM">
-      Book a seat now!
-    </a>
+    <a href="<%= request.getContextPath() %>/booking">Book a seat now!</a>
   </div>
-  <%
-  } else {
-    for (Booking b : myBookings) {
-      String badgeClass = "badge-standard";
-      if (b.getSeatType().equals("Premium")) badgeClass = "badge-premium";
-      if (b.getSeatType().equals("VIP"))     badgeClass = "badge-vip";
-  %>
+    <%
+    } else {
+        for (Booking b : myBookings) {
+            subtotal += b.getTotalPrice(); // use the getter that actually exists
+            String badgeClass = "badge-standard";
+            if (b.getSeatType().equals("Premium")) badgeClass = "badge-premium";
+            if (b.getSeatType().equals("VIP"))     badgeClass = "badge-vip";
+%>
   <div class="card booking-card p-4">
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h5 class="fw-bold mb-1">🎬 <%= b.getMovieName() %></h5>
+        <h5 class="fw-bold mb-1">🎬 <%= b.getMovieName() %>
+          <% if ("PENDING".equalsIgnoreCase(b.getBookingStatus())) { %>
+          <span class="badge bg-warning text-dark ms-2">⏳ Pending</span>
+          <% } else if ("CONFIRMED".equalsIgnoreCase(b.getBookingStatus())) { %>
+          <span class="badge bg-success ms-2">✅ Confirmed</span>
+          <% } else if ("CANCELLED".equalsIgnoreCase(b.getBookingStatus())) { %>
+          <span class="badge bg-danger ms-2">❌ Cancelled</span>
+          <% } %>
+        </h5>
         <p class="text-muted mb-1">🕐 <%= b.getShowTime() %></p>
         <p class="mb-1">
           Seat: <strong><%= b.getSeatId() %></strong>
@@ -73,11 +103,31 @@
       </div>
     </div>
   </div>
-  <%
-      }
+    <%
+        }
+
+        // Subtotal card — only shown when there are bookings
+         if (!"history".equals(request.getParameter("page"))) {
+%>
+
+  <div class="card shadow-sm mt-4">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1">Order Summary</h5>
+        <p class="text-muted mb-0"><%= myBookings.size() %> booking(s)</p>
+      </div>
+      <div class="text-end">
+        <h4 class="fw-bold text-warning mb-2">LKR <%= (int) subtotal %></h4>
+        <button type="button" class="btn btn-warning fw-bold px-4" onclick="handlePayment()">
+          Proceed to Payment →
+        </button>
+      </div>
+    </div>
+  </div>
+    <%
     }
-  %>
-</div>
+    }
+%>
 
 <%@ include file="/includes/footer.jsp" %>
 
