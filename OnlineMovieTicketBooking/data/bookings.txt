@@ -1,3 +1,0 @@
-BK-20260514-00003|TestUser|test@test.com|S01|Standard|500.0|1.1|1|null
-BK-20260515-00002|TestUser|test@test.com|S08|Premium|1000.0|2.1|2|7:00PM
-BK-20260515-00003|TestUser|test@test.com|S05|Premium|1000.0|3.1|3|7:00PM
