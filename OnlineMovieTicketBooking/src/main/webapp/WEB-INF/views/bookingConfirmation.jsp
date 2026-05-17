@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="seatbooking.model.Booking" %>
+<%@ page import="com.cinebooking.models.Booking" %>
 <!DOCTYPE html>
 <html>
 <head>

@@ -35,7 +35,7 @@
     <!-- BookingServlet registration -->
     <servlet>
         <servlet-name>BookingServlet</servlet-name>
-        <servlet-class>seatbooking.servlet.BookingServlet</servlet-class>
+        <servlet-class>com.cinebooking.controllers.BookingServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
