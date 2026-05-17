@@ -39,7 +39,7 @@ The system applies all five OOP principles across all six components:
 * **Information Hiding:** File I/O and business logic hidden inside service classes.
 
 ## Folder Structure
-* `src/main/java/com/cinebooking/` - Contains all Java POJO classes, Servlets, and Services.
+* `src/main/java/com/transactionManagement/` - Contains all Java POJO classes, Servlets, and Services.
 * `src/main/webapp/WEB-INF/views/` - Contains all JSP files for the frontend user interface.
 * `data/` - Contains all `.txt` files used for data storage (e.g., users.txt, movies.txt, showtimes.txt).
 * `docs/` - Contains Class diagrams and the Final Report.
