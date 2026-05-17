@@ -1,8 +1,7 @@
-package seatbooking.service;
+package com.cinebooking.services;
 
-import com.cinebooking.models.Showtime;
-import seatbooking.model.Booking;
-import seatbooking.model.Seat;
+import com.cinebooking.models.Booking;
+import com.cinebooking.models.Seat;
 
 import java.io.*;
 import java.time.LocalDate;
