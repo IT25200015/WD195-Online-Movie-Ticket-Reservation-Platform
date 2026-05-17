@@ -61,7 +61,8 @@
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/movies">Movies</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/showtimes">Showtimes</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking.jsp">Book Tickets</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking">Book Tickets</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/booking?action=myBookings">My Bookings</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/deals">Offers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/reviews.jsp">Reviews</a></li>
                 <% if (navUser != null) { %>
