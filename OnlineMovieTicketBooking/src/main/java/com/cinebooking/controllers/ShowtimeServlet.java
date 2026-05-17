@@ -2,6 +2,7 @@ package com.cinebooking.controllers;
 
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.Showtime;
+import com.cinebooking.models.User;
 import com.cinebooking.services.MovieService;
 import com.cinebooking.services.ShowtimeService;
 
@@ -19,7 +20,17 @@ public class ShowtimeServlet extends HttpServlet {
     @Override
     public void init() {
 
-        service = new ShowtimeService();
+        String dataFilePath = getServletContext().getRealPath("/data/showtimes.txt");
+        service = new ShowtimeService(dataFilePath);
+    }
+
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+        User user = (User) session.getAttribute("user");
+        return user != null && "Admin".equals(user.getRole());
     }
 
     @Override
@@ -27,8 +38,9 @@ public class ShowtimeServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
+        String moviesFilePath = getServletContext().getRealPath("/data/movies.txt");
         MovieService movieService =
-                new MovieService();
+                new MovieService(moviesFilePath);
 
         List<Movie> movies =
                 movieService.getAllMovies();
@@ -60,9 +72,12 @@ public class ShowtimeServlet extends HttpServlet {
 
         // ADMIN PAGE
         if ("manage".equals(page)) {
-
+            if (!isAdmin(request)) {
+                response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+                return;
+            }
             request.getRequestDispatcher(
-                            "/includes/manageShowtimes.jsp")
+                            "/WEB-INF/views/manageShowtimes.jsp")
                     .forward(request, response);
         }
 
@@ -79,6 +94,11 @@ public class ShowtimeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (!isAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/UserController?action=login");
+            return;
+        }
 
         String action = request.getParameter("action");
 

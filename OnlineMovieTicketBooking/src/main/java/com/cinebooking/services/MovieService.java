@@ -7,13 +7,16 @@ import java.util.*;
 
 public class MovieService {
 
-    // Everyone change this file path to the file path in your machine
-    private static final String FILE_PATH = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\movies.txt";
+    private final String filePath;
+
+    public MovieService(String filePath) {
+        this.filePath = filePath;
+    }
 
     // Read all movies
     public List<Movie> getAllMovies() throws IOException {
         List<Movie> movies = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
 
         if (!file.exists()) return movies;
 
@@ -35,7 +38,7 @@ public class MovieService {
 
     // Add movie
     public void addMovie(Movie movie) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
         bw.write(movie.toFileString());
         bw.newLine();
         bw.close();
@@ -45,7 +48,7 @@ public class MovieService {
     public void updateMovie(Movie updatedMovie) throws IOException {
         List<Movie> movies = getAllMovies();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
 
         for (Movie movie : movies) {
             if (movie.getId() == updatedMovie.getId()) {
@@ -62,7 +65,7 @@ public class MovieService {
     public void deleteMovie(int id) throws IOException {
         List<Movie> movies = getAllMovies();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
 
         for (Movie movie : movies) {
             if (movie.getId() != id) {

@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ include file="header.jsp" %>
-<%@ include file="navbar.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,6 +53,8 @@
 
 <body>
 
+<jsp:include page="/includes/navbar.jsp" />
+
 <div class="container">
 
     <div class="section-title">
@@ -101,7 +101,7 @@
 
 </div>
 
-<%@ include file="footer.jsp" %>
+<jsp:include page="/includes/footer.jsp" />
 
 </body>
 </html>

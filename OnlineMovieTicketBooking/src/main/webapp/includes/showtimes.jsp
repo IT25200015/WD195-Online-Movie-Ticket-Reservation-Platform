@@ -62,6 +62,8 @@
 
 <body>
 
+<jsp:include page="/includes/navbar.jsp" />
+
 <div class="container mt-5">
 
     <div class="showtime-card">
@@ -97,6 +99,8 @@
     </div>
 
 </div>
+
+<jsp:include page="/includes/footer.jsp" />
 
 </body>
 </html>

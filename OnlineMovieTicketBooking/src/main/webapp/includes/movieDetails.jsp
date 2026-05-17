@@ -83,6 +83,8 @@
 
 <body>
 
+<jsp:include page="/includes/navbar.jsp" />
+
 <div class="container movie-container">
 
     <div class="row">
@@ -148,6 +150,8 @@
     </div>
 
 </div>
+
+<jsp:include page="/includes/footer.jsp" />
 
 </body>
 </html>

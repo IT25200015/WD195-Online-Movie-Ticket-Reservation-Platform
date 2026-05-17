@@ -7,8 +7,11 @@ import java.util.*;
 
 public class ShowtimeService {
 
-    // Everyone change this file path to the file path in your machine
-    private static final String FILE_PATH = "C:\\Users\\ASUS\\OneDrive\\Desktop\\WD195-Online-Movie-Ticket-Reservation-Platform\\OnlineMovieTicketBooking\\src\\main\\webapp\\data\\showtimes.txt";
+    private final String filePath;
+
+    public ShowtimeService(String filePath) {
+        this.filePath = filePath;
+    }
 
     // GET ALL
     public List<Showtime> getAllShowtimes()
@@ -16,7 +19,7 @@ public class ShowtimeService {
 
         List<Showtime> list = new ArrayList<>();
 
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
 
         if (!file.exists()) return list;
 
@@ -68,7 +71,7 @@ public class ShowtimeService {
 
         BufferedWriter bw =
                 new BufferedWriter(
-                        new FileWriter(FILE_PATH, true));
+                        new FileWriter(filePath, true));
 
         bw.write(newShowtime.toFileString());
         bw.newLine();
@@ -84,7 +87,7 @@ public class ShowtimeService {
 
         BufferedWriter bw =
                 new BufferedWriter(
-                        new FileWriter(FILE_PATH));
+                        new FileWriter(filePath));
 
         for (Showtime s : list) {
 
@@ -106,7 +109,7 @@ public class ShowtimeService {
 
         BufferedWriter bw =
                 new BufferedWriter(
-                        new FileWriter(FILE_PATH));
+                        new FileWriter(filePath));
 
         for (Showtime s : list) {
 
