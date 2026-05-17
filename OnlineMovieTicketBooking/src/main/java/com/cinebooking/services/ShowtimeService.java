@@ -14,8 +14,7 @@ public class ShowtimeService {
     }
 
     // GET ALL
-    public List<Showtime> getAllShowtimes()
-            throws IOException {
+    public List<Showtime> getAllShowtimes() throws IOException {
 
         List<Showtime> list = new ArrayList<>();
 
@@ -30,9 +29,9 @@ public class ShowtimeService {
 
         while ((line = br.readLine()) != null) {
 
-            list.add(
-                    Showtime.fromFileString(line)
-            );
+            if (!line.trim().isEmpty()) {
+                list.add(Showtime.fromFileString(line));
+            }
         }
 
         br.close();
@@ -47,7 +46,6 @@ public class ShowtimeService {
         List<Showtime> result = new ArrayList<>();
 
         for (Showtime s : getAllShowtimes()) {
-
             if (s.getMovieId() == movieId) {
                 result.add(s);
             }
@@ -57,8 +55,7 @@ public class ShowtimeService {
     }
 
     // ADD
-    public void addShowtime(Showtime showtime)
-            throws IOException {
+    public void addShowtime(Showtime showtime) throws IOException {
 
         int newId = generateId();
 
@@ -75,13 +72,11 @@ public class ShowtimeService {
 
         bw.write(newShowtime.toFileString());
         bw.newLine();
-
         bw.close();
     }
 
     // DELETE
-    public void deleteShowtime(int id)
-            throws IOException {
+    public void deleteShowtime(int id) throws IOException {
 
         List<Showtime> list = getAllShowtimes();
 
@@ -92,7 +87,6 @@ public class ShowtimeService {
         for (Showtime s : list) {
 
             if (s.getId() != id) {
-
                 bw.write(s.toFileString());
                 bw.newLine();
             }
@@ -102,8 +96,7 @@ public class ShowtimeService {
     }
 
     // UPDATE
-    public void updateShowtime(Showtime updated)
-            throws IOException {
+    public void updateShowtime(Showtime updated) throws IOException {
 
         List<Showtime> list = getAllShowtimes();
 
@@ -114,11 +107,8 @@ public class ShowtimeService {
         for (Showtime s : list) {
 
             if (s.getId() == updated.getId()) {
-
                 bw.write(updated.toFileString());
-            }
-            else {
-
+            } else {
                 bw.write(s.toFileString());
             }
 
@@ -130,22 +120,21 @@ public class ShowtimeService {
 
     private int generateId() {
 
-        List<Showtime> list = null;
         try {
-            list = getAllShowtimes();
+            List<Showtime> list = getAllShowtimes();
+
+            int maxId = 0;
+
+            for (Showtime s : list) {
+                if (s.getId() > maxId) {
+                    maxId = s.getId();
+                }
+            }
+
+            return maxId + 1;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        int maxId = 0;
-
-        for (Showtime s : list) {
-            if (s.getId() > maxId) {
-                maxId = s.getId();
-            }
-        }
-
-        return maxId + 1;
     }
-
 }

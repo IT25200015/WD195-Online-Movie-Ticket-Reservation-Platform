@@ -17,8 +17,11 @@ public class MovieDetailsServlet
     @Override
     public void init() {
 
-        String dataFilePath = getServletContext().getRealPath("/data/movies.txt");
-        movieService = new MovieService(dataFilePath);
+        String path =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
+
+        movieService = new MovieService(path);
     }
 
     @Override

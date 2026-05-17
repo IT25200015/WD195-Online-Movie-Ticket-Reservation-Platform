@@ -143,6 +143,7 @@ package com.cinebooking.controllers;
 
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.User;
+import com.cinebooking.models.User;
 import com.cinebooking.services.MovieService;
 
 import jakarta.servlet.ServletException;
@@ -226,7 +227,7 @@ public class MovieServlet extends HttpServlet {
             movieService.deleteMovie(id);
         }
 
-        // ADD OR UPDATE Details
+        // ADD OR UPDATE
         else {
 
             String title = request.getParameter("title");
@@ -246,9 +247,10 @@ public class MovieServlet extends HttpServlet {
 
                 fileName = filePart.getSubmittedFileName();
 
-                // ✅ CORRECTED: saves to src/main/webapp/images/
-                String uploadPath = getServletContext().getRealPath("/images");
-
+                // Update the folder path according to your folder location
+                String uploadPath =
+                        getServletContext()
+                                .getRealPath("/images");
                 File uploadDir = new File(uploadPath);
 
                 if (!uploadDir.exists()) {

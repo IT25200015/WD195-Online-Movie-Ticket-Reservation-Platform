@@ -3,6 +3,7 @@ package com.cinebooking.controllers;
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.Showtime;
 import com.cinebooking.models.User;
+import com.cinebooking.models.User;
 import com.cinebooking.services.MovieService;
 import com.cinebooking.services.ShowtimeService;
 
@@ -38,9 +39,12 @@ public class ShowtimeServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String moviesFilePath = getServletContext().getRealPath("/data/movies.txt");
+        String moviePath =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
+
         MovieService movieService =
-                new MovieService(moviesFilePath);
+                new MovieService(moviePath);
 
         List<Movie> movies =
                 movieService.getAllMovies();
