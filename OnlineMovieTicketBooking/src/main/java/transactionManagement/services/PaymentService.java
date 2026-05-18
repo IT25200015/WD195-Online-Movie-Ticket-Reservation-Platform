@@ -7,7 +7,6 @@ import transactionManagement.dao.PaymentDAOFile;
 import transactionManagement.models.Booking;
 import transactionManagement.models.CardPayment;
 import transactionManagement.models.Payment;
-import transactionManagement.models.Showtime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

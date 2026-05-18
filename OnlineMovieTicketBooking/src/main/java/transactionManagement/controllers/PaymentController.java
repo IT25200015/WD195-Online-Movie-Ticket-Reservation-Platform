@@ -4,7 +4,6 @@ import transactionManagement.dao.PaymentDAO;
 import transactionManagement.dao.PaymentDAOFile;
 import transactionManagement.models.CardPayment;
 import transactionManagement.models.Payment;
-import transactionManagement.models.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
