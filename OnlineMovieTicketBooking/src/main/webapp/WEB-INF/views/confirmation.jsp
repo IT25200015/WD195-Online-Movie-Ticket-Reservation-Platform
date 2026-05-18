@@ -53,6 +53,28 @@
         .btn-action:hover { background: rgba(255,255,255,0.08); color: var(--cinema-text); }
     </style>
 </head>
+<script>
+    window.onload = async function() {
+        console.log("Page loaded. Confirming bookings...");
+
+        try {
+            const response = await fetch("<%= request.getContextPath() %>/booking", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "action=confirmBookings"
+            });
+
+            if (response.ok) {
+                console.log("Bookings confirmed successfully!");
+            } else {
+                console.error("Server responded with status:", response.status);
+            }
+        } catch (error) {
+            console.error("Network error occurred during confirmation:", error);
+            alert("A network error occurred. Please check your connection and try again.");
+        }
+    };
+</script>
 <body>
 <div class="container">
     <div class="row justify-content-center">
@@ -95,8 +117,8 @@
 
             <!-- Buttons -->
             <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a href="PaymentController?action=myBookings" class="btn btn-action">My Bookings</a>
-                <a href="PaymentController?action=selectMovie" class="btn btn-action">Book Another</a>
+                <a href="booking?action=myBookings&page=history" class="btn btn-action">My Bookings</a>
+                <a href="movies" class="btn btn-action">Book Another</a>
                 <a href="UserController?action=profile" class="btn btn-action">Back to Profile</a>
             </div>
 

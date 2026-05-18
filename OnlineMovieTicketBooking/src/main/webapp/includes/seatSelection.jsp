@@ -244,8 +244,8 @@
             <span id="selectedCount">0</span> seat(s) selected &nbsp;|&nbsp;
             <strong>Total: LKR <span id="selectedTotal">0</span></strong>
         </div>
-        <form method="get" action="<%= request.getContextPath() %>/PaymentController" id="multiSeatForm">
-            <input type="hidden" name="action"     value="paymentForm">
+        <form method="post" action="<%= request.getContextPath() %>/booking" id="multiSeatForm">
+            <input type="hidden" name="action"     value="bookMultiple">
             <input type="hidden" name="movieName"  value="<%= movieName %>">
             <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">
             <input type="hidden" name="movieID"    value="<%= request.getAttribute("movieID") %>">

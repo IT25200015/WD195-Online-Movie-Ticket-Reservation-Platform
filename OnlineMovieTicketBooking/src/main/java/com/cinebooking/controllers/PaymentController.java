@@ -47,10 +47,10 @@ public class PaymentController extends HttpServlet {
 
         } else if ("paymentForm".equals(action)) {
             // Pass seat and movie info to payment page
-            request.setAttribute("movieName", request.getParameter("movieName"));
-            request.setAttribute("showtime", request.getParameter("showtime"));
-            request.setAttribute("seats", request.getParameter("seats"));
-            request.setAttribute("total", request.getParameter("total"));
+            request.setAttribute("movieName", session.getAttribute("movieName"));
+            request.setAttribute("showtime", session.getAttribute("showtime"));
+            request.setAttribute("seats", session.getAttribute("seats"));
+            request.setAttribute("total", session.getAttribute("total"));
             request.getRequestDispatcher("/WEB-INF/views/paymentForm.jsp").forward(request, response);
 
         } else if ("myBookings".equals(action)) {
