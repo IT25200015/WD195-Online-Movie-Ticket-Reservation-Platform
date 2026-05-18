@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/booking")
@@ -48,13 +49,15 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
+        User user = (User) sessionUser;
+        String customerEmail = user.getEmail();
+        String customerName  = user.getName();
+
         String action = request.getParameter("action");
 
         if ("myBookings".equals(action)) {
             String page = request.getParameter("page");
             if (page.equals("history")) {
-                User user = (User) sessionUser;
-                String customerEmail = user.getEmail();
                 List<Booking> myBookings = bookingService.getConfirmedBookingsByEmail(customerEmail);
 
                 request.setAttribute("myBookings", myBookings);
@@ -62,8 +65,6 @@ public class BookingServlet extends HttpServlet {
                         .forward(request, response);
             }
             else {
-                User user = (User) sessionUser;
-                String customerEmail = user.getEmail();
                 List<Booking> myBookings = bookingService.getPendingBookingsByEmail(customerEmail);
 
                 request.setAttribute("myBookings", myBookings);
@@ -120,7 +121,7 @@ public class BookingServlet extends HttpServlet {
         if ("cancel".equals(action)) {
             String bookingId = request.getParameter("bookingId");
             bookingService.cancelBooking(bookingId);
-            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=history");
+            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
 
             return;
         }
@@ -144,23 +145,33 @@ public class BookingServlet extends HttpServlet {
             String[] seatIds  = request.getParameterValues("seatIds");
             String movieName  = request.getParameter("movieName");
             String showtimeId = request.getParameter("showtimeId");
-
+            List<String> bookingIDList = new java.util.ArrayList<>(List.of());
             if (seatIds != null) {
                 for (String seatId : seatIds) {
-                    bookingService.createBooking(customerName, customerEmail,
+                    Booking booking = bookingService.createBooking(customerName, customerEmail,
                             seatId, movieName, showtimeId, "PENDING");
+                    bookingIDList.add(booking.getBookingId());
+                    System.out.println("Saved Booking" + booking.getBookingId());
                 }
+                session.setAttribute("bookingIDList", bookingIDList);
             }
+            session.setAttribute("movieName", movieName);
+            session.setAttribute("showtime", showtimeId);
+            session.setAttribute("seats", request.getParameter("seats"));
+            session.setAttribute("total", request.getParameter("total"));
             response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
+            // response.sendRedirect(request.getContextPath() + "/PaymentController?action=paymentForm");
             return;
         }
 
         if ("confirmBookings".equals(action)) {
             List<Booking> pendingBookings = bookingService.getPendingBookingsByEmail(customerEmail);
-
+            List<String> bookingIDs = (List<String>) session.getAttribute("bookingIDList");
             for (Booking b : pendingBookings) {
-                b.setBookingStatus("CONFIRMED");
-                bookingService.updateBooking(b);
+                if (bookingIDs != null && bookingIDs.contains(b.getBookingId())) {
+                    b.setBookingStatus("CONFIRMED");
+                    bookingService.updateBooking(b);
+                }
             }
 
             response.setStatus(HttpServletResponse.SC_OK);

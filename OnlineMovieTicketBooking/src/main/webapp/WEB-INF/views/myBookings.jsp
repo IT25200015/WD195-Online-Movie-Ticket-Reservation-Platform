@@ -23,17 +23,7 @@
 <script>
   async function handlePayment() {
     try {
-      const response = await fetch("<%= request.getContextPath() %>/booking", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "action=confirmBookings"
-      });
-
-      if (response.ok) {
-        window.location.href = "<%= request.getContextPath() %>/payment";
-      } else {
-        alert("Failed to confirm bookings. Please try again.");
-      }
+      window.location.href = "<%= request.getContextPath() %>/PaymentController?action=paymentForm";
     } catch (err) {
       console.error("Error confirming bookings:", err);
       alert("Something went wrong. Please try again.");
@@ -59,11 +49,15 @@
   </div>
     <%
     } else {
+        StringBuilder seatIds = new StringBuilder();
         for (Booking b : myBookings) {
-            subtotal += b.getTotalPrice(); // use the getter that actually exists
+            subtotal += b.getTotalPrice();
+
             String badgeClass = "badge-standard";
             if (b.getSeatType().equals("Premium")) badgeClass = "badge-premium";
             if (b.getSeatType().equals("VIP"))     badgeClass = "badge-vip";
+            if (!seatIds.isEmpty()) seatIds.append(",");
+            seatIds.append(b.getSeatId());
 %>
   <div class="card booking-card p-4">
     <div class="row align-items-center">
@@ -102,7 +96,8 @@
   </div>
     <%
         }
-
+        session.setAttribute("total", String.valueOf(subtotal));
+        session.setAttribute("seats", seatIds.toString());
         // Subtotal card — only shown when there are bookings
          if (!"history".equals(request.getParameter("page"))) {
 %>
