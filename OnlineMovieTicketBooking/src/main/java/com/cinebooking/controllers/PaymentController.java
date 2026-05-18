@@ -4,6 +4,7 @@ import com.cinebooking.dao.PaymentDAO;
 import com.cinebooking.dao.PaymentDAOFile;
 import com.cinebooking.models.CardPayment;
 import com.cinebooking.models.Payment;
+import com.cinebooking.models.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ public class PaymentController extends HttpServlet {
 
     // Get the payments file path from the server
     private String getFilePath(HttpServletRequest request) {
-        return request.getServletContext().getRealPath("/") + "/../data/payments.txt";
+        return request.getServletContext().getRealPath("/data/payments.txt");
     }
 
     @Override

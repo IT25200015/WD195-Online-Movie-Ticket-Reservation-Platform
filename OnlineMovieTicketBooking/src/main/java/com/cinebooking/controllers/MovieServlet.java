@@ -25,7 +25,7 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        movieService = new MovieService();
+        movieService = new MovieService(getServletContext().getRealPath("/"));
     }
 
     @Override
