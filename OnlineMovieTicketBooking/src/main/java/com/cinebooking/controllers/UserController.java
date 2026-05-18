@@ -251,10 +251,11 @@ public class UserController extends HttpServlet {
                     session.setAttribute("user", loggedUser);
 
                     // Check if user is Admin or Regular to redirect
-                    if (loggedUser.getRole().equalsIgnoreCase("Admin")) {
+                    String role = loggedUser.getRole();
+                    if ("Admin".equalsIgnoreCase(role)) {
                         response.sendRedirect("UserController?action=adminDashboard");
                     } else {
-                        response.sendRedirect("UserController?action=profile");
+                        response.sendRedirect("home");
                     }
                 } else {
                     // If login fails, send back with error message
