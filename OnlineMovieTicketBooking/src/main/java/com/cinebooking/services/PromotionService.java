@@ -18,6 +18,9 @@ public class PromotionService {
         this.filePath = "C:\\Users\\User\\Downloads\\New folder (2)\\WD195-Online-Movie-Ticket-Reservation-Platform-main\\OnlineMovieTicketBooking\\data\\promotions.txt";
         ensureFileExists();
     }
+    /**
+     * Ensures the promotions file exists before reading or writing data.
+     */
 
     private void ensureFileExists() {
         File file = new File(filePath);
@@ -27,7 +30,7 @@ public class PromotionService {
                 System.out.println("Created promotions.txt file at: " + filePath);
             }
         } catch (IOException e) {
-            System.err.println("Error creating promotions file: " + e.getMessage());
+            System.err.println("Failed to create promotions file: " + e.getMessage());
         }
     }
 
