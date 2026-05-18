@@ -4,7 +4,6 @@ import com.cinebooking.dao.PaymentDAO;
 import com.cinebooking.dao.PaymentDAOFile;
 import com.cinebooking.models.CardPayment;
 import com.cinebooking.models.Payment;
-import seatbooking.service.BookingService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,15 +15,13 @@ import java.util.UUID;
 public class PaymentService {
 
     private final PaymentDAO paymentDAO;
-    private final BookingService bookingService;
 
     // Hardcoded promo codes — Component 5 can replace this with a file-based lookup later
     private static final String PROMO_CODE_10 = "MOVIE10";   // 10% off
     private static final String PROMO_CODE_20 = "CINE20";    // 20% off
 
-    public PaymentService(String paymentFilePath, String webappRootPath) {
+    public PaymentService(String paymentFilePath) {
         this.paymentDAO = new PaymentDAOFile(paymentFilePath);
-        this.bookingService = new BookingService(webappRootPath);
     }
 
     // Generate a unique transaction ID
