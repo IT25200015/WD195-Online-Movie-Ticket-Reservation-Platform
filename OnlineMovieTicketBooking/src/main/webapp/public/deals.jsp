@@ -3,11 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Active Deals & Promotions | CineBooking</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <jsp:include page="/includes/header.jsp" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
@@ -17,6 +14,8 @@
     <!-- Global Focus/Autofill Styling -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
+    <jsp:include page="/includes/navbar.jsp" />
+
 <body class="modern-ui">
 
     <!-- Premium Hero Section -->
@@ -64,7 +63,7 @@
                                         <% } %>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <h2 class="fw-bold text-white mb-2">
                                         <c:choose>
@@ -80,7 +79,7 @@
                                         </c:choose>
                                     </h2>
                                     <p class="text-muted">
-                                        Valid on all movies currently screening at CineBooking. 
+                                        Valid on all movies currently screening at CineBooking.
                                         <c:if test="${promo.minimumAmount > 0}">
                                             <span class="d-block mt-2 small fw-bold text-primary">
                                                 <i class="fa-solid fa-circle-info me-1"></i> Min. booking: Rs ${promo.minimumAmount}
@@ -103,7 +102,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        
+
         <div class="mt-5 pt-5 text-center fade-in">
             <p class="text-muted small mb-3">Questions about our promotions?</p>
             <div class="d-flex justify-content-center gap-3">
@@ -112,6 +111,8 @@
                 <a href="#" class="text-decoration-none text-primary fw-bold small">Support Center</a>
             </div>
         </div>
+    <jsp:include page="/includes/footer.jsp" />
+
     </div>
 
     <!-- Script for copy to clipboard -->
