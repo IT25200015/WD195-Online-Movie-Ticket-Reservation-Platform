@@ -297,8 +297,7 @@
             <h1 class="hero-title">Welcome to CineBooking</h1>
             <p class="hero-subtitle">Book premium movie experiences with a cinematic view, curated showtimes, and instant access.</p>
             <div class="hero-actions">
-                <a class="cinema-btn" href="${pageContext.request.contextPath}/UserController?action=register" role="button">Buy Ticket</a>
-                <button class="cinema-btn secondary" type="button">Watch Trailer</button>
+                <a class="cinema-btn" href="${pageContext.request.contextPath}/booking" role="button">Book Tickets</a>
             </div>
         </div>
     </section>
@@ -371,4 +370,3 @@
 <%@ include file="includes/footer.jsp" %>
 </body>
 </html>
-
