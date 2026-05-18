@@ -110,6 +110,10 @@
             container.appendChild(input);
         });
 
+        // Update total and seats hidden fields
+        document.getElementById('totalHidden').value = total;
+        document.getElementById('seatsHidden').value = [...selectedSeats.keys()].join(', ');
+
         bar.classList.toggle('d-none', count === 0);
         bar.style.display = count > 0 ? 'flex' : 'none';
     }
@@ -197,7 +201,6 @@
     </div>
 
     <!-- Seat Grid -->
-    <!-- Seat Grid -->
     <div class="row g-3" id="seatGrid">
         <%
             for (Seat seat : seatList) {
@@ -241,11 +244,13 @@
             <span id="selectedCount">0</span> seat(s) selected &nbsp;|&nbsp;
             <strong>Total: LKR <span id="selectedTotal">0</span></strong>
         </div>
-        <form method="post" action="<%= request.getContextPath() %>/booking" id="multiSeatForm">
-            <input type="hidden" name="action" value="bookMultiple">
+        <form method="get" action="<%= request.getContextPath() %>/PaymentController" id="multiSeatForm">
+            <input type="hidden" name="action"     value="paymentForm">
             <input type="hidden" name="movieName"  value="<%= movieName %>">
             <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">
             <input type="hidden" name="movieID"    value="<%= request.getAttribute("movieID") %>">
+            <input type="hidden" name="total"      id="totalHidden" value="0">
+            <input type="hidden" name="seats"      id="seatsHidden" value="">
             <div id="seatInputs"></div>
             <button type="submit" class="btn btn-warning fw-bold px-4">Next →</button>
         </form>
@@ -253,36 +258,6 @@
 
     <!-- Bottom padding so content isn't hidden behind sticky bar -->
     <div style="height: 80px;"></div>
-<%--    <div class="row g-3">--%>
-<%--        <%--%>
-<%--            for (Seat seat : seatList) {--%>
-<%--                String badgeClass = "badge-standard";--%>
-<%--                if (seat.getSeatType().equals("Premium")) badgeClass = "badge-premium";--%>
-<%--                if (seat.getSeatType().equals("VIP"))     badgeClass = "badge-vip";--%>
-<%--                String bookedClass = seat.isBooked() ? "seat-booked" : "";--%>
-<%--        %>--%>
-<%--        <div class="col-6 col-md-3 col-lg-2">--%>
-<%--            <form method="post" action="<%= request.getContextPath() %>/booking">--%>
-<%--                <input type="hidden" name="seatId"     value="<%= seat.getSeatId() %>">--%>
-<%--                <input type="hidden" name="movieName"  value="<%= request.getAttribute("movieName") %>">--%>
-<%--                <input type="hidden" name="showtimeId" value="<%= request.getAttribute("showtimeId") %>">--%>
-
-<%--                <button type="submit"--%>
-<%--                        class="btn w-100 seat-card border shadow-sm <%= bookedClass %>"--%>
-<%--                        <%= seat.isBooked() ? "disabled" : "" %>>--%>
-<%--                    <div class="fw-bold"><%= seat.getSeatId() %></div>--%>
-<%--                    <span class="badge <%= badgeClass %> mt-1"><%= seat.getSeatType() %></span>--%>
-<%--                    <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>--%>
-<%--                    <% if (seat.isBooked()) { %>--%>
-<%--                    <div class="small text-danger">Booked</div>--%>
-<%--                    <% } %>--%>
-<%--                </button>--%>
-<%--            </form>--%>
-<%--        </div>--%>
-<%--        <%--%>
-<%--            }--%>
-<%--        %>--%>
-<%--    </div>--%>
 
     <% } else if (request.getAttribute("showtimeId") != null) { %>
     <div class="alert alert-info">No seats available for this showtime.</div>
