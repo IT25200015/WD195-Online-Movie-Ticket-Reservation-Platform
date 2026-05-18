@@ -1,9 +1,9 @@
-package transactionManagement.controllers;
+package com.cinebooking.controllers;
 
-import transactionManagement.dao.PaymentDAO;
-import transactionManagement.dao.PaymentDAOFile;
-import transactionManagement.models.CardPayment;
-import transactionManagement.models.Payment;
+import com.cinebooking.dao.PaymentDAO;
+import com.cinebooking.dao.PaymentDAOFile;
+import com.cinebooking.models.CardPayment;
+import com.cinebooking.models.Payment;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

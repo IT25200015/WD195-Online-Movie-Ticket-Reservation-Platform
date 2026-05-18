@@ -1,9 +1,9 @@
-package transactionManagement.services;
+package com.cinebooking.services;
 
-import transactionManagement.dao.PaymentDAO;
-import transactionManagement.dao.PaymentDAOFile;
-import transactionManagement.models.CardPayment;
-import transactionManagement.models.Payment;
+import com.cinebooking.dao.PaymentDAO;
+import com.cinebooking.dao.PaymentDAOFile;
+import com.cinebooking.models.CardPayment;
+import com.cinebooking.models.Payment;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

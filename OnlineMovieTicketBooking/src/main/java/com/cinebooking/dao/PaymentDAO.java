@@ -1,6 +1,6 @@
-package transactionManagement.dao;
+package com.cinebooking.dao;
 
-import transactionManagement.models.Payment;
+import com.cinebooking.models.Payment;
 import java.util.List;
 
 // Abstraction - interface defines what must be done, not how

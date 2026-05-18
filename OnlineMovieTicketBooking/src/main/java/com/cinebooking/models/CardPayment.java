@@ -1,4 +1,4 @@
-package transactionManagement.models;
+package com.cinebooking.models;
 
 // Inheritance - CardPayment extends Payment and gets all its fields and methods
 // Polymorphism - overrides processPayment() with card-specific logic

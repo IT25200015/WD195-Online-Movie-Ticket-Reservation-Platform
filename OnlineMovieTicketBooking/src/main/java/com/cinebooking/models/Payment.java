@@ -1,4 +1,4 @@
-package transactionManagement.models;
+package com.cinebooking.models;
 
 // Abstraction - Payment is abstract because we don't want to create a generic payment
 // Only specific types like CardPayment can be created

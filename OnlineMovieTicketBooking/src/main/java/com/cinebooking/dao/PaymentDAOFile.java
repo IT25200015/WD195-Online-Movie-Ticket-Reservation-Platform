@@ -1,7 +1,7 @@
-package transactionManagement.dao;
+package com.cinebooking.dao;
 
-import transactionManagement.models.CardPayment;
-import transactionManagement.models.Payment;
+import com.cinebooking.models.CardPayment;
+import com.cinebooking.models.Payment;
 
 import java.io.*;
 import java.util.ArrayList;
