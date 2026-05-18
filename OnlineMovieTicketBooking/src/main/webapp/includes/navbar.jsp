@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     .cinema-navbar {
-        background-color: #121212;
+        background-color: rgba(18, 18, 18, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
     }
 
     .cinema-navbar .navbar-brand,
@@ -43,16 +46,30 @@
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
         object-fit: cover;
     }
+
+    .brand-cine {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan glitch shadow */
+    }
+    .brand-booking {
+        color: #e50914 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan glitch shadow */
+    }
 </style>
 
 <%
     com.cinebooking.models.User navUser = (com.cinebooking.models.User) session.getAttribute("user");
 %>
 
-<nav class="navbar navbar-expand-lg navbar-dark shadow cinema-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark shadow cinema-navbar sticky-top">
     <div class="container">
-<%--        <a class="navbar-brand fw-bold" href="index.jsp">🎬 CineBooking</a>--%>
-        <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/home">🎬 CineBooking</a>
+        <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/home">🎬 <span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

@@ -3,34 +3,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promotion Management Panel</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <jsp:include page="/includes/header.jsp" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-promotions.css">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
 <body class="modern-ui">
 
-    <!-- Top Navbar Placeholder -->
-    <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-film text-warning me-2"></i>CineBooking Admin</a>
-            <div class="d-flex text-white opacity-75">
-                Promotion Management System v1.0
-            </div>
-        </div>
-    </nav>
+    <jsp:include page="/includes/navbar.jsp" />
 
     <div class="container-fluid py-4 px-lg-5">
-        
+
         <!-- Header Actions -->
         <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
             <div>
@@ -172,6 +159,8 @@
             </table>
         </div>
     </div>
+
+    <jsp:include page="/includes/footer.jsp" />
 
 
     <!-- Create/Edit Modal -->

@@ -38,6 +38,20 @@
             margin-bottom: 30px;
         }
 
+        .brand-cine {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan shadow */
+        }
+        .brand-booking {
+            color: #e50914 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan shadow */
+        }
 
         .custom-input {
             background-color: var(--cinema-surface);
@@ -94,7 +108,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
 
-                <div class="brand-title text-center">CINEBOOKING</div>
+                <div class="brand-title text-center"><span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></div>
 
                 <form action="${pageContext.request.contextPath}/UserController" method="POST">
 

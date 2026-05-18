@@ -3,11 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promotion Analytics - CineBooking</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <jsp:include page="/includes/header.jsp" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
@@ -16,21 +13,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Global Focus/autofill CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
-</head>
-<body class="modern-ui">
+    <style>
+        body,
+        .modern-ui {
+            background-color: #121212;
+            color: #f5f5f5;
+        }
 
-    <!-- Top Navbar Placeholder -->
-    <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-film text-warning me-2"></i>CineBooking Admin</a>
-            <div class="d-flex text-white opacity-75">
-                Promotion Analytics Dashboard
-            </div>
+        .container {
+            background-color: transparent;
+        }
+
+        .glass-card {
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            border: 1px solid #2a2a2a;
+        }
+
+        .text-muted {
+            color: #b9b9b9 !important;
+        }
+    </style>
+</head>
+    <jsp:include page="/includes/navbar.jsp" />
         </div>
     </nav>
 
     <div class="container py-5">
-        
+
         <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom">
             <div>
                 <a href="${pageContext.request.contextPath}/admin/promotions" class="btn btn-sm btn-secondary-action mb-2 rounded-pill">
@@ -67,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            
+
              <!-- Stat Card 3 -->
             <div class="col-md-12 col-lg-4">
                 <div class="glass-card p-4 d-flex align-items-center h-100" style="background: #2b2b2b; color: white;">
@@ -82,7 +92,9 @@
                 </div>
             </div>
         </div>
-        
+
+    <jsp:include page="/includes/footer.jsp" />
+
     </div>
 
 </body>

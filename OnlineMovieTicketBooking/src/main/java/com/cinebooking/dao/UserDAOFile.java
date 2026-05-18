@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class UserDAOFile implements UserDAO {
 
-    private static final String DEFAULT_FILE_PATH = "C:/Users/USER/OneDrive/Desktop/WD195-Online-Movie-Ticket-Reservation-Platform/OnlineMovieTicketBooking/src/main/webapp/data/users.txt";
     private final String filePath;
     private java.util.List<User> cachedUsers;
 
@@ -24,11 +23,6 @@ public class UserDAOFile implements UserDAO {
         String normalizedEmail = email.trim();
         String normalizedStatus = newStatus.trim();
         boolean updated = updateMembershipInFile(new File(filePath), normalizedEmail, normalizedStatus);
-
-        // Keep source data in sync when running from a deployed path.
-        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
-            updated = updateMembershipInFile(new File(DEFAULT_FILE_PATH), normalizedEmail, normalizedStatus) || updated;
-        }
 
         if (updated && cachedUsers != null) {
             for (User user : cachedUsers) {
@@ -44,22 +38,16 @@ public class UserDAOFile implements UserDAO {
         return updated;
     }
 
-    public UserDAOFile() {
-        this.filePath = DEFAULT_FILE_PATH;
-    }
-
     public UserDAOFile(String filePath) {
-        this.filePath = (filePath == null || filePath.trim().isEmpty()) ? DEFAULT_FILE_PATH : filePath;
+        if (filePath == null || filePath.trim().isEmpty()) {
+            throw new IllegalArgumentException("filePath is required");
+        }
+        this.filePath = filePath;
     }
 
     @Override
     public boolean registerUser(User user) {
         boolean saved = appendUserToFile(new File(filePath), user);
-
-        // Keep source data in sync when running from a deployed path.
-        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
-            saved = appendUserToFile(new File(DEFAULT_FILE_PATH), user) || saved;
-        }
 
         return saved;
     }
@@ -75,11 +63,6 @@ public class UserDAOFile implements UserDAO {
         // Check the active file first.
         if (isEmailInFile(new File(filePath), normalizedEmail)) {
             return true;
-        }
-
-        // If running from a deployed path, also check the source file.
-        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
-            return isEmailInFile(new File(DEFAULT_FILE_PATH), normalizedEmail);
         }
 
         return false;
@@ -179,11 +162,6 @@ public class UserDAOFile implements UserDAO {
     @Override
     public boolean updateUser(User user) {
         boolean updated = updateUserInFile(new File(filePath), user);
-
-        // Keep source data in sync when running from a deployed path.
-        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
-            updated = updateUserInFile(new File(DEFAULT_FILE_PATH), user) || updated;
-        }
 
         return updated;
     }
@@ -301,10 +279,6 @@ public class UserDAOFile implements UserDAO {
         String normalizedEmail = email.trim();
         boolean deleted = deleteUserFromFile(new File(filePath), normalizedEmail);
 
-        // Keep source data in sync when running from a deployed path.
-        if (!DEFAULT_FILE_PATH.equalsIgnoreCase(filePath)) {
-            deleted = deleteUserFromFile(new File(DEFAULT_FILE_PATH), normalizedEmail) || deleted;
-        }
 
         return deleted;
     }

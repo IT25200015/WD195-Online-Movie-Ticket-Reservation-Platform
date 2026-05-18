@@ -125,6 +125,21 @@
         .badge.bg-success {
             background-color: var(--cinema-accent) !important;
         }
+
+        .brand-cine {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan shadow */
+        }
+        .brand-booking {
+            color: #e50914 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan shadow */
+        }
     </style>
 </head>
 <body>
@@ -132,14 +147,17 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-5">
-            <div class="profile-card text-center">
-                <img
-                    src="https://ui-avatars.com/api/?name=<%= java.net.URLEncoder.encode(user.getName(), "UTF-8") %>&background=e50914&color=fff&rounded=true&size=128"
-                    alt="User avatar"
-                    class="rounded-circle border border-2"
-                    style="width: 100px; height: 100px; border-color: #e50914; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);">
-                <h2 class="brand-name">CINEBOOKING</h2>
-                <h5 class="mb-4 text-secondary">MY PROFILE</h5>
+            <div class="profile-card text-center position-relative">
+                <a href="home" class="text-white text-decoration-none position-absolute top-0 start-0 mt-3 ms-3">&larr; Back to Home</a>
+                <div class="text-center">
+                    <img
+                        src="https://ui-avatars.com/api/?name=<%= java.net.URLEncoder.encode(user.getName(), "UTF-8") %>&background=e50914&color=fff&rounded=true&size=128"
+                        alt="User avatar"
+                        class="rounded-circle border border-2"
+                        style="width: 100px; height: 100px; border-color: #e50914; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);">
+                    <h2 class="brand-name"><span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></h2>
+                    <h5 class="mb-4 text-secondary">MY PROFILE</h5>
+                </div>
 
                 <div class="text-start mt-4">
                     <div class="info-label">Full Name</div>

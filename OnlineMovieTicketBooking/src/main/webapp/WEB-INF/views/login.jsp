@@ -89,6 +89,21 @@
             box-shadow: 0 12px 24px var(--cinema-glow);
             filter: brightness(1.05);
         }
+
+        .brand-cine {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan shadow */
+        }
+        .brand-booking {
+            color: #e50914 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan shadow */
+        }
     </style>
 </head>
 <body>
@@ -98,7 +113,7 @@
             <div class="col-md-5 col-lg-4">
 
                 <div class="text-center">
-                    <div class="brand-title">CINEBOOKING</div>
+                    <div class="brand-title"><span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></div>
                     <div class="brand-subtitle">WELCOME BACK</div>
                 </div>
 
