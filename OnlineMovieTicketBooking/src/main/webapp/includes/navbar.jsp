@@ -46,6 +46,21 @@
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
         object-fit: cover;
     }
+
+    .brand-cine {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan glitch shadow */
+    }
+    .brand-booking {
+        color: #e50914 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan glitch shadow */
+    }
 </style>
 
 <%
@@ -54,8 +69,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow cinema-navbar sticky-top">
     <div class="container">
-<%--        <a class="navbar-brand fw-bold" href="index.jsp">🎬 CineBooking</a>--%>
-        <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/home">🎬 CineBooking</a>
+        <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/home">🎬 <span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

@@ -125,6 +125,21 @@
         .badge.bg-success {
             background-color: var(--cinema-accent) !important;
         }
+
+        .brand-cine {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.6) !important; /* Left-side cyan shadow */
+        }
+        .brand-booking {
+            color: #e50914 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan shadow */
+        }
     </style>
 </head>
 <body>
@@ -140,7 +155,7 @@
                         alt="User avatar"
                         class="rounded-circle border border-2"
                         style="width: 100px; height: 100px; border-color: #e50914; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);">
-                    <h2 class="brand-name">CINEBOOKING</h2>
+                    <h2 class="brand-name"><span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></h2>
                     <h5 class="mb-4 text-secondary">MY PROFILE</h5>
                 </div>
 
