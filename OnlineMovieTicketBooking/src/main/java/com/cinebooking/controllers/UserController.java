@@ -58,7 +58,8 @@ public class UserController extends HttpServlet {
             com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
 
             if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
-                UserDAO userDAO = new UserDAOFile();
+                String dataFilePath = getServletContext().getRealPath("/data/users.txt");
+                UserDAO userDAO = new UserDAOFile(dataFilePath);
                 java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
 
                 String searchQuery = request.getParameter("searchQuery");
@@ -91,46 +92,6 @@ public class UserController extends HttpServlet {
                 // If not Admin, redirect to login
                 response.sendRedirect("UserController?action=login");
             }
-        } else if ("deleteUserByAdmin".equals(action)) {
-            HttpSession session = request.getSession();
-            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
-
-            if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
-                String email = request.getParameter("email");
-                boolean deleted = false;
-
-                if (email != null && !email.trim().isEmpty()) {
-                    String dataFilePath = getServletContext().getRealPath("/data/users.txt");
-                    UserDAO userDAO = new UserDAOFile(dataFilePath);
-                    deleted = userDAO.deleteUser(email);
-                }
-
-                if (deleted) {
-                    response.sendRedirect("UserController?action=adminDashboard&msg=deleteSuccess");
-                } else {
-                    response.sendRedirect("UserController?action=adminDashboard&error=deleteFailed");
-                }
-            } else {
-                response.sendRedirect("UserController?action=login");
-            }
-        } else if ("toggleMembership".equals(action)) {
-            HttpSession session = request.getSession();
-            com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
-
-            if (loggedUser == null || !"Admin".equals(loggedUser.getRole())) {
-                response.sendRedirect("UserController?action=login");
-                return;
-            }
-
-            String email = request.getParameter("email");
-            String status = request.getParameter("status");
-
-            if (email != null && !email.trim().isEmpty() && status != null && !status.trim().isEmpty()) {
-                UserDAOFile userDAO = new UserDAOFile();
-                userDAO.changeMembership(email, status);
-            }
-
-            response.sendRedirect("UserController?action=adminDashboard");
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
         } else if ("login".equals(action)) {
@@ -161,6 +122,47 @@ public class UserController extends HttpServlet {
         UserDAO userDAO = new UserDAOFile(dataFilePath); // Use this for File storage (users.txt)
 
         try {
+            if ("deleteUserByAdmin".equals(action)) {
+                HttpSession session = request.getSession();
+                com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+                if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
+                    String email = request.getParameter("email");
+                    boolean deleted = false;
+
+                    if (email != null && !email.trim().isEmpty()) {
+                        deleted = userDAO.deleteUser(email);
+                    }
+
+                    if (deleted) {
+                        response.sendRedirect("UserController?action=adminDashboard&msg=deleteSuccess");
+                    } else {
+                        response.sendRedirect("UserController?action=adminDashboard&error=deleteFailed");
+                    }
+                } else {
+                    response.sendRedirect("UserController?action=login");
+                }
+                return;
+            } else if ("toggleMembership".equals(action)) {
+                HttpSession session = request.getSession();
+                com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
+
+                if (loggedUser == null || !"Admin".equals(loggedUser.getRole())) {
+                    response.sendRedirect("UserController?action=login");
+                    return;
+                }
+
+                String email = request.getParameter("email");
+                String status = request.getParameter("status");
+
+                if (email != null && !email.trim().isEmpty() && status != null && !status.trim().isEmpty()) {
+                    userDAO.changeMembership(email, status);
+                }
+
+                response.sendRedirect("UserController?action=adminDashboard");
+                return;
+            }
+
             // register a new user
 
             if (("register".equals(action))) {
@@ -173,6 +175,13 @@ public class UserController extends HttpServlet {
                 String dob = request.getParameter("dob");
                 String gender = request.getParameter("gender");
                 String adminKey = request.getParameter("adminKey");
+
+                String confirmPassword = request.getParameter("confirmPassword");
+                if (confirmPassword == null || !confirmPassword.equals(password)) {
+                    request.setAttribute("error", "Passwords do not match!");
+                    request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                    return;
+                }
 
                 // stop registration if the email is already used.
                 if (userDAO.isEmailExists(email)) {

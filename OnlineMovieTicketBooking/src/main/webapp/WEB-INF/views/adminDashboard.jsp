@@ -324,16 +324,28 @@
                                         <span class="text-muted">N/A</span>
                                     </c:if>
                                     <c:if test="${user.role == 'Customer'}">
-                                        <a href="UserController?action=deleteUserByAdmin&email=${user.email}"
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                        <form method="POST" action="UserController" style="display: inline;">
+                                            <input type="hidden" name="action" value="deleteUserByAdmin">
+                                            <input type="hidden" name="email" value="${user.email}">
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                                        </form>
                                         <c:if test="${user.role == 'Customer' and user.membership == 'Regular'}">
-                                            <a href="UserController?action=toggleMembership&email=${user.email}&status=Premium"
-                                               class="btn btn-success btn-sm ms-2">Make Premium</a>
+                                            <form method="POST" action="UserController" style="display: inline;">
+                                                <input type="hidden" name="action" value="toggleMembership">
+                                                <input type="hidden" name="email" value="${user.email}">
+                                                <input type="hidden" name="status" value="Premium">
+                                                <button type="submit" class="btn btn-success btn-sm ms-2">Make Premium</button>
+                                            </form>
                                         </c:if>
                                         <c:if test="${user.role == 'Customer' and user.membership == 'Premium'}">
-                                            <a href="UserController?action=toggleMembership&email=${user.email}&status=Regular"
-                                               class="btn btn-warning btn-sm ms-2">Remove Premium</a>
+                                            <form method="POST" action="UserController" style="display: inline;">
+                                                <input type="hidden" name="action" value="toggleMembership">
+                                                <input type="hidden" name="email" value="${user.email}">
+                                                <input type="hidden" name="status" value="Regular">
+                                                <button type="submit" class="btn btn-warning btn-sm ms-2">Remove Premium</button>
+                                            </form>
                                         </c:if>
                                     </c:if>
                                 </td>

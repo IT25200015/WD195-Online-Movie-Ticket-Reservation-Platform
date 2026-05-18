@@ -110,7 +110,7 @@
 
                     <div class="mb-3">
                         <label class="form-label small text-secondary">Email Address</label>
-                        <input type="email" name="email" class="form-control" value="<%= user.getEmail() %>" required>
+                        <input type="email" name="email" class="form-control" value="<%= user.getEmail() %>" readonly required>
                     </div>
 
                     <div class="mb-3">
