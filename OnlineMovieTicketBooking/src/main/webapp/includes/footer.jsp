@@ -10,10 +10,11 @@
             <div class="col-12 col-md-6 col-lg-3">
                 <h6 class="footer-title">Quick Links</h6>
                 <ul class="footer-links list-unstyled mb-0">
-                    <li><a href="${pageContext.request.contextPath}/index.jsp">Movies</a></li>
-                    <li><a href="${pageContext.request.contextPath}/public/deals.jsp">Offers</a></li>
-                    <li><a href="${pageContext.request.contextPath}/public/checkout-mock.jsp">Booking History</a></li>
-                    <li><a href="${pageContext.request.contextPath}/index.jsp#contact">Contact Us</a></li>
+                    <li><a href="${pageContext.request.contextPath}/movies">Movies</a></li>
+                    <li><a href="${pageContext.request.contextPath}/deals">Offers</a></li>
+                    <li><a href="${pageContext.request.contextPath}/booking">Book Tickets</a></li>
+                    <li><a href="${pageContext.request.contextPath}/about.jsp">About Us</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact Us</a></li>
                 </ul>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
