@@ -297,7 +297,7 @@
             <h1 class="hero-title">Welcome to CineBooking</h1>
             <p class="hero-subtitle">Book premium movie experiences with a cinematic view, curated showtimes, and instant access.</p>
             <div class="hero-actions">
-                <a class="cinema-btn" href="${pageContext.request.contextPath}/booking" role="button">Book Tickets</a>
+                <a class="cinema-btn" href="${pageContext.request.contextPath}/booking" role="button">Buy Tickets</a>
             </div>
         </div>
     </section>

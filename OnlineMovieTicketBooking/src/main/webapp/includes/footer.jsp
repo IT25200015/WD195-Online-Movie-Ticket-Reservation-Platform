@@ -12,7 +12,7 @@
                 <ul class="footer-links list-unstyled mb-0">
                     <li><a href="${pageContext.request.contextPath}/movies">Movies</a></li>
                     <li><a href="${pageContext.request.contextPath}/deals">Offers</a></li>
-                    <li><a href="${pageContext.request.contextPath}/booking">Book Tickets</a></li>
+                    <li><a href="${pageContext.request.contextPath}/booking">Buy Tickets</a></li>
                     <li><a href="${pageContext.request.contextPath}/about.jsp">About Us</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact Us</a></li>
                 </ul>

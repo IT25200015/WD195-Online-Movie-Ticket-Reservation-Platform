@@ -115,7 +115,7 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-end pe-4">
-                                        
+
                                         <!-- Actions Dropdown -->
                                         <div class="dropdown">
                                             <button class="btn btn-secondary-action btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
@@ -123,7 +123,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 glass-card">
                                                 <li>
-                                                    <a class="dropdown-item py-2" href="#" 
+                                                    <a class="dropdown-item py-2" href="#"
                                                        onclick='openEditModal("${promo.promoCode}", "${promo.promotionType}", ${promo.discountValue}, "${promo.startDate}", "${promo.endDate}", ${promo.usageLimit}, ${promo.minimumAmount}, "${promo.promotionType == 'SEASONAL' ? promo.seasonName : ''}")'>
                                                        <i class="fa-regular fa-pen-to-square text-primary me-2"></i> Edit Promotion
                                                     </a>
