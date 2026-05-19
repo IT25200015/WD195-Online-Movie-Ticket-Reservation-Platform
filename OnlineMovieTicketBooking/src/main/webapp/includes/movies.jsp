@@ -6,6 +6,7 @@
 <head>
     <title>Movies</title>
     <jsp:include page="/includes/header.jsp" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
         :root {
@@ -20,6 +21,9 @@
         body {
             background-color: var(--cinema-bg);
             color: var(--cinema-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .section-title {
@@ -38,8 +42,8 @@
         }
 
         .movie-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 28px rgba(229, 9, 20, 0.25);
         }
 
         .movie-card img {
@@ -74,6 +78,7 @@
 
 <jsp:include page="/includes/navbar.jsp" />
 
+<main class="flex-grow-1">
 <div class="container">
 
     <div class="section-title">
@@ -119,6 +124,7 @@
     </div>
 
 </div>
+</main>
 
 <jsp:include page="/includes/footer.jsp" />
 

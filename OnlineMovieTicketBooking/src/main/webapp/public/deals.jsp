@@ -14,28 +14,29 @@
     <!-- Global Focus/Autofill Styling -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
-    <jsp:include page="/includes/navbar.jsp" />
-
 <body class="modern-ui">
 
-    <!-- Premium Hero Section -->
-    <header class="hero-section">
-        <div class="container position-relative z-1 text-center">
-            <span class="badge bg-dark text-light rounded-pill px-3 py-2 mb-3 fw-bold fade-in" style="font-size: 0.9rem;">
-                <i class="fa-solid fa-sparkles me-2"></i>LIMITED TIME OFFERS
-            </span>
-            <h1 class="display-3 fw-bold mb-3 fade-in" style="letter-spacing: -2px;">Unlock Premium Movie Experiences</h1>
-            <p class="lead opacity-75 mb-4 fade-in" style="max-width: 600px; margin: 0 auto;">
-                Apply these exclusive codes at checkout and enjoy the magic of cinema for less.
-            </p>
-        </div>
-        <div class="hero-shape"></div>
-    </header>
+    <jsp:include page="/includes/navbar.jsp" />
 
-    <div class="container py-4">
-        <div class="row g-4 justify-content-center">
-            <c:choose>
-                <c:when test="${empty activePromotions}">
+    <main class="flex-grow-1 container mt-5">
+        <!-- Premium Hero Section -->
+        <header class="hero-section">
+            <div class="container position-relative z-1 text-center">
+                <span class="badge bg-dark text-light rounded-pill px-3 py-2 mb-3 fw-bold fade-in" style="font-size: 0.9rem;">
+                    <i class="fa-solid fa-sparkles me-2"></i>LIMITED TIME OFFERS
+                </span>
+                <h1 class="display-3 fw-bold mb-3 fade-in" style="letter-spacing: -2px;">Unlock Premium Movie Experiences</h1>
+                <p class="lead opacity-75 mb-4 fade-in" style="max-width: 600px; margin: 0 auto;">
+                    Apply these exclusive codes at checkout and enjoy the magic of cinema for less.
+                </p>
+            </div>
+            <div class="hero-shape"></div>
+        </header>
+
+        <div class="container py-4">
+            <div class="row g-4 justify-content-center">
+                <c:choose>
+                    <c:when test="${empty activePromotions}">
                         <div class="col-md-8 text-center py-5 glass-card fade-in">
                         <div class="mb-4">
                             <i class="fa-solid fa-ticket-simple fa-4x text-muted opacity-25"></i>
@@ -111,9 +112,9 @@
                 <a href="#" class="text-decoration-none text-primary fw-bold small">Support Center</a>
             </div>
         </div>
-    <jsp:include page="/includes/footer.jsp" />
+    </main>
 
-    </div>
+    <jsp:include page="/includes/footer.jsp" />
 
     <!-- Script for copy to clipboard -->
     <script>

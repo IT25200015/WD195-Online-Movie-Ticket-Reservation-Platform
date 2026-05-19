@@ -7,46 +7,65 @@
 <head>
     <title>Select a Seat - CineBooking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
-        .navbar { background-color: #2c3e50; }
-        .footer { background-color: #2c3e50; color: white; padding: 20px 0; margin-top: 50px; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar { background-color: #151515; }
+        .footer { background-color: #151515; color: #f5f5f5; padding: 20px 0; margin-top: 50px; }
 
         .seat-card {
+            background: #222;
+            border: 1px solid #333;
             border-radius: 12px;
-            transition: transform 0.2s;
+            color: #f5f5f5;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             cursor: pointer;
         }
         .seat-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(229, 9, 20, 0.15);
         }
+        .seat-type-standard { border-color: #37b2ff; box-shadow: 0 0 0 1px rgba(55, 178, 255, 0.35); }
+        .seat-type-premium  { border-color: #a855f7; box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35); }
+        .seat-type-vip      { border-color: #fbbf24; box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.35); }
         .seat-booked {
-            opacity: 0.5;
+            background: #1a1a1a;
+            color: #8a8a8a;
+            border-color: #2a2a2a;
+            opacity: 0.55;
             cursor: not-allowed;
             pointer-events: none;
         }
-        .badge-standard { background-color: #3498db; }
-        .badge-premium  { background-color: #9b59b6; }
-        .badge-vip      { background-color: #f39c12; }
+        .badge-standard { background-color: #37b2ff; color: #0b0b0b; }
+        .badge-premium  { background-color: #a855f7; }
+        .badge-vip      { background-color: #fbbf24; color: #0b0b0b; }
 
         .screen {
-            background: linear-gradient(to bottom, #bdc3c7, #ecf0f1);
-            border-radius: 8px;
-            padding: 10px;
+            background: linear-gradient(to bottom, #f5f5f5, #b7c7d9);
+            border-radius: 80px 80px 12px 12px;
+            padding: 12px;
             text-align: center;
             font-weight: 600;
-            color: #555;
-            letter-spacing: 4px;
+            color: #0b0b0b;
+            letter-spacing: 6px;
             margin-bottom: 30px;
+            box-shadow: 0 14px 22px rgba(56, 189, 248, 0.25);
         }
 
         .showtime-select {
             appearance: none;
             -webkit-appearance: none;
-            background-color: #2c3e50;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.15);
+            background-color: #1f1f1f;
+            color: #f5f5f5;
+            border: 1px solid #333;
             border-radius: 8px;
             padding: 10px 40px 10px 14px;
             font-family: 'Poppins', sans-serif;
@@ -59,17 +78,18 @@
 
         .showtime-select:focus {
             outline: none;
-            border-color: #f39c12;
+            border-color: #e50914;
         }
 
         .showtime-select option {
-            background-color: #2c3e50;
-            color: white;
+            background-color: #1f1f1f;
+            color: #f5f5f5;
         }
         .seat-selected {
-            background-color: #27ae60 !important;
-            color: white !important;
-            border-color: #27ae60 !important;
+            background-color: #151515 !important;
+            color: #f5f5f5 !important;
+            border-color: #e50914 !important;
+            box-shadow: 0 0 18px rgba(229, 9, 20, 0.35) !important;
         }
     </style>
 </head>
@@ -122,6 +142,7 @@
 
 <%@ include file="/includes/navbar.jsp" %>
 
+<main class="flex-grow-1">
 <div class="container my-5">
 
     <h2 class="fw-bold mb-1">Select Your Seat</h2>
@@ -205,14 +226,21 @@
         <%
             for (Seat seat : seatList) {
                 String badgeClass = "badge-standard";
-                if (seat.getSeatType().equals("Premium")) badgeClass = "badge-premium";
-                if (seat.getSeatType().equals("VIP"))     badgeClass = "badge-vip";
+                String seatTypeClass = "seat-type-standard";
+                if (seat.getSeatType().equals("Premium")) {
+                    badgeClass = "badge-premium";
+                    seatTypeClass = "seat-type-premium";
+                }
+                if (seat.getSeatType().equals("VIP")) {
+                    badgeClass = "badge-vip";
+                    seatTypeClass = "seat-type-vip";
+                }
                 String bookedClass = seat.isBooked() ? "seat-booked" : "";
         %>
         <div class="col-6 col-md-3 col-lg-2">
             <% if (!seat.isBooked()) { %>
             <button type="button"
-                    class="btn w-100 seat-card border shadow-sm selectable-seat"
+                    class="btn w-100 seat-card <%= seatTypeClass %> selectable-seat"
                     data-seat-id="<%= seat.getSeatId() %>"
                     data-seat-type="<%= seat.getSeatType() %>"
                     data-price="<%= (int) seat.getPrice() %>"
@@ -222,7 +250,7 @@
                 <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>
             </button>
             <% } else { %>
-            <button type="button" class="btn w-100 seat-card border shadow-sm seat-booked" disabled>
+            <button type="button" class="btn w-100 seat-card <%= seatTypeClass %> seat-booked" disabled>
                 <div class="fw-bold"><%= seat.getSeatId() %></div>
                 <span class="badge bg-secondary mt-1"><%= seat.getSeatType() %></span>
                 <div class="small mt-1">LKR <%= (int) seat.getPrice() %></div>
@@ -236,10 +264,10 @@
     <!-- Sticky bottom bar -->
     <div id="seatSummaryBar" class="d-none" style="
     position: fixed; bottom: 0; left: 0; right: 0;
-    background: #2c3e50; color: white;
+    background: #161616; color: #f5f5f5;
     padding: 14px 24px;
     display: flex; justify-content: space-between; align-items: center;
-    z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.3);">
+    z-index: 1000; box-shadow: 0 -2px 18px rgba(0,0,0,0.5);">
         <div>
             <span id="selectedCount">0</span> seat(s) selected &nbsp;|&nbsp;
             <strong>Total: LKR <span id="selectedTotal">0</span></strong>
@@ -264,6 +292,7 @@
     <% } %>
 
 </div>
+</main>
 
 <%@ include file="/includes/footer.jsp" %>
 

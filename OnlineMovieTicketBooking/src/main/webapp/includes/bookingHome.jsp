@@ -9,6 +9,7 @@
   <title>Movies</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <style>
     :root {
@@ -22,8 +23,8 @@
       --card-radius: 12px;
     }
     body {
-      background-color: #0b0f2f;
-      color: white;
+      background-color: #121212;
+      color: #f5f5f5;
     }
 
     .section-title {
@@ -42,7 +43,7 @@
     }
     .movie-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 48px rgba(229, 9, 20, 0.25);
     }
     .movie-card:hover .card-overlay { opacity: 1; }
     .movie-poster {
@@ -72,8 +73,8 @@
       padding: 20px;
     }
     .card-overlay .book-now {
-      background: var(--gold);
-      color: var(--navy);
+      background: #e50914;
+      color: #ffffff;
       border: none;
       padding: 10px 20px;
       border-radius: 4px;

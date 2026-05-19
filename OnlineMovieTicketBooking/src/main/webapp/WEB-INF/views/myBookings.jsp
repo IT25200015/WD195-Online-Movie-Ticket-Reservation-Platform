@@ -7,16 +7,24 @@
   <title>My Bookings - CineBooking</title>
   <jsp:include page="/includes/header.jsp" />
   <style>
-    body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
+    body { font-family: 'Poppins', sans-serif; background-color: #121212; color: #f5f5f5; }
     .booking-card {
+      background-color: #1b1b1b;
       border-radius: 12px;
-      border: none;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.4);
       margin-bottom: 20px;
     }
     .badge-standard { background-color: #3498db; }
     .badge-premium  { background-color: #9b59b6; }
     .badge-vip      { background-color: #f39c12; }
+    .empty-state-alert {
+      background-color: #222;
+      border: 1px solid #e50914;
+      color: #f5f5f5;
+    }
+    .empty-state-alert a { color: #e50914; font-weight: 600; }
+    .empty-state-alert a:hover { color: #ff3b30; }
   </style>
 </head>
 
@@ -30,12 +38,12 @@
     }
   }
 </script>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <%@ include file="/includes/navbar.jsp" %>
 
-<div class="container my-5">
-  <h2 class="fw-bold mb-4">My Bookings</h2>
+<main class="flex-grow-1 container mt-5">
+  <h2 class="fw-bold mb-4 text-light">My Bookings</h2>
 
     <%
     List<Booking> myBookings = (List<Booking>) request.getAttribute("myBookings");
@@ -43,7 +51,7 @@
 
     if (myBookings == null || myBookings.isEmpty()) {
 %>
-  <div class="alert alert-info">
+  <div class="alert empty-state-alert">
     You have no bookings yet.
     <a href="<%= request.getContextPath() %>/booking">Book a seat now!</a>
   </div>
@@ -62,7 +70,7 @@
   <div class="card booking-card p-4">
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h5 class="fw-bold mb-1">🎬 <%= b.getMovieName() %>
+        <h5 class="fw-bold mb-1 text-light">🎬 <%= b.getMovieName() %>
           <% if ("PENDING".equalsIgnoreCase(b.getBookingStatus())) { %>
           <span class="badge bg-warning text-dark ms-2">⏳ Pending</span>
           <% } else if ("CONFIRMED".equalsIgnoreCase(b.getBookingStatus())) { %>
@@ -71,22 +79,22 @@
           <span class="badge bg-danger ms-2">❌ Cancelled</span>
           <% } %>
         </h5>
-        <p class="text-muted mb-1">🕐 <%= b.getShowTime() %></p>
-        <p class="mb-1">
+        <p class="text-secondary mb-1">🕐 <%= b.getShowTime() %></p>
+        <p class="mb-1 text-light">
           Seat: <strong><%= b.getSeatId() %></strong>
           <span class="badge <%= badgeClass %> ms-2"><%= b.getSeatType() %></span>
         </p>
-        <p class="mb-1">Date: <%= b.getBookingDate() %></p>
-        <p class="mb-0">
-          Total: <strong class="text-success">LKR <%= b.getTotalPrice() %></strong>
+        <p class="mb-1 text-light">Date: <%= b.getBookingDate() %></p>
+        <p class="mb-0 text-light">
+          Total: <strong class="text-warning">LKR <%= b.getTotalPrice() %></strong>
         </p>
-        <small class="text-muted">Booking ID: <%= b.getBookingId() %></small>
+        <small class="text-secondary">Booking ID: <%= b.getBookingId() %></small>
       </div>
       <div class="col-md-4 text-end">
         <form method="post" action="<%= request.getContextPath() %>/booking">
           <input type="hidden" name="action" value="cancel">
           <input type="hidden" name="bookingId" value="<%= b.getBookingId() %>">
-          <button type="submit" class="btn btn-danger"
+          <button type="submit" class="btn btn-outline-danger"
                   onclick="return confirm('Are you sure you want to cancel this booking?')">
             Cancel Booking
           </button>
@@ -102,11 +110,11 @@
          if (!"history".equals(request.getParameter("page"))) {
 %>
 
-  <div class="card shadow-sm mt-4">
+  <div class="card booking-card mt-4">
     <div class="card-body d-flex justify-content-between align-items-center">
       <div>
-        <h5 class="mb-1">Order Summary</h5>
-        <p class="text-muted mb-0"><%= myBookings.size() %> booking(s)</p>
+        <h5 class="mb-1 text-light">Order Summary</h5>
+        <p class="text-secondary mb-0"><%= myBookings.size() %> booking(s)</p>
       </div>
       <div class="text-end">
         <h4 class="fw-bold text-warning mb-2">LKR <%= (int) subtotal %></h4>
@@ -120,6 +128,7 @@
     }
     }
 %>
+</main>
 
 <%@ include file="/includes/footer.jsp" %>
 

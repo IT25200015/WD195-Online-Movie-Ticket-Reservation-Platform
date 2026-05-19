@@ -197,9 +197,15 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="promotions.jsp" class="btn btn-offers w-100 py-2 mb-3 fw-bold">
-                        VIEW OFFERS & PROMOTIONS
-                    </a>
+                    <% if (user.getRole() != null && user.getRole().equalsIgnoreCase("Admin")) { %>
+                        <a href="UserController?action=adminDashboard" class="btn btn-offers w-100 py-2 mb-3 fw-bold">
+                            ADMIN DASHBOARD
+                        </a>
+                    <% } else { %>
+                        <a href="booking?action=myBookings&page=history" class="btn btn-offers w-100 py-2 mb-3 fw-bold">
+                            MY BOOKING HISTORY
+                        </a>
+                    <% } %>
                     <a href="UserController?action=editProfile" class="btn btn-custom-edit w-100 py-2 mb-3">
                         EDIT DETAILS
                     </a>
