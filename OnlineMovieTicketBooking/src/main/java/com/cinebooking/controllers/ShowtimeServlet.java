@@ -1,5 +1,6 @@
 package com.cinebooking.controllers;
 
+import com.cinebooking.config.AppConfig;
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.Showtime;
 import com.cinebooking.models.User;
@@ -21,7 +22,7 @@ public class ShowtimeServlet extends HttpServlet {
     @Override
     public void init() {
 
-        String dataFilePath = getServletContext().getRealPath("/data/showtimes.txt");
+        String dataFilePath = AppConfig.BASE_DATA_PATH + "showtimes.txt";
         service = new ShowtimeService(dataFilePath);
     }
 
@@ -39,9 +40,7 @@ public class ShowtimeServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String moviePath =
-                getServletContext()
-                        .getRealPath("/data/movies.txt");
+        String moviePath = AppConfig.BASE_DATA_PATH + "movies.txt";
 
         MovieService movieService =
                 new MovieService(moviePath);

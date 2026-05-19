@@ -1,5 +1,6 @@
 package com.cinebooking.controllers;
 
+import com.cinebooking.config.AppConfig;
 import com.cinebooking.dao.PaymentDAO;
 import com.cinebooking.dao.PaymentDAOFile;
 import com.cinebooking.models.CardPayment;
@@ -24,7 +25,7 @@ public class PaymentController extends HttpServlet {
 
     // Get the payments file path from the server
     private String getFilePath(HttpServletRequest request) {
-        return request.getServletContext().getRealPath("/data/payments.txt");
+        return AppConfig.BASE_DATA_PATH + "payments.txt";
     }
 
     @Override
