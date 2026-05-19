@@ -12,10 +12,11 @@ public class PromotionService {
 
     private String filePath;
 
-    public PromotionService(String rootPath) {
-        // Build a webapp-relative data path for safe deployments.
-        File dataFile = new File(rootPath, "data" + File.separator + "promotions.txt");
-        this.filePath = dataFile.getPath();
+    public PromotionService(String filePath) {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            throw new IllegalArgumentException("filePath is required");
+        }
+        this.filePath = filePath;
         ensureFileExists();
     }
     /**
