@@ -25,11 +25,11 @@ public abstract class Promotion implements Serializable {
                      LocalDate startDate, LocalDate endDate,
                      int usageLimit, double minimumAmount) {
         this.promoCode = promoCode;
-        this.discountValue = discountValue;
+        this.discountValue =Math.max(0, discountValue);
         this.startDate = startDate;
         this.endDate = endDate;
         this.usageLimit = usageLimit;
-        this.minimumAmount = minimumAmount;
+        this.minimumAmount =Math.max(0, minimumAmount);
         this.usageCount = 0;
         this.isActive = true;
     }
