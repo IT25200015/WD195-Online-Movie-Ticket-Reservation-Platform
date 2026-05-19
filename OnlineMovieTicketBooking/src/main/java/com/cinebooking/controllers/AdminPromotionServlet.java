@@ -1,6 +1,5 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.config.AppConfig;
 import com.cinebooking.models.FixedAmountDiscount;
 import com.cinebooking.models.PercentageDiscount;
 import com.cinebooking.models.Promotion;
@@ -26,7 +25,7 @@ public class AdminPromotionServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String dataPath = AppConfig.BASE_DATA_PATH + "promotions.txt";
+        String dataPath = getServletContext().getRealPath("/");
         promotionService = new PromotionService(dataPath);
     }
 
