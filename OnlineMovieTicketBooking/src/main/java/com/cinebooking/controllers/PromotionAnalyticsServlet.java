@@ -1,5 +1,6 @@
 package com.cinebooking.controllers;
 
+import com.cinebooking.config.AppConfig;
 import com.cinebooking.services.PromotionService;
 
 import jakarta.servlet.ServletException;
@@ -17,7 +18,7 @@ public class PromotionAnalyticsServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String dataPath = getServletContext().getRealPath("/");
+        String dataPath = AppConfig.BASE_DATA_PATH + "promotions.txt";
         promotionService = new PromotionService(dataPath);
     }
 
