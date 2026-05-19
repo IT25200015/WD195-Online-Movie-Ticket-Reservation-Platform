@@ -17,7 +17,7 @@ public class PromotionAnalyticsServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String dataPath = getServletContext().getRealPath("/");
+        String dataPath = getServletContext().getRealPath("/data/promotions.txt");
         promotionService = new PromotionService(dataPath);
     }
 

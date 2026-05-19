@@ -16,7 +16,11 @@ public class PromotionService {
         if (filePath == null || filePath.trim().isEmpty()) {
             throw new IllegalArgumentException("filePath is required");
         }
-        this.filePath = filePath;
+        File candidate = new File(filePath);
+        if (candidate.isDirectory()) {
+            candidate = new File(candidate, "data" + File.separator + "promotions.txt");
+        }
+        this.filePath = candidate.getPath();
         ensureFileExists();
     }
     /**
@@ -25,7 +29,10 @@ public class PromotionService {
 
     private void ensureFileExists() {
         File file = new File(filePath);
-        file.getParentFile().mkdirs();
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
         try {
             if (file.createNewFile()) {
                 System.out.println("Created promotions.txt file at: " + filePath);
@@ -82,7 +89,13 @@ public class PromotionService {
             return false; // Code already exists
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        File target = new File(filePath);
+        File parent = target.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(target, true))) {
             writer.write(promotion.toFileString());
             writer.newLine();
             return true;
