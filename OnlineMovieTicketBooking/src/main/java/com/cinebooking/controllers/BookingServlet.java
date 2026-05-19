@@ -1,6 +1,5 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.config.AppConfig;
 import com.cinebooking.models.*;
 import com.cinebooking.services.MovieService;
 import com.cinebooking.services.ShowtimeService;
@@ -26,10 +25,10 @@ public class BookingServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String seatFilepath = AppConfig.BASE_DATA_PATH + "seats.txt";
-        String bookingFilepath = AppConfig.BASE_DATA_PATH + "bookings.txt";
-        String movieFilePath = AppConfig.BASE_DATA_PATH + "movies.txt";
-        String showTimeFilePath = AppConfig.BASE_DATA_PATH + "showtimes.txt";
+        String seatFilepath = getServletContext().getRealPath("/data/seats.txt");
+        String bookingFilepath = getServletContext().getRealPath("/data/bookings.txt");
+        String movieFilePath = getServletContext().getRealPath("/data/movies.txt");
+        String showTimeFilePath = getServletContext().getRealPath("/data/showtimes.txt");
 
         bookingService = new BookingService(seatFilepath, bookingFilepath);
         movieService = new MovieService(movieFilePath);

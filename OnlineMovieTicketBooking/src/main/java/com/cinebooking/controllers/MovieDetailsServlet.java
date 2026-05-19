@@ -1,6 +1,5 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.config.AppConfig;
 import com.cinebooking.models.Movie;
 import com.cinebooking.services.MovieService;
 
@@ -18,7 +17,9 @@ public class MovieDetailsServlet
     @Override
     public void init() {
 
-        String path = AppConfig.BASE_DATA_PATH + "movies.txt";
+        String path =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
 
         movieService = new MovieService(path);
     }

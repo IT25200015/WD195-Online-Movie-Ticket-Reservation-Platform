@@ -1,6 +1,5 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.config.AppConfig;
 import com.cinebooking.dao.UserDAO;
 import com.cinebooking.dao.UserDAOFile;
 import com.cinebooking.models.Admin;
@@ -59,7 +58,7 @@ public class UserController extends HttpServlet {
             com.cinebooking.models.User loggedUser = (com.cinebooking.models.User) session.getAttribute("user");
 
             if (loggedUser != null && "Admin".equals(loggedUser.getRole())) {
-                String dataFilePath = AppConfig.BASE_DATA_PATH + "users.txt";
+                String dataFilePath = getServletContext().getRealPath("/data/users.txt");
                 UserDAO userDAO = new UserDAOFile(dataFilePath);
                 java.util.List<com.cinebooking.models.User> userList = userDAO.getAllUsers();
 
@@ -119,7 +118,7 @@ public class UserController extends HttpServlet {
         // to test
         System.out.println("Action received: " + action);
 
-        String dataFilePath = AppConfig.BASE_DATA_PATH + "users.txt";
+        String dataFilePath = getServletContext().getRealPath("/data/users.txt");
         UserDAO userDAO = new UserDAOFile(dataFilePath); // Use this for File storage (users.txt)
 
         try {

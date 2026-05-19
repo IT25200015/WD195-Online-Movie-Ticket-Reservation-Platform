@@ -1,6 +1,5 @@
 package com.cinebooking.controllers;
 
-import com.cinebooking.config.AppConfig;
 import com.cinebooking.models.Movie;
 import com.cinebooking.services.MovieService;
 
@@ -18,7 +17,9 @@ public class IndexServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
 
-        String moviePath = AppConfig.BASE_DATA_PATH + "movies.txt";
+        String moviePath =
+                getServletContext()
+                        .getRealPath("/data/movies.txt");
 
         movieService = new MovieService(moviePath);
     }
