@@ -20,4 +20,13 @@ public interface UserDAO {
     void changeMembership(String email, String newStatus);
 
     boolean updateMembership(String email, String newStatus);
+
+    /**
+     * Updates only the premium_request column for the given user email.
+     *
+     * @param email          the user's email address
+     * @param requestStatus  the new status (e.g., "Pending", "None")
+     * @return true if the record was found and updated, false otherwise
+     */
+    boolean updatePremiumRequest(String email, String requestStatus);
 }

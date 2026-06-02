@@ -75,13 +75,26 @@ public abstract class User {
         this.gender = gender;
     }
 
-//Abstraction - Because the dashboadrd changes on user role
+//Abstraction - Because the dashboard changes on user role
     public abstract void displayDashboard();
 
     public void showUserDetails() {
         System.out.println("Email: " + email);
         System.out.println("Name: " + name);
         System.out.println("Role: " + role);
+    }
+
+    /**
+     * Returns membership tier. Base implementation returns "Regular".
+     * Customer overrides this with the stored value.
+     */
+    public String getMembership() {
+        return "Regular";
+    }
+
+    /** No-op setter – subclasses that support membership override this. */
+    public void setMembership(String membership) {
+        // base implementation is a no-op; Customer overrides
     }
 
 }
