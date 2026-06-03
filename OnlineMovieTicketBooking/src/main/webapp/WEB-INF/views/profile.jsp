@@ -140,6 +140,52 @@
             letter-spacing: 1px !important;
             text-shadow: -1px 0 2px rgba(0, 255, 255, 0.4) !important; /* Left-side cyan shadow */
         }
+
+        /* === Premium Request Button === */
+        .btn-request-premium {
+            background: linear-gradient(135deg, #f5a623, #f7c948);
+            border: none;
+            color: #1a1a1a;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            padding: 8px 14px;
+            transition: filter 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(245, 166, 35, 0.35);
+            cursor: pointer;
+        }
+        .btn-request-premium:hover {
+            filter: brightness(1.08);
+            box-shadow: 0 6px 18px rgba(245, 166, 35, 0.5);
+        }
+        .btn-request-premium:disabled,
+        .btn-request-premium[disabled] {
+            background: #444444;
+            color: #888888;
+            box-shadow: none;
+            cursor: not-allowed;
+            filter: none;
+        }
+        .premium-pending-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            border-radius: 20px;
+            padding: 2px 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+        }
+        .alert-cinema {
+            border-radius: 10px;
+            font-size: 0.88rem;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +204,37 @@
                     <h2 class="brand-name"><span class="brand-cine">CINE</span><span class="brand-booking">BOOKING</span></h2>
                     <h5 class="mb-4 text-secondary">MY PROFILE</h5>
                 </div>
+
+                <%-- ============================================================
+                     Premium Request Feedback Banners
+                     ============================================================ --%>
+                <%
+                    String premiumMsg = request.getParameter("premiumMsg");
+                    if (premiumMsg != null) {
+                        if ("requested".equals(premiumMsg)) {
+                %>
+                <div class="alert alert-warning alert-dismissible fade show alert-cinema" role="alert">
+                    <strong>&#11088; Request Submitted!</strong> Your premium upgrade request has been sent. The admin will review it shortly.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%      } else if ("alreadyPending".equals(premiumMsg)) { %>
+                <div class="alert alert-info alert-dismissible fade show alert-cinema" role="alert">
+                    <strong>&#9432; Already Pending.</strong> You already have an active request. Please wait for the admin to review it.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%      } else if ("alreadyPremium".equals(premiumMsg)) { %>
+                <div class="alert alert-success alert-dismissible fade show alert-cinema" role="alert">
+                    <strong>&#10003; You're Premium!</strong> You already have a Premium membership.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%      } else if ("error".equals(premiumMsg)) { %>
+                <div class="alert alert-danger alert-dismissible fade show alert-cinema" role="alert">
+                    <strong>&#9888; Error.</strong> Something went wrong. Please try again later.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%      }
+                    }
+                %>
 
                 <div class="text-start mt-4">
                     <div class="info-label">Full Name</div>
@@ -187,10 +264,29 @@
                            com.cinebooking.models.Customer customer = (com.cinebooking.models.Customer) user;
                     %>
                         <div class="info-label">Membership Tier</div>
-                        <div class="info-value">
-                            <span class="badge bg-success text-uppercase" style="font-size: 0.7rem;">
-                                <%= customer.getMembership() %>
+                        <div class="info-value d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <span>
+                                <span class="badge bg-success text-uppercase" style="font-size: 0.7rem;">
+                                    <%= customer.getMembership() %>
+                                </span>
+                                <% if ("Pending".equalsIgnoreCase(customer.getPremiumRequest())) { %>
+                                    <span class="premium-pending-badge">&#9679; Upgrade Requested</span>
+                                <% } %>
                             </span>
+
+                            <%-- Only show the upgrade button for Regular members --%>
+                            <% if (!"Premium".equalsIgnoreCase(customer.getMembership())) { %>
+                                <% boolean isPending = "Pending".equalsIgnoreCase(customer.getPremiumRequest()); %>
+                                <form action="UserController" method="post" style="margin:0;">
+                                    <input type="hidden" name="action" value="requestPremium">
+                                    <button type="submit"
+                                            id="btn-request-premium"
+                                            class="btn-request-premium"
+                                            <%= isPending ? "disabled title='Your request is under review'" : "" %>>
+                                        <%= isPending ? "&#10003; Request Sent" : "&#11088; Request Premium" %>
+                                    </button>
+                                </form>
+                            <% } %>
                         </div>
                     <% } %>
 

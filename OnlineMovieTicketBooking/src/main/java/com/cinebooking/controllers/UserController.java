@@ -381,6 +381,45 @@ public class UserController extends HttpServlet {
                     // Not an admin? Send them to the login page
                     response.sendRedirect("UserController?action=login");
                 }
+            } else if ("requestPremium".equals(action)) {
+                // ----------------------------------------------------------------
+                // User-initiated premium membership request flow
+                // ----------------------------------------------------------------
+                HttpSession session = request.getSession();
+                User loggedUser = (User) session.getAttribute("user");
+
+                // Only logged-in Customers can make this request
+                if (loggedUser == null || !"Customer".equals(loggedUser.getRole())) {
+                    response.sendRedirect("UserController?action=login");
+                    return;
+                }
+
+                Customer customer = (Customer) loggedUser;
+
+                // Guard: already Premium — nothing to request
+                if ("Premium".equalsIgnoreCase(customer.getMembership())) {
+                    response.sendRedirect("UserController?action=profile&premiumMsg=alreadyPremium");
+                    return;
+                }
+
+                // Guard: request already submitted — no duplicate entries
+                if ("Pending".equalsIgnoreCase(customer.getPremiumRequest())) {
+                    response.sendRedirect("UserController?action=profile&premiumMsg=alreadyPending");
+                    return;
+                }
+
+                // Write "Pending" to the data file
+                boolean saved = userDAO.updatePremiumRequest(customer.getEmail(), "Pending");
+
+                if (saved) {
+                    // Update session object so the button disables instantly (no re-login needed)
+                    customer.setPremiumRequest("Pending");
+                    session.setAttribute("user", customer);
+                    response.sendRedirect("UserController?action=profile&premiumMsg=requested");
+                } else {
+                    response.sendRedirect("UserController?action=profile&premiumMsg=error");
+                }
+                return;
             }
 
         } catch (Exception e) {
