@@ -1,0 +1,225 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.cinebooking.models.Review" %>
+<%@ page import="com.cinebooking.models.User" %>
+<%@ page import="com.cinebooking.models.PublicReview" %>
+<%
+    List<Review> reviewList = (List<Review>) request.getAttribute("reviewList");
+    String movieId = (String) request.getAttribute("movieId");
+    Integer reviewCount = (Integer) request.getAttribute("reviewCount");
+    String averageRating = (String) request.getAttribute("averageRating");
+    User loggedUser = (User) session.getAttribute("user");
+    boolean isAdmin = loggedUser != null && "Admin".equalsIgnoreCase(loggedUser.getRole());
+
+    if (reviewCount == null) reviewCount = 0;
+    if (averageRating == null) averageRating = "0.0";
+    double avgD = 0.0;
+    try { avgD = Double.parseDouble(averageRating); } catch (Exception ignored) {}
+    int filledStars = (int) Math.round(avgD);
+%>
+
+<!-- ═══ REVIEWS SECTION ═══════════════════════════════════════════════ -->
+<div class="mt-5 pt-4" style="border-top: 1px solid #2a2a2a;">
+
+    <!-- Header Row -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+        <div>
+            <h3 class="mb-1">User Reviews</h3>
+            <p class="text-secondary mb-0">
+                Average: <strong style="color:#e50914;"><%= averageRating %></strong>
+                &nbsp;|&nbsp; <strong><%= reviewCount %></strong> review<%= reviewCount != 1 ? "s" : "" %>
+            </p>
+        </div>
+        <div>
+            <% if (loggedUser != null) { %>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                <i class="bi bi-pencil-square"></i> Write a Review
+            </button>
+            <% } else { %>
+            <a href="${pageContext.request.contextPath}/UserController?action=login"
+               class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-box-arrow-in-right"></i> Login to Review
+            </a>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Rating Distribution Bars -->
+    <% if (reviewCount > 0) { %>
+    <div class="mb-4 p-3" style="background:#1a1a1a; border-radius:14px; border:1px solid #2a2a2a;">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <% for (int i = 1; i <= 5; i++) { %>
+            <i class="bi <%= i <= filledStars ? "bi-star-fill" : "bi-star" %>"
+               style="color:#d4af37; font-size:1rem;"></i>
+            <% } %>
+            <span style="color:#aaa; font-size:0.85rem;"><%= averageRating %> / 5 from <%= reviewCount %> review<%= reviewCount != 1 ? "s" : "" %></span>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Reviews List -->
+    <%
+        if (reviewList == null || reviewList.isEmpty()) {
+    %>
+    <div class="alert" style="background:#1a1a1a; border:2px dashed #333; border-radius:14px; text-align:center; padding:2rem;">
+        <i class="bi bi-chat-dots" style="font-size:2.5rem; color:#444; display:block; margin-bottom:8px;"></i>
+        <em style="color:#888;">No approved reviews yet. Be the first!</em>
+    </div>
+    <%
+        } else {
+            boolean anyShown = false;
+            for (Review review : reviewList) {
+                String status = review.getStatus() == null ? "PENDING" : review.getStatus();
+                if (!isAdmin && !"APPROVED".equalsIgnoreCase(status)) continue;
+                anyShown = true;
+                boolean isOwner = loggedUser != null && loggedUser.getEmail() != null
+                                  && loggedUser.getEmail().equalsIgnoreCase(review.getUserId());
+    %>
+    <div class="card mb-3" style="background:#1a1a1a; border:1px solid #2a2a2a; border-radius:14px;">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <h6 class="card-title mb-0"><%= PublicReview.escapeStatic(review.getTitle()) %></h6>
+                    <small style="color:#888;"><i class="bi bi-person-circle"></i> <%= review.getUserId() %></small>
+                </div>
+                <div class="text-end">
+                    <% for (int i = 1; i <= 5; i++) { %>
+                    <i class="bi <%= i <= review.getRating() ? "bi-star-fill" : "bi-star" %>"
+                       style="color:#d4af37;"></i>
+                    <% } %>
+                    <br><small style="color:#888;"><%= review.getRating() %>/5</small>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 my-2">
+                <% if ("APPROVED".equalsIgnoreCase(status)) { %>
+                <span class="badge" style="background:rgba(25,135,84,0.2);color:#75b798;border:1px solid #198754;">APPROVED</span>
+                <% } else if ("PENDING".equalsIgnoreCase(status)) { %>
+                <span class="badge" style="background:rgba(255,193,7,0.15);color:#ffc107;border:1px solid #ffc107;">PENDING</span>
+                <% } %>
+                <% if (review.isVerified()) { %><span class="badge bg-primary">Verified Booking</span><% } %>
+                <% if (review.isSpoiler()) { %><span class="badge bg-danger">Spoiler</span><% } %>
+            </div>
+
+            <p class="card-text" style="color:#ccc;"><%= PublicReview.escapeStatic(review.getBody()) %></p>
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-2"
+                 style="border-top:1px solid #252525; font-size:0.8rem; color:#666;">
+                <span><i class="bi bi-calendar3"></i> <%= review.getSubmissionDate() %></span>
+                <div class="d-flex gap-2">
+                    <form method="post" action="${pageContext.request.contextPath}/reviews" class="d-inline">
+                        <input type="hidden" name="action" value="upvote">
+                        <input type="hidden" name="reviewId" value="<%= review.getReviewId() %>">
+                        <input type="hidden" name="movieId" value="<%= movieId %>">
+                        <button class="btn btn-sm btn-outline-success py-0 px-2"
+                                title="Helpful"><i class="bi bi-hand-thumbs-up"></i> <%= review.getHelpfulCount() %></button>
+                    </form>
+                    <form method="post" action="${pageContext.request.contextPath}/reviews" class="d-inline">
+                        <input type="hidden" name="action" value="report">
+                        <input type="hidden" name="reviewId" value="<%= review.getReviewId() %>">
+                        <input type="hidden" name="movieId" value="<%= movieId %>">
+                        <button class="btn btn-sm btn-outline-warning py-0 px-2"
+                                onclick="return confirm('Report this review?')"
+                                title="Report"><i class="bi bi-flag"></i></button>
+                    </form>
+                    <% if (isOwner) { %>
+                    <a href="${pageContext.request.contextPath}/reviews?action=editForm&movieId=<%= review.getMovieId() %>&reviewId=<%= review.getReviewId() %>"
+                       class="btn btn-sm btn-outline-primary py-0 px-2"><i class="bi bi-pencil"></i></a>
+                    <form method="post" action="${pageContext.request.contextPath}/reviews" class="d-inline"
+                          onsubmit="return confirm('Delete?')">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="movieId" value="<%= review.getMovieId() %>">
+                        <input type="hidden" name="reviewId" value="<%= review.getReviewId() %>">
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2"><i class="bi bi-trash"></i></button>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%
+            }
+            if (!anyShown) {
+    %>
+    <div class="alert" style="background:#1a1a1a; border:2px dashed #333; border-radius:14px; text-align:center; padding:2rem;">
+        <em style="color:#888;">No approved reviews yet.</em>
+    </div>
+    <%  }
+        }
+    %>
+</div>
+
+<!-- ═══ SUBMIT REVIEW MODAL ═══════════════════════════════════════════ -->
+<% if (loggedUser != null) { %>
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background:#1a1a1a; border:1px solid #2a2a2a; color:#f5f5f5;">
+            <div class="modal-header" style="border-bottom:1px solid #333;">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2" style="color:#e50914;"></i>Write a Review</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="${pageContext.request.contextPath}/reviews" class="row g-3">
+                    <input type="hidden" name="action" value="submit">
+                    <input type="hidden" name="movieId" value="<%= movieId != null ? movieId : "" %>">
+
+                    <!-- Interactive star selector -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Rating <span style="color:#e50914">*</span></label>
+                        <div class="d-flex gap-1 mb-1" id="starSel">
+                            <% for (int s = 1; s <= 5; s++) { %>
+                            <i class="bi bi-star star-opt" data-val="<%= s %>"
+                               style="font-size:1.8rem;color:#444;cursor:pointer;"></i>
+                            <% } %>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingVal" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Review Title <span style="color:#e50914">*</span></label>
+                        <input type="text" name="title" class="form-control"
+                               style="background:#222;border:1px solid #333;color:#f5f5f5;"
+                               maxlength="120" placeholder="Summarize your experience..." required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Your Review <span style="color:#e50914">*</span></label>
+                        <textarea name="body" rows="5" class="form-control"
+                                  style="background:#222;border:1px solid #333;color:#f5f5f5;"
+                                  maxlength="2000" placeholder="Share your thoughts..." required></textarea>
+                        <small style="color:#666;">Max 2000 characters</small>
+                    </div>
+                    <div class="col-12 form-check ms-2">
+                        <input class="form-check-input" type="checkbox" name="isSpoiler" id="spoilerCheck2">
+                        <label class="form-check-label" for="spoilerCheck2" style="color:#aaa;">
+                            ⚠️ This review contains spoilers
+                        </label>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger fw-bold px-4">
+                            <i class="bi bi-send-fill me-1"></i> Post Review
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        const opts = document.querySelectorAll('.star-opt');
+        const inp  = document.getElementById('ratingVal');
+        function paint(n) {
+            opts.forEach(o => {
+                o.className = 'bi star-opt ' + (parseInt(o.dataset.val) <= n ? 'bi-star-fill' : 'bi-star');
+                o.style.color = parseInt(o.dataset.val) <= n ? '#d4af37' : '#444';
+            });
+        }
+        opts.forEach(o => {
+            o.addEventListener('mouseover', () => paint(parseInt(o.dataset.val)));
+            o.addEventListener('mouseout',  () => paint(parseInt(inp.value) || 0));
+            o.addEventListener('click', () => { inp.value = o.dataset.val; paint(parseInt(o.dataset.val)); });
+        });
+    })();
+</script>
+<% } %>

@@ -1,0 +1,80 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.cinebooking.models.Review" %>
+<%@ page import="java.util.List" %>
+
+<%
+    String  _avgRating   = (String)  request.getAttribute("averageRating");
+    String  _wAvgRating  = (String)  request.getAttribute("weightedAverageRating");
+    Integer _reviewCount = (Integer) request.getAttribute("reviewCount");
+    int[]   _ratingDist  = (int[])   request.getAttribute("ratingDist");
+
+    if (_avgRating  == null) _avgRating  = "0.0";
+    if (_reviewCount == null) _reviewCount = 0;
+    if (_ratingDist  == null) _ratingDist  = new int[5];
+
+    double _avgD = 0.0;
+    try { _avgD = Double.parseDouble(_avgRating); } catch (Exception ignored) {}
+    int _filledStars = (int) Math.round(_avgD);
+    int[] _starLabels = {5, 4, 3, 2, 1};
+%>
+
+<!-- ════ RATINGS SUMMARY WIDGET ════════════════════════════════ -->
+<div class="ratings-widget-container"
+     style="background:linear-gradient(135deg,#181818,#1e1e1e);
+            border:1px solid #252525;border-radius:20px;
+            padding:28px;margin-bottom:32px;">
+
+    <div class="row align-items-center g-4">
+
+        <!-- Left: Score + Stars + Count -->
+        <div class="col-md-3 text-center">
+            <div style="font-size:3.5rem;font-weight:700;color:#e50914;line-height:1;">
+                <%= _avgRating %>
+            </div>
+            <div style="color:#888;font-size:0.8rem;margin-bottom:6px;">out of 5.0</div>
+            <div>
+                <% for (int _i = 1; _i <= 5; _i++) { %>
+                <i class="bi <%= _i <= _filledStars ? "bi-star-fill" : "bi-star" %>"
+                   style="color:#d4af37;font-size:1.25rem;"></i>
+                <% } %>
+            </div>
+            <div style="color:#888;font-size:0.82rem;margin-top:6px;">
+                <%= _reviewCount %> review<%= _reviewCount != 1 ? "s" : "" %>
+            </div>
+            <% if (_wAvgRating != null) { %>
+            <div style="margin-top:8px;font-size:0.78rem;color:#aaa;">
+                Weighted: <strong style="color:#e50914;"><%= _wAvgRating %></strong>
+                <span title="Verified reviews carry 1.5× weight" style="cursor:help;">ⓘ</span>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Right: Distribution bars (5→1) -->
+        <div class="col-md-9">
+            <% for (int _si = 0; _si < 5; _si++) {
+                int _cnt = _ratingDist[_si];
+                int _pct = _reviewCount > 0 ? (int) Math.round(_cnt * 100.0 / _reviewCount) : 0;
+                String _barColor = _starLabels[_si] >= 4 ? "#4caf50"
+                                 : _starLabels[_si] == 3 ? "#ffc107"
+                                 : "#e53935";
+            %>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div style="min-width:52px;font-size:0.78rem;color:#aaa;text-align:right;">
+                    <i class="bi bi-star-fill" style="color:#d4af37;font-size:0.7rem;"></i>
+                    <%= _starLabels[_si] %>
+                </div>
+                <div style="flex:1;height:10px;background:#222;border-radius:5px;overflow:hidden;">
+                    <div style="height:100%;width:<%= _pct %>%;
+                                background:linear-gradient(90deg,<%= _barColor %>,#d4af37);
+                                border-radius:5px;transition:width 0.6s ease;">
+                    </div>
+                </div>
+                <div style="min-width:38px;font-size:0.78rem;color:#aaa;text-align:left;">
+                    <%= _cnt %> &nbsp;<span style="color:#555;font-size:0.7rem;">(<%= _pct %>%)</span>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+<!-- ════ END RATINGS SUMMARY WIDGET ════════════════════════════ -->

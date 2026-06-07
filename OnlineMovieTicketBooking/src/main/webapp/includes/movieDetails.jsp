@@ -154,6 +154,8 @@
 
     </div>
 
+    <jsp:include page="/includes/reviews-patch.jspf" />
+
 </div>
 
 <jsp:include page="/includes/footer.jsp" />
