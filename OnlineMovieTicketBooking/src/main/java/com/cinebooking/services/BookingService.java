@@ -1,6 +1,5 @@
 package com.cinebooking.services;
 
-import com.cinebooking.models.Showtime;
 import com.cinebooking.models.Booking;
 import com.cinebooking.models.Seat;
 
@@ -14,8 +13,9 @@ import java.util.List;
 
 public class BookingService {
 
-    private String SEATS_FILE;
-    private String BOOKINGS_FILE;
+    private static final Object FILE_LOCK = new Object();
+    private final String SEATS_FILE;
+    private final String BOOKINGS_FILE;
 
     public BookingService(String seatsFilepath, String bookingFilepath) {
         this.SEATS_FILE = seatsFilepath;
@@ -24,20 +24,22 @@ public class BookingService {
 
     public List<Seat> getAllSeats() {
         List<Seat> seatList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(SEATS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data.length == 4) {
-                    String seatId = data[0];
-                    String seatType = data[1];
-                    boolean isBooked = Boolean.parseBoolean(data[2]);
-                    double price = Double.parseDouble(data[3]);
-                    seatList.add(new Seat(seatId, seatType, isBooked, price));
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(SEATS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (data.length == 4) {
+                        String seatId = data[0];
+                        String seatType = data[1];
+                        boolean isBooked = Boolean.parseBoolean(data[2]);
+                        double price = Double.parseDouble(data[3]);
+                        seatList.add(new Seat(seatId, seatType, isBooked, price));
+                    }
                 }
+            } catch (IOException e) {
+                System.err.println("Unable to read seats file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return seatList;
     }
@@ -48,31 +50,29 @@ public class BookingService {
 
         // 2. Find which seats are already booked for this showtime
         List<String> bookedSeatIds = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data.length >= 9) {
-                    String bookingSeatId   = data[3];
-                    String bookingShowtime = data[8];
-                    String bookingStatus = data[9];
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (data.length >= 10) {
+                        String bookingSeatId   = data[3];
+                        String bookingShowtime = data[8];
+                        String bookingStatus = data[9];
 
-                    if (!bookingStatus.equals("PENDING") && bookingShowtime.equals(String.valueOf(showtimeId))) {
-                        bookedSeatIds.add(bookingSeatId);
+                        if (!bookingStatus.equals("PENDING") && bookingShowtime.equals(String.valueOf(showtimeId))) {
+                            bookedSeatIds.add(bookingSeatId);
+                        }
                     }
                 }
+            } catch (IOException e) {
+                System.err.println("Unable to read bookings file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         // 3. Mark seats as booked if they appear in bookings for this showtime
         for (Seat seat : allSeats) {
-            if (bookedSeatIds.contains(seat.getSeatId())) {
-                seat.setBooked(true);
-            } else {
-                seat.setBooked(false);
-            }
+            seat.setBooked(bookedSeatIds.contains(seat.getSeatId()));
         }
 
         return allSeats;
@@ -89,63 +89,46 @@ public class BookingService {
 
     public List<Booking> getPendingBookingsByEmail(String email) {
         List<Booking> bookings = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data.length == 10 && data[2].equals(email) && data[9].equals("PENDING")) {
-                    Booking b = new Booking(
-                            data[0], data[1], data[2], data[3],
-                            data[4], Double.parseDouble(data[5]),
-                            data[6], data[7], data[8], data[9]
-                    );
-                    bookings.add(b);
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (data.length == 10 && data[2].equals(email) && data[9].equals("PENDING")) {
+                        Booking b = new Booking(
+                                data[0], data[1], data[2], data[3],
+                                data[4], Double.parseDouble(data[5]),
+                                data[6], data[7], data[8], data[9]
+                        );
+                        bookings.add(b);
+                    }
                 }
+            } catch (IOException e) {
+                System.err.println("Unable to read bookings file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return bookings;
     }
 
     public List<Booking> getConfirmedBookingsByEmail(String email) {
         List<Booking> bookings = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data.length == 10 && data[2].equals(email) && data[9].equals("CONFIRMED")) {
-                    Booking b = new Booking(
-                            data[0], data[1], data[2], data[3],
-                            data[4], Double.parseDouble(data[5]),
-                            data[6], data[7], data[8], data[9]
-                    );
-                    bookings.add(b);
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (data.length == 10 && data[2].equals(email) && data[9].equals("CONFIRMED")) {
+                        Booking b = new Booking(
+                                data[0], data[1], data[2], data[3],
+                                data[4], Double.parseDouble(data[5]),
+                                data[6], data[7], data[8], data[9]
+                        );
+                        bookings.add(b);
+                    }
                 }
+            } catch (IOException e) {
+                System.err.println("Unable to read bookings file: " + e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bookings;
-    }
-
-    public List<Booking> getBookingsByEmail(String email) {
-        List<Booking> bookings = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data.length == 10 && data[2].equals(email)) {
-                    Booking b = new Booking(
-                            data[0], data[1], data[2], data[3],
-                            data[4], Double.parseDouble(data[5]),
-                            data[6], data[7], data[8], data[9]
-                    );
-                    bookings.add(b);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return bookings;
     }
@@ -161,9 +144,7 @@ public class BookingService {
         // Check if seat is already booked for this showtime
         List<Seat> availableSeats = getAvailableSeats(Integer.parseInt(showtimeId));
         for (Seat s : availableSeats) {
-            if (s.getSeatId().equals(seatId) && s.isBooked()) {
-                return null; // already booked for this showtime
-            }
+            if (s.getSeatId().equals(seatId) && s.isBooked()) return null; // already booked for this showtime
         }
 
         String bookingId   = generateBookingId();
@@ -173,54 +154,58 @@ public class BookingService {
                 seatId, seat.getSeatType(), seat.getPrice(),
                 bookingDate, movieName, showtimeId, status);
 
-        saveBooking(booking);
+        synchronized (FILE_LOCK) {
+            saveBooking(booking);
+        }
         return booking;
     }
 
-    public boolean cancelBooking(String bookingId) {
+    public void cancelBooking(String bookingId) {
         List<String> lines = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (!data[0].equals(bookingId)) {
-                    lines.add(line);
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (!data[0].equals(bookingId)) {
+                        lines.add(line);
+                    }
                 }
+            } catch (IOException e) {
+                System.err.println("Unable to cancel booking: " + e.getMessage());
+                return;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
-            for (String line : lines) {
-                bw.write(line);
-                bw.newLine();
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
+                for (String line : lines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            } catch (IOException e) {
+                System.err.println("Unable to cancel booking write: " + e.getMessage());
+                return;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
-
-        return true;
     }
 
     private void saveBooking(Booking booking) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE, true))) {
-            bw.write(booking.getBookingId() + "|" +
-                    booking.getCustomerName() + "|" +
-                    booking.getCustomerEmail() + "|" +
-                    booking.getSeatId() + "|" +
-                    booking.getSeatType() + "|" +
-                    booking.getTotalPrice() + "|" +
-                    booking.getBookingDate() + "|" +
-                    booking.getMovieName() + "|" +
-                    booking.getShowTime() + "|" +
-                    booking.getBookingStatus());
-            bw.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (FILE_LOCK) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE, true))) {
+                bw.write(booking.getBookingId() + "|" +
+                        booking.getCustomerName() + "|" +
+                        booking.getCustomerEmail() + "|" +
+                        booking.getSeatId() + "|" +
+                        booking.getSeatType() + "|" +
+                        booking.getTotalPrice() + "|" +
+                        booking.getBookingDate() + "|" +
+                        booking.getMovieName() + "|" +
+                        booking.getShowTime() + "|" +
+                        booking.getBookingStatus());
+                bw.newLine();
+            } catch (IOException e) {
+                System.err.println("Unable to write booking: " + e.getMessage());
+            }
         }
     }
 
@@ -228,41 +213,43 @@ public class BookingService {
         List<String> lines = new ArrayList<>();
         boolean updated = false;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split("\\|");
-                if (data[0].equals(booking.getBookingId())) {
-                    // Replace with updated booking data
-                    line = booking.getBookingId() + "|" +
-                            booking.getCustomerName() + "|" +
-                            booking.getCustomerEmail() + "|" +
-                            booking.getSeatId() + "|" +
-                            booking.getSeatType() + "|" +
-                            booking.getTotalPrice() + "|" +
-                            booking.getBookingDate() + "|" +
-                            booking.getMovieName() + "|" +
-                            booking.getShowTime() + "|" +
-                            booking.getBookingStatus();
-                    updated = true;
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split("\\|");
+                    if (data[0].equals(booking.getBookingId())) {
+                        // Replace with updated booking data
+                        line = booking.getBookingId() + "|" +
+                                booking.getCustomerName() + "|" +
+                                booking.getCustomerEmail() + "|" +
+                                booking.getSeatId() + "|" +
+                                booking.getSeatType() + "|" +
+                                booking.getTotalPrice() + "|" +
+                                booking.getBookingDate() + "|" +
+                                booking.getMovieName() + "|" +
+                                booking.getShowTime() + "|" +
+                                booking.getBookingStatus();
+                        updated = true;
+                    }
+                    lines.add(line);
                 }
-                lines.add(line);
+            } catch (IOException e) {
+                System.err.println("Unable to update booking: " + e.getMessage());
+                return false;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        if (!updated) return false;
+            if (!updated) return false;
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
-            for (String line : lines) {
-                bw.write(line);
-                bw.newLine();
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE))) {
+                for (String line : lines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            } catch (IOException e) {
+                System.err.println("Unable to update booking write: " + e.getMessage());
+                return false;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
 
         return true;
@@ -276,12 +263,14 @@ public class BookingService {
 
     private int countExistingBookings() {
         int count = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
-            while (br.readLine() != null) {
-                count++;
+        synchronized (FILE_LOCK) {
+            try (BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE))) {
+                while (br.readLine() != null) {
+                    count++;
+                }
+            } catch (IOException e) {
+                System.err.println("Unable to count bookings: " + e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return count;
     }

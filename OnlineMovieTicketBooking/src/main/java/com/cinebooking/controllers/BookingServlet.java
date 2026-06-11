@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/booking")
@@ -51,54 +50,39 @@ public class BookingServlet extends HttpServlet {
 
         User user = (User) sessionUser;
         String customerEmail = user.getEmail();
-        String customerName  = user.getName();
 
-        String action = request.getParameter("action");
-
-        if ("myBookings".equals(action)) {
-            String page = request.getParameter("page");
-            if (page.equals("history")) {
-                List<Booking> myBookings = bookingService.getConfirmedBookingsByEmail(customerEmail);
-
-                request.setAttribute("myBookings", myBookings);
-                request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp")
-                        .forward(request, response);
-            }
-            else {
-                List<Booking> myBookings = bookingService.getPendingBookingsByEmail(customerEmail);
+        switch (request.getParameter("action") == null ? "" : request.getParameter("action")) {
+            case "myBookings" -> {
+                String page = request.getParameter("page");
+                List<Booking> myBookings = "history".equals(page)
+                        ? bookingService.getConfirmedBookingsByEmail(customerEmail)
+                        : bookingService.getPendingBookingsByEmail(customerEmail);
 
                 request.setAttribute("myBookings", myBookings);
-                request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp")
-                        .forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/myBookings.jsp").forward(request, response);
             }
+            case "bookMovie" -> handleBooking(request, response);
+            case "selectSeat" -> {
+                String movieName   = request.getParameter("movieName");
+                String showtimeId  = request.getParameter("showtimeId");
 
-        } else if ("bookMovie".equals(action)) {
-            handleBooking(request, response);
+                if (showtimeId == null || showtimeId.isEmpty()) {
+                    response.sendRedirect(request.getContextPath() + "/booking");
+                    return;
+                }
 
-        } else if ("selectSeat".equals(action)) {
-            // User selected a showtime — load available seats
-            String movieName   = request.getParameter("movieName");
-            String showtimeId  = request.getParameter("showtimeId");
+                List<Seat> seatList = bookingService.getAvailableSeats(Integer.parseInt(showtimeId));
 
-            if (showtimeId == null || showtimeId.isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/booking");
-                return;
+                request.setAttribute("seatList", seatList);
+                request.setAttribute("movieName", movieName);
+                request.setAttribute("showtimeId", showtimeId);
+                request.getRequestDispatcher("/includes/seatSelection.jsp").forward(request, response);
             }
-
-            List<Seat> seatList = bookingService.getAvailableSeats(Integer.parseInt(showtimeId));
-
-            request.setAttribute("seatList", seatList);
-            request.setAttribute("movieName", movieName);
-            request.setAttribute("showtimeId", showtimeId);
-            request.getRequestDispatcher("/includes/seatSelection.jsp")
-                    .forward(request, response);
-
-        } else {
-            // Default - show all movies
-            List<Movie> movies = movieService.getAllMovies();
-            request.setAttribute("movies", movies);
-            request.getRequestDispatcher("includes/bookingHome.jsp")
-                    .forward(request, response);
+            default -> {
+                List<Movie> movies = movieService.getAllMovies();
+                request.setAttribute("movies", movies);
+                request.getRequestDispatcher("includes/bookingHome.jsp").forward(request, response);
+            }
         }
     }
 
@@ -115,90 +99,81 @@ public class BookingServlet extends HttpServlet {
             return;
         }
         User user = (User) sessionUser;
-        String customerName  = user.getName();
         String customerEmail = user.getEmail();
 
-        if ("cancel".equals(action)) {
-            String bookingId = request.getParameter("bookingId");
-            bookingService.cancelBooking(bookingId);
-            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
-
-            return;
-        }
-
-        if ("selectSeat".equals(action)) {
-            // User chose a showtime from the dropdown
-            String movieName  = request.getParameter("movieName");
-            String showtimeId = request.getParameter("showtimeId");
-            System.out.println("Showtime ID: " + showtimeId);
-            List<Seat> seatList = bookingService.getAvailableSeats(Integer.parseInt(showtimeId));
-
-            request.setAttribute("seatList", seatList);
-            request.setAttribute("movieName", movieName);
-            request.setAttribute("showtimeId", showtimeId);
-            request.getRequestDispatcher("/includes/seatSelection.jsp")
-                    .forward(request, response);
-            return;
-        }
-
-        if ("bookMultiple".equals(action)) {
-            String[] seatIds  = request.getParameterValues("seatIds");
-            String movieName  = request.getParameter("movieName");
-            String showtimeId = request.getParameter("showtimeId");
-            List<String> bookingIDList = new java.util.ArrayList<>(List.of());
-            if (seatIds != null) {
-                for (String seatId : seatIds) {
-                    Booking booking = bookingService.createBooking(customerName, customerEmail,
-                            seatId, movieName, showtimeId, "PENDING");
-                    bookingIDList.add(booking.getBookingId());
-                    System.out.println("Saved Booking" + booking.getBookingId());
-                }
-                session.setAttribute("bookingIDList", bookingIDList);
+        switch (action == null ? "" : action) {
+            case "cancel" -> {
+                String bookingId = request.getParameter("bookingId");
+                bookingService.cancelBooking(bookingId);
+                response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
             }
-            session.setAttribute("movieName", movieName);
-            session.setAttribute("showtime", showtimeId);
-            session.setAttribute("seats", request.getParameter("seats"));
-            session.setAttribute("total", request.getParameter("total"));
-            response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
-            // response.sendRedirect(request.getContextPath() + "/PaymentController?action=paymentForm");
-            return;
-        }
+            case "selectSeat" -> {
+                String movieName  = request.getParameter("movieName");
+                String showtimeId = request.getParameter("showtimeId");
+                List<Seat> seatList = bookingService.getAvailableSeats(Integer.parseInt(showtimeId));
 
-        if ("confirmBookings".equals(action)) {
-            List<Booking> pendingBookings = bookingService.getPendingBookingsByEmail(customerEmail);
-            List<String> bookingIDs = (List<String>) session.getAttribute("bookingIDList");
-            for (Booking b : pendingBookings) {
-                if (bookingIDs != null && bookingIDs.contains(b.getBookingId())) {
-                    b.setBookingStatus("CONFIRMED");
-                    bookingService.updateBooking(b);
-                }
+                request.setAttribute("seatList", seatList);
+                request.setAttribute("movieName", movieName);
+                request.setAttribute("showtimeId", showtimeId);
+                request.getRequestDispatcher("/includes/seatSelection.jsp").forward(request, response);
             }
+            case "bookMultiple" -> {
+                String[] seatIds  = request.getParameterValues("seatIds");
+                String movieName  = request.getParameter("movieName");
+                String showtimeId = request.getParameter("showtimeId");
+                List<String> bookingIDList = new java.util.ArrayList<>();
+                if (seatIds != null) {
+                    for (String seatId : seatIds) {
+                        Booking booking = bookingService.createBooking(user.getName(), customerEmail,
+                                seatId, movieName, showtimeId, "PENDING");
+                        if (booking != null) {
+                            bookingIDList.add(booking.getBookingId());
+                        }
+                    }
+                    session.setAttribute("bookingIDList", bookingIDList);
+                }
+                session.setAttribute("movieName", movieName);
+                session.setAttribute("showtime", showtimeId);
+                session.setAttribute("seats", request.getParameter("seats"));
+                session.setAttribute("total", request.getParameter("total"));
+                response.sendRedirect(request.getContextPath() + "/booking?action=myBookings&page=new");
+            }
+            case "confirmBookings" -> {
+                List<Booking> pendingBookings = bookingService.getPendingBookingsByEmail(customerEmail);
+                Object bookingIDsAttr = session.getAttribute("bookingIDList");
+                if (bookingIDsAttr instanceof List<?> bookingIDs) {
+                    for (Booking b : pendingBookings) {
+                        if (bookingIDs.contains(b.getBookingId())) {
+                            b.setBookingStatus("CONFIRMED");
+                            bookingService.updateBooking(b);
+                        }
+                    }
+                }
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+            default -> {
+                String seatId     = request.getParameter("seatId");
+                String movieName  = request.getParameter("movieName");
+                String showtimeId = request.getParameter("showtimeId");
 
-            response.setStatus(HttpServletResponse.SC_OK);
-            return;
+                Booking booking = bookingService.createBooking(user.getName(), customerEmail,
+                        seatId, movieName, showtimeId, "PENDING");
+
+                if (booking == null) {
+                    request.setAttribute("errorMessage", "Booking failed. Seat may already be taken.");
+                    request.setAttribute("seatList", bookingService.getAvailableSeats(Integer.parseInt(showtimeId)));
+                    request.setAttribute("movieName", movieName);
+                    request.setAttribute("showtimeId", showtimeId);
+                    request.getRequestDispatcher("/WEB-INF/views/seatSelection.jsp").forward(request, response);
+                }
+
+                request.setAttribute("bookedMovieName", booking.getMovieName());
+                request.setAttribute("bookedSeats", booking.getSeatId());
+                request.setAttribute("totalPrice", booking.getTotalPrice());
+                
+                request.getRequestDispatcher("/WEB-INF/views/booking_success.jsp").forward(request, response);
+            }
         }
-
-        // Create booking
-        String seatId     = request.getParameter("seatId");
-        String movieName  = request.getParameter("movieName");
-        String showtimeId = request.getParameter("showtimeId");
-
-        Booking booking = bookingService.createBooking(customerName, customerEmail,
-                seatId, movieName, showtimeId, "PENDING");
-
-        if (booking == null) {
-            request.setAttribute("errorMessage", "Booking failed. Seat may already be taken.");
-            request.setAttribute("seatList", bookingService.getAvailableSeats(Integer.parseInt(showtimeId)));
-            request.setAttribute("movieName", movieName);
-            request.setAttribute("showtimeId", showtimeId);
-            request.getRequestDispatcher("/WEB-INF/views/seatSelection.jsp")
-                    .forward(request, response);
-            return;
-        }
-
-        request.setAttribute("booking", booking);
-        request.getRequestDispatcher("/WEB-INF/views/bookingConfirmation.jsp")
-                .forward(request, response);
     }
 
     void handleBooking(HttpServletRequest request, HttpServletResponse response)
