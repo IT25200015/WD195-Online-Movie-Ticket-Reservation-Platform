@@ -76,12 +76,44 @@
                 <div class="summary-row"><span>Discount</span><span id="discountDisplay">LKR 0.00</span></div>
                 <div class="summary-row total"><span>Total</span><span id="finalDisplay">LKR <%= String.format("%.2f", totalD) %></span></div>
             </div>
+
+            <%
+                // Check membership for the promo hints panel
+                User promoUser = (User) session.getAttribute("user");
+                boolean promoIsPremium = promoUser != null
+                        && "Premium".equalsIgnoreCase(promoUser.getMembership());
+                java.util.List<com.cinebooking.models.Promotion> activePromos =
+                        (java.util.List<com.cinebooking.models.Promotion>) request.getAttribute("activePromotions");
+            %>
+
+            <% if (promoIsPremium) { %>
             <div class="card-surface mt-3">
-                <div class="section-label">Promo Codes</div>
-                <p class="promo-hint"><code style="color:#e50914">MOVIE10</code> — 10% off</p>
-                <p class="promo-hint"><code style="color:#e50914">CINE20</code> — 20% off</p>
+                <div class="section-label">Available Promo Codes</div>
+                <% if (activePromos != null && !activePromos.isEmpty()) {
+                    for (com.cinebooking.models.Promotion promo : activePromos) { %>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <code style="color:#e50914; font-size:0.9rem;"><%= promo.getPromoCode() %></code>
+                        <br>
+                        <small class="promo-hint">
+                            <%= promo.getPromotionType().equalsIgnoreCase("PERCENTAGE") ? promo.getDiscountValue() + "% off" : "LKR " + (int)promo.getDiscountValue() + " off" %>
+                            &mdash; Expires <%= promo.getEndDate() %>
+                        </small>
+                    </div>
+                    <button type="button" class="btn btn-sm"
+                            style="background:rgba(229,9,20,0.15);color:#e50914;border:1px solid rgba(229,9,20,0.3);font-size:0.75rem;"
+                            onclick="applySpecificPromo('<%= promo.getPromoCode() %>')">
+                        Apply
+                    </button>
+                </div>
+                <% }
+                } else { %>
+                <p class="promo-hint">No active promotions at the moment. Check back soon!</p>
+                <% } %>
             </div>
+            <% } %>
         </div>
+
 
         <!-- Right: Payment Form -->
         <div class="col-md-6">
@@ -132,11 +164,36 @@
                     </div>
 
                     <div class="section-label mt-2">Promo Code</div>
-                    <div class="input-group mb-3">
-                        <input type="text" name="promoCode" id="promoInput" class="form-control custom-input" placeholder="Enter promo code (optional)">
-                        <button type="button" class="btn" style="background:var(--cinema-accent);color:#fff;border-radius:0 10px 10px 0" onclick="applyPromo()">Apply</button>
-                    </div>
-                    <div id="promoMsg" class="small mb-3"></div>
+
+                    <%
+                        // Safely retrieve user from session and check membership
+                        User sessionUser = (User) session.getAttribute("user");
+                        String membershipType = "Regular"; // default
+                        if (sessionUser != null && sessionUser.getMembership() != null) {
+                            membershipType = sessionUser.getMembership();
+                        }
+                        boolean isPremium = "Premium".equalsIgnoreCase(membershipType);
+                    %>
+
+                    <% if (isPremium) { %>
+                        <!-- Premium member: Show promo input -->
+                        <div class="input-group mb-3">
+                            <input type="text" name="promoCode" id="promoInput" class="form-control custom-input" placeholder="Enter promo code (optional)">
+                            <button type="button" class="btn" style="background:var(--cinema-accent);color:#fff;border-radius:0 10px 10px 0" onclick="applyPromo()">Apply</button>
+                        </div>
+                        <div id="promoMsg" class="small mb-3"></div>
+                    <% } else { %>
+                        <!-- Regular member: Show warning alert -->
+                        <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
+                            <strong>⭐ Upgrade to Premium!</strong>
+                            <br>
+                            Promo codes are exclusive to Premium members.
+                            <a href="${pageContext.request.contextPath}/UserController?action=profile" class="alert-link">Upgrade now</a> to unlock exclusive discounts.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <!-- Hidden promo input for Regular members (to prevent tampering) -->
+                        <input type="hidden" name="promoCode" value="">
+                    <% } %>
 
                     <button type="submit" class="btn btn-pay mt-2">🔒 PAY NOW</button>
                 </form>
@@ -155,13 +212,30 @@
     }
 
     function applyPromo() {
-        const code = document.getElementById('promoInput').value.trim().toUpperCase();
-        let discount = 0, msg = '';
-        if      (code === 'MOVIE10') { discount = baseTotal * 0.10; msg = '<span style="color:#4caf50">✓ 10% discount applied!</span>'; }
-        else if (code === 'CINE20') { discount = baseTotal * 0.20; msg = '<span style="color:#4caf50">✓ 20% discount applied!</span>'; }
-        else if (code)              { msg = '<span style="color:#e50914">✗ Invalid promo code.</span>'; }
+        const promoInput = document.getElementById('promoInput');
+        if (!promoInput) return;
+        const code = promoInput.value.trim().toUpperCase();
+        applyPromoCode(code);
+    }
 
-        document.getElementById('promoMsg').innerHTML = msg;
+    function applySpecificPromo(code) {
+        const promoInput = document.getElementById('promoInput');
+        if (promoInput) {
+            promoInput.value = code;
+        }
+        applyPromoCode(code.toUpperCase());
+    }
+
+    function applyPromoCode(code) {
+        let discount = 0, msg = '';
+        // The server validates the actual promo; this is UI preview only
+        if      (code === 'MOVIE10')  { discount = baseTotal * 0.10; msg = '<span style="color:#4caf50">✓ 10% discount preview applied!</span>'; }
+        else if (code === 'CINE20')   { discount = baseTotal * 0.20; msg = '<span style="color:#4caf50">✓ 20% discount preview applied!</span>'; }
+        else if (code === 'SUMMER15') { discount = baseTotal * 0.15; msg = '<span style="color:#4caf50">✓ 15% discount preview applied!</span>'; }
+        else if (code)                { msg = '<span style="color:#e50914">✗ Code not recognized for preview. Server will validate on submit.</span>'; }
+
+        const promoMsg = document.getElementById('promoMsg');
+        if (promoMsg) promoMsg.innerHTML = msg;
         document.getElementById('discountDisplay').textContent = 'LKR ' + discount.toFixed(2);
         document.getElementById('finalDisplay').textContent    = 'LKR ' + (baseTotal - discount).toFixed(2);
     }
