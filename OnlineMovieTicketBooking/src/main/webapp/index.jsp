@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"
-           uri="http://java.sun.com/jsp/jstl/core" %>
+           uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>CineBooking | Home</title>
@@ -30,7 +30,7 @@
             display: grid;
             align-items: center;
             background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.72) 20%, rgba(0, 0, 0, 0.3) 65%),
-                url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1600&auto=format&fit=crop");
+            url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1600&auto=format&fit=crop");
             background-size: cover;
             background-position: center;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);

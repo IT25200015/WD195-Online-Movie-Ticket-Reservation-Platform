@@ -143,7 +143,8 @@ package com.cinebooking.controllers;
 
 import com.cinebooking.models.Movie;
 import com.cinebooking.models.User;
-import com.cinebooking.models.User;
+import com.cinebooking.services.FileReviewService;
+import com.cinebooking.services.IReviewService;
 import com.cinebooking.services.MovieService;
 
 import jakarta.servlet.ServletException;
@@ -152,7 +153,9 @@ import jakarta.servlet.http.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.Part;
 
@@ -164,31 +167,41 @@ import jakarta.servlet.http.Part;
 @WebServlet("/movies")
 public class MovieServlet extends HttpServlet {
 
-    private MovieService movieService;
+    private MovieService   movieService;
+    private IReviewService reviewService;
 
     @Override
     public void init() throws ServletException {
-        String dataFilePath = getServletContext().getRealPath("/data/movies.txt");
-        movieService = new MovieService(dataFilePath);
+        String dataFilePath  = getServletContext().getRealPath("/data/movies.txt");
+        String reviewsPath   = getServletContext().getRealPath("/data/reviews.txt");
+        String ratingsPath   = getServletContext().getRealPath("/data/ratings.txt");
+        movieService  = new MovieService(dataFilePath);
+        reviewService = new FileReviewService(reviewsPath, ratingsPath);
     }
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            return false;
-        }
+        if (session == null) return false;
         User user = (User) session.getAttribute("user");
         return user != null && "Admin".equals(user.getRole());
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         List<Movie> movies = movieService.getAllMovies();
-
         request.setAttribute("movies", movies);
+
+        // Build per-movie rating map: movieId (String) -> double[] { weightedAvg, count }
+        Map<String, double[]> movieRatings = new HashMap<>();
+        for (Movie m : movies) {
+            String mid = String.valueOf(m.getId());
+            double wAvg  = reviewService.getWeightedAverageRating(mid);
+            int    count = reviewService.getMovieReviews(mid).size();
+            movieRatings.put(mid, new double[]{wAvg, count});
+        }
+        request.setAttribute("movieRatings", movieRatings);
 
         String page = request.getParameter("page");
 
@@ -199,9 +212,7 @@ public class MovieServlet extends HttpServlet {
             }
             request.getRequestDispatcher("/WEB-INF/views/manageMovies.jsp")
                     .forward(request, response);
-        }
-        else {
-
+        } else {
             request.getRequestDispatcher("/includes/movies.jsp")
                     .forward(request, response);
         }
