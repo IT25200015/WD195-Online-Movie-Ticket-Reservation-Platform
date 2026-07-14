@@ -1,6 +1,6 @@
 # WD195 - Online Movie Ticket Booking Platform
 
-📄 **Project Documentation:** [Download/View the Software Requirements Specification (SRS) here](docs/SRS_OnlineMovieTicketBookingPlatform.pdf)
+📄 **Project Documentation:** [Download/View the Software Requirements Specification (SRS) here](OnlineMovieTicketBooking/docs/SRS_OnlineMovieTicketBookingPlatform.pdf)
 ## Project Overview
 The Online Movie Ticket Booking Platform is a web-based application developed for the SE1020 Object Oriented Programming module. The system enables users to browse movies, select showtimes, choose seats, make payments, apply promotional discounts, and leave reviews. Data is persisted using file read/write operations on plain text files, with a MySQL connection.
 
